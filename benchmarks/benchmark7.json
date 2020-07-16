@@ -1,0 +1,132 @@
+{
+  "source": {
+    "relations": [
+      "Customer(int CustomerPOID, String Name)",
+      "Policy(int PolicyID, int CustomerPOID_fk, int Amount)"
+    ],
+    "primarykeys": [
+      "Customer(CustomerPOID)",
+      "Policy(PolicyID)"
+    ],
+    "foreignkeys": [
+      "Policy(CustomerPOID_fk) -> Customer(CustomerPOID)"
+    ],
+    "transactions": [
+      {
+        "signature": "void createCustomer(int cid, String name)",
+        "body": [
+          "ins(Customer, (cid, name))"
+        ]
+      },
+      {
+        "signature": "void createPolicy(int pid, int cid, int amount)",
+        "body": [
+          "ins(Policy, (pid, cid, amount))"
+        ]
+      },
+      {
+        "signature": "void deleteCustomer(int cid)",
+        "body": [
+          "del(Customer, CustomerPOID=cid)"
+        ]
+      },
+      {
+        "signature": "void deletePolicy(int pid)",
+        "body": [
+          "del(Policy, PolicyID=pid)"
+        ]
+      },
+      {
+        "signature": "void updatePolicyAmount(int pid, int amount)",
+        "body": [
+          "upd(Policy, PolicyID=pid, Amount, amount)"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getCustomerID(String name)",
+        "body": [
+          "pi([CustomerPOID], sigma(Name=name, Customer))"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getPolicy(int cid)",
+        "body": [
+          "pi([PolicyID, Amount], sigma(CustomerPOID=cid, join(Customer, Policy)))"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getPolicyByName(String name)",
+        "body": [
+          "pi([PolicyID, Amount], sigma(Name=name, join(Customer, Policy)))"
+        ]
+      }
+    ]
+  },
+  "target": {
+    "relations": [
+      "Customer(int CustomerPOID, String Name)",
+      "Policy(int PolicyID, int Amount)",
+      "Holds(int CustomerPOID_fk, int PolicyID_fk)"
+    ],
+    "primarykeys": [
+      "Customer(CustomerPOID)",
+      "Policy(PolicyID)"
+    ],
+    "foreignkeys": [
+      "Holds(CustomerPOID_fk) -> Customer(CustomerPOID)",
+      "Holds(PolicyID_fk) -> Policy(PolicyID)"
+    ],
+    "transactions": [
+      {
+        "signature": "void createCustomer(int cid, String name)",
+        "body": [
+          "ins(Customer, (cid, name))"
+        ]
+      },
+      {
+        "signature": "void createPolicy(int pid, int cid, int amount)",
+        "body": [
+          "ins(Holds, (cid, pid))",
+          "ins(Policy, (pid, amount))"
+        ]
+      },
+      {
+        "signature": "void deleteCustomer(int cid)",
+        "body": [
+          "del(Customer, CustomerPOID=cid)"
+        ]
+      },
+      {
+        "signature": "void deletePolicy(int pid)",
+        "body": [
+          "del(Holds, PolicyID_fk=pid)",
+          "del(Policy, PolicyID=pid)"
+        ]
+      },
+      {
+        "signature": "void updatePolicyAmount(int pid, int amount)",
+        "body": [
+          "upd(Policy, PolicyID=pid, Amount, amount)"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getCustomerID(String name)",
+        "body": [
+          "pi([CustomerPOID], sigma(Name=name, Customer))"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getPolicy(int cid)",
+        "body": [
+          "pi([PolicyID, Amount], sigma(CustomerPOID=cid, join(join(Customer, Holds), Policy)))"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getPolicyByName(String name)",
+        "body": [
+          "pi([PolicyID, Amount], sigma(Name=name, join(join(Customer, Holds), Policy)))"
+        ]
+      }
+    ]
+  }
+}

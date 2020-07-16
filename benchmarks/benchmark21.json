@@ -1,0 +1,1203 @@
+{
+  "source": {
+    "relations": [
+      "departments(int departments.id, String departments.name, int departments.user_id, String departments.active, String departments.created_at, String departments.updated_at)",
+      "fee_schedules(int fee_schedules.id, String fee_schedules.base_amount, String fee_schedules.amount_per_day, int fee_schedules.item_type_id, String fee_schedules.created_at, String fee_schedules.updated_at)",
+      "groups(int groups.id, String groups.name, String groups.description, String groups.created_at, String groups.updated_at)",
+      "groups_permissions(int groups_permissions.id, int groups_permissions.group_id, int groups_permissions.permission_id, String groups_permissions.created_at, String groups_permissions.updated_at)",
+      "groups_users(int groups_users.id, int groups_users.group_id, int groups_users.user_id, String groups_users.created_at, String groups_users.updated_at)",
+      "incidental_types(int incidental_types.id, String incidental_types.name, String incidental_types.description, String incidental_types.base, String incidental_types.modifier_amount, String incidental_types.modifier_description, String incidental_types.created_at, String incidental_types.updated_at)",
+      "incurred_incidentals(int incurred_incidentals.id, int incurred_incidentals.incidental_type_id, String incurred_incidentals.times_modified, String incurred_incidentals.notes, String incurred_incidentals.document, String incurred_incidentals.created_at, String incurred_incidentals.updated_at)",
+      "item_types(int item_types.id, String item_types.name, String item_types.disclaimer, int item_types.fee_schedule_id, String item_types.created_at, String item_types.updated_at)",
+      "permissions(int permissions.id, String permissions.controller, String permissions.action, String permissions.id_field, String permissions.created_at, String permissions.updated_at)",
+      "rentals(int rentals.id, String rentals.rental_status, int rentals.user_id, int rentals.department_id, int rentals.reservation_id, int rentals.item_type_id, String rentals.start_date, String rentals.end_date, String rentals.checked_in_at, String rentals.checked_out_at, String rentals.created_at, String rentals.updated_at)",
+      "users(int users.id, String users.first_name, String users.last_name, String users.email, int users.phone, int users.spire_id, int users.department_id, String users.active, String users.created_at, String users.updated_at)",
+      "versions(int versions.id, String versions.item_type, int versions.item_id, String versions.event, String versions.whodunnit, String versions.object, String versions.created_at)"
+    ],
+    "primarykeys": [
+      "departments(departments.id)",
+      "fee_schedules(fee_schedules.id)",
+      "groups(groups.id)",
+      "groups_permissions(groups_permissions.id)",
+      "groups_users(groups_users.id)",
+      "incidental_types(incidental_types.id)",
+      "incurred_incidentals(incurred_incidentals.id)",
+      "item_types(item_types.id)",
+      "permissions(permissions.id)",
+      "rentals(rentals.id)",
+      "users(users.id)",
+      "versions(versions.id)"
+    ],
+    "foreignkeys": [
+      "departments(departments.user_id) -> users(users.id)",
+      "fee_schedules(fee_schedules.item_type_id) -> item_types(item_types.id)",
+      "groups_permissions(groups_permissions.group_id) -> groups(groups.id)",
+      "groups_permissions(groups_permissions.permission_id) -> permissions(permissions.id)",
+      "groups_users(groups_users.group_id) -> groups(groups.id)",
+      "groups_users(groups_users.user_id) -> users(users.id)",
+      "incurred_incidentals(incurred_incidentals.incidental_type_id) -> incidental_types(incidental_types.id)",
+      "item_types(item_types.fee_schedule_id) -> fee_schedules(fee_schedules.id)",
+      "rentals(rentals.user_id) -> users(users.id)",
+      "rentals(rentals.department_id) -> departments(departments.id)",
+      "rentals(rentals.item_type_id) -> item_types(item_types.id)",
+      "users(users.department_id) -> departments(departments.id)"
+    ],
+    "transactions": [
+      {
+        "signature": "void createDepartment(int id, String name, int user_id, String active, String created_at, String updated_at)",
+        "body": [
+          "ins(departments, (id, name, user_id, active, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteDepartment(int id)",
+        "body": [
+          "del(departments, departments.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateDepartment(int id, String name, int user_id, String active, String updated_at)",
+        "body": [
+          "upd(departments, departments.id=id, departments.name, name)",
+          "upd(departments, departments.id=id, departments.user_id, user_id)",
+          "upd(departments, departments.id=id, departments.active, active)",
+          "upd(departments, departments.id=id, departments.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readDepartment(int id)",
+        "body": [
+          "pi([departments.name, departments.user_id, departments.active], sigma(departments.id=id, departments))"
+        ]
+      },
+      {
+        "signature": "void readDepartmentCreateTime(int id)",
+        "body": [
+          "pi([departments.created_at], sigma(departments.id=id, departments))"
+        ]
+      },
+      {
+        "signature": "void readDepartmentUpdateTime(int id)",
+        "body": [
+          "pi([departments.updated_at], sigma(departments.id=id, departments))"
+        ]
+      },
+      {
+        "signature": "void createGroup(int id, String name, String description, String created_at, String updated_at)",
+        "body": [
+          "ins(groups, (id, name, description, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteGroup(int id)",
+        "body": [
+          "del(groups, groups.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateGroup(int id, String name, String description, String updated_at)",
+        "body": [
+          "upd(groups, groups.id=id, groups.name, name)",
+          "upd(groups, groups.id=id, groups.description, description)",
+          "upd(groups, groups.id=id, groups.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readGroup(int id)",
+        "body": [
+          "pi([groups.name, groups.description], sigma(groups.id=id, groups))"
+        ]
+      },
+      {
+        "signature": "void readGroupCreateTime(int id)",
+        "body": [
+          "pi([groups.created_at], sigma(groups.id=id, groups))"
+        ]
+      },
+      {
+        "signature": "void readGroupUpdateTime(int id)",
+        "body": [
+          "pi([groups.updated_at], sigma(groups.id=id, groups))"
+        ]
+      },
+      {
+        "signature": "void createGroupPermission(int id, int group_id, int permission_id, String created_at, String updated_at)",
+        "body": [
+          "ins(groups_permissions, (id, group_id, permission_id, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteGroupPermission(int id)",
+        "body": [
+          "del(groups_permissions, groups_permissions.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateGroupPermission(int id, int group_id, int permission_id, String updated_at)",
+        "body": [
+          "upd(groups_permissions, groups_permissions.id=id, groups_permissions.group_id, group_id)",
+          "upd(groups_permissions, groups_permissions.id=id, groups_permissions.permission_id, permission_id)",
+          "upd(groups_permissions, groups_permissions.id=id, groups_permissions.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readGroupPermission(int id)",
+        "body": [
+          "pi([groups_permissions.group_id, groups_permissions.permission_id], sigma(groups_permissions.id=id, groups_permissions))"
+        ]
+      },
+      {
+        "signature": "void readGroupPermissionCreateTime(int id)",
+        "body": [
+          "pi([groups_permissions.created_at], sigma(groups_permissions.id=id, groups_permissions))"
+        ]
+      },
+      {
+        "signature": "void readGroupPermissionUpdateTime(int id)",
+        "body": [
+          "pi([groups_permissions.updated_at], sigma(groups_permissions.id=id, groups_permissions))"
+        ]
+      },
+      {
+        "signature": "void createGroupUser(int id, int group_id, int user_id, String created_at, String updated_at)",
+        "body": [
+          "ins(groups_users, (id, group_id, user_id, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteGroupUser(int id)",
+        "body": [
+          "del(groups_users, groups_users.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateGroupUser(int id, int group_id, int user_id, String updated_at)",
+        "body": [
+          "upd(groups_users, groups_users.id=id, groups_users.group_id, group_id)",
+          "upd(groups_users, groups_users.id=id, groups_users.user_id, user_id)",
+          "upd(groups_users, groups_users.id=id, groups_users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readGroupUser(int id)",
+        "body": [
+          "pi([groups_users.group_id, groups_users.user_id], sigma(groups_users.id=id, groups_users))"
+        ]
+      },
+      {
+        "signature": "void readGroupUserCreateTime(int id)",
+        "body": [
+          "pi([groups_users.created_at], sigma(groups_users.id=id, groups_users))"
+        ]
+      },
+      {
+        "signature": "void readGroupUserUpdateTime(int id)",
+        "body": [
+          "pi([groups_users.updated_at], sigma(groups_users.id=id, groups_users))"
+        ]
+      },
+      {
+        "signature": "void createIncidentalType(int id, String name, String description, String base, String modifier_amount, String modifier_description, String created_at, String updated_at)",
+        "body": [
+          "ins(incidental_types, (id, name, description, base, modifier_amount, modifier_description, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteIncidentalType(int id)",
+        "body": [
+          "del(incidental_types, incidental_types.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateIncidentalType(int id, String name, String description, String base, String modifier_amount, String modifier_description, String updated_at)",
+        "body": [
+          "upd(incidental_types, incidental_types.id=id, incidental_types.name, name)",
+          "upd(incidental_types, incidental_types.id=id, incidental_types.description, description)",
+          "upd(incidental_types, incidental_types.id=id, incidental_types.base, base)",
+          "upd(incidental_types, incidental_types.id=id, incidental_types.modifier_amount, modifier_amount)",
+          "upd(incidental_types, incidental_types.id=id, incidental_types.modifier_description, modifier_description)",
+          "upd(incidental_types, incidental_types.id=id, incidental_types.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readIncidentalType(int id)",
+        "body": [
+          "pi([incidental_types.name, incidental_types.description, incidental_types.base, incidental_types.modifier_amount, incidental_types.modifier_description], sigma(incidental_types.id=id, incidental_types))"
+        ]
+      },
+      {
+        "signature": "void readIncidentalTypeCreateTime(int id)",
+        "body": [
+          "pi([incidental_types.created_at], sigma(incidental_types.id=id, incidental_types))"
+        ]
+      },
+      {
+        "signature": "void readIncidentalTypeUpdateTime(int id)",
+        "body": [
+          "pi([incidental_types.updated_at], sigma(incidental_types.id=id, incidental_types))"
+        ]
+      },
+      {
+        "signature": "void createIncurredIncidental(int id, int incidental_type_id, String times_modified, String notes, String document, String created_at, String updated_at)",
+        "body": [
+          "ins(incurred_incidentals, (id, incidental_type_id, times_modified, notes, document, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteIncurredIncidental(int id)",
+        "body": [
+          "del(incurred_incidentals, incurred_incidentals.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateIncurredIncidental(int id, int incidental_type_id, String times_modified, String notes, String document, String updated_at)",
+        "body": [
+          "upd(incurred_incidentals, incurred_incidentals.id=id, incurred_incidentals.incidental_type_id, incidental_type_id)",
+          "upd(incurred_incidentals, incurred_incidentals.id=id, incurred_incidentals.times_modified, times_modified)",
+          "upd(incurred_incidentals, incurred_incidentals.id=id, incurred_incidentals.notes, notes)",
+          "upd(incurred_incidentals, incurred_incidentals.id=id, incurred_incidentals.document, document)",
+          "upd(incurred_incidentals, incurred_incidentals.id=id, incurred_incidentals.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readIncurredIncidental(int id)",
+        "body": [
+          "pi([incurred_incidentals.incidental_type_id, incurred_incidentals.times_modified, incurred_incidentals.notes, incurred_incidentals.document], sigma(incurred_incidentals.id=id, incurred_incidentals))"
+        ]
+      },
+      {
+        "signature": "void readIncurredIncidentalCreateTime(int id)",
+        "body": [
+          "pi([incurred_incidentals.created_at], sigma(incurred_incidentals.id=id, incurred_incidentals))"
+        ]
+      },
+      {
+        "signature": "void readIncurredIncidentalUpdateTime(int id)",
+        "body": [
+          "pi([incurred_incidentals.updated_at], sigma(incurred_incidentals.id=id, incurred_incidentals))"
+        ]
+      },
+      {
+        "signature": "void createItemType(int id, String name, String disclaimer, String base_amount, String amount_per_day, String created_at, String updated_at)",
+        "body": [
+          "ins(fee_schedules, (UUID_x1, base_amount, amount_per_day, id, UUID_f_created_at, UUID_f_updated_at))",
+          "ins(item_types, (id, name, disclaimer, UUID_x1, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteItemType(int id)",
+        "body": [
+          "del(fee_schedules, in(fee_schedules.id, pi([item_types.fee_schedule_id], sigma(item_types.id=id, item_types))))",
+          "del(item_types, item_types.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateItemType(int id, String name, String disclaimer, String base_amount, String amount_per_day, String updated_at)",
+        "body": [
+          "upd(item_types, item_types.id=id, item_types.name, name)",
+          "upd(item_types, item_types.id=id, item_types.disclaimer, disclaimer)",
+          "upd(fee_schedules, in(fee_schedules.id, pi([item_types.fee_schedule_id], sigma(item_types.id=id, item_types))), fee_schedules.base_amount, base_amount)",
+          "upd(fee_schedules, in(fee_schedules.id, pi([item_types.fee_schedule_id], sigma(item_types.id=id, item_types))), fee_schedules.amount_per_day, amount_per_day)",
+          "upd(fee_schedules, in(fee_schedules.id, pi([item_types.fee_schedule_id], sigma(item_types.id=id, item_types))), fee_schedules.updated_at, updated_at)",
+          "upd(item_types, item_types.id=id, item_types.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readItemType(int id)",
+        "body": [
+          "pi([item_types.name, item_types.disclaimer, fee_schedules.base_amount, fee_schedules.amount_per_day], sigma(item_types.id=id, join(item_types, fee_schedules)))"
+        ]
+      },
+      {
+        "signature": "void readItemTypeCreateTime(int id)",
+        "body": [
+          "pi([item_types.created_at], sigma(item_types.id=id, item_types))"
+        ]
+      },
+      {
+        "signature": "void readItemTypeUpdateTime(int id)",
+        "body": [
+          "pi([item_types.updated_at], sigma(item_types.id=id, item_types))"
+        ]
+      },
+      {
+        "signature": "void createPermission(int id, String controller, String action, String id_field, String created_at, String updated_at)",
+        "body": [
+          "ins(permissions, (id, controller, action, id_field, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deletePermission(int id)",
+        "body": [
+          "del(permissions, permissions.id=id)"
+        ]
+      },
+      {
+        "signature": "void updatePermission(int id, String controller, String action, String id_field, String updated_at)",
+        "body": [
+          "upd(permissions, permissions.id=id, permissions.controller, controller)",
+          "upd(permissions, permissions.id=id, permissions.action, action)",
+          "upd(permissions, permissions.id=id, permissions.id_field, id_field)",
+          "upd(permissions, permissions.id=id, permissions.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readPermission(int id)",
+        "body": [
+          "pi([permissions.controller, permissions.action, permissions.id_field], sigma(permissions.id=id, permissions))"
+        ]
+      },
+      {
+        "signature": "void readPermissionCreateTime(int id)",
+        "body": [
+          "pi([permissions.created_at], sigma(permissions.id=id, permissions))"
+        ]
+      },
+      {
+        "signature": "void readPermissionUpdateTime(int id)",
+        "body": [
+          "pi([permissions.updated_at], sigma(permissions.id=id, permissions))"
+        ]
+      },
+      {
+        "signature": "void createRental(int id, String rental_status, int user_id, int department_id, int reservation_id, int item_type_id, String start_date, String end_date, String checked_in_at, String checked_out_at, String created_at, String updated_at)",
+        "body": [
+          "ins(rentals, (id, rental_status, user_id, department_id, reservation_id, item_type_id, start_date, end_date, checked_in_at, checked_out_at, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteRental(int id)",
+        "body": [
+          "del(rentals, rentals.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateRental(int id, String rental_status, int user_id, int department_id, int reservation_id, int item_type_id, String start_date, String end_date, String checked_in_at, String checked_out_at, String updated_at)",
+        "body": [
+          "upd(rentals, rentals.id=id, rentals.rental_status, rental_status)",
+          "upd(rentals, rentals.id=id, rentals.user_id, user_id)",
+          "upd(rentals, rentals.id=id, rentals.department_id, department_id)",
+          "upd(rentals, rentals.id=id, rentals.reservation_id, reservation_id)",
+          "upd(rentals, rentals.id=id, rentals.item_type_id, item_type_id)",
+          "upd(rentals, rentals.id=id, rentals.start_date, start_date)",
+          "upd(rentals, rentals.id=id, rentals.end_date, end_date)",
+          "upd(rentals, rentals.id=id, rentals.checked_in_at, checked_in_at)",
+          "upd(rentals, rentals.id=id, rentals.checked_out_at, checked_out_at)",
+          "upd(rentals, rentals.id=id, rentals.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readRental(int id)",
+        "body": [
+          "pi([rentals.rental_status, rentals.user_id, rentals.department_id, rentals.reservation_id, rentals.item_type_id, rentals.start_date, rentals.end_date, rentals.checked_in_at, rentals.checked_out_at], sigma(rentals.id=id, rentals))"
+        ]
+      },
+      {
+        "signature": "void readRentalCreateTime(int id)",
+        "body": [
+          "pi([rentals.created_at], sigma(rentals.id=id, rentals))"
+        ]
+      },
+      {
+        "signature": "void readRentalUpdateTime(int id)",
+        "body": [
+          "pi([rentals.updated_at], sigma(rentals.id=id, rentals))"
+        ]
+      },
+      {
+        "signature": "void createUser(int id, String first_name, String last_name, String email, int phone, int spire_id, int department_id, String active, String created_at, String updated_at)",
+        "body": [
+          "ins(users, (id, first_name, last_name, email, phone, spire_id, department_id, active, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteUser(int id)",
+        "body": [
+          "del(users, users.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateUser(int id, String first_name, String last_name, String email, int phone, int spire_id, int department_id, String active, String updated_at)",
+        "body": [
+          "upd(users, users.id=id, users.first_name, first_name)",
+          "upd(users, users.id=id, users.last_name, last_name)",
+          "upd(users, users.id=id, users.email, email)",
+          "upd(users, users.id=id, users.phone, phone)",
+          "upd(users, users.id=id, users.spire_id, spire_id)",
+          "upd(users, users.id=id, users.department_id, department_id)",
+          "upd(users, users.id=id, users.active, active)",
+          "upd(users, users.id=id, users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readUser(int id)",
+        "body": [
+          "pi([users.first_name, users.last_name, users.email, users.phone, users.spire_id, users.department_id, users.active], sigma(users.id=id, users))"
+        ]
+      },
+      {
+        "signature": "void readUserCreateTime(int id)",
+        "body": [
+          "pi([users.created_at], sigma(users.id=id, users))"
+        ]
+      },
+      {
+        "signature": "void readUserUpdateTime(int id)",
+        "body": [
+          "pi([users.updated_at], sigma(users.id=id, users))"
+        ]
+      },
+      {
+        "signature": "void createVersion(int id, String item_type, int item_id, String event, String whodunnit, String object, String created_at)",
+        "body": [
+          "ins(versions, (id, item_type, item_id, event, whodunnit, object, created_at))"
+        ]
+      },
+      {
+        "signature": "void deleteVersion(int id)",
+        "body": [
+          "del(versions, versions.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateVersion(int id, String item_type, int item_id, String event, String whodunnit, String object)",
+        "body": [
+          "upd(versions, versions.id=id, versions.item_type, item_type)",
+          "upd(versions, versions.id=id, versions.item_id, item_id)",
+          "upd(versions, versions.id=id, versions.event, event)",
+          "upd(versions, versions.id=id, versions.whodunnit, whodunnit)",
+          "upd(versions, versions.id=id, versions.object, object)"
+        ]
+      },
+      {
+        "signature": "void readVersion(int id)",
+        "body": [
+          "pi([versions.item_type, versions.item_id, versions.event, versions.whodunnit, versions.object], sigma(versions.id=id, versions))"
+        ]
+      },
+      {
+        "signature": "void readVersionCreateTime(int id)",
+        "body": [
+          "pi([versions.created_at], sigma(versions.id=id, versions))"
+        ]
+      },
+      {
+        "signature": "void readDepartmentUser(int id)",
+        "body": [
+          "pi([users.id, users.first_name, users.last_name, users.email, users.phone, users.spire_id, users.department_id, users.active], sigma(departments.id=id, join(departments, users)))"
+        ]
+      },
+      {
+        "signature": "void readUserDepartment(int id)",
+        "body": [
+          "pi([departments.id, departments.name, departments.user_id, departments.active], sigma(users.id=id, join(departments, users)))"
+        ]
+      },
+      {
+        "signature": "void readGroupPermissionGroup(int id)",
+        "body": [
+          "pi([groups.id, groups.name, groups.description], sigma(groups_permissions.id=id, join(groups_permissions, groups)))"
+        ]
+      },
+      {
+        "signature": "void readGroupGroupPermission(int id)",
+        "body": [
+          "pi([groups_permissions.id, groups_permissions.group_id, groups_permissions.permission_id], sigma(groups.id=id, join(groups_permissions, groups)))"
+        ]
+      },
+      {
+        "signature": "void readGroupPermissionPermission(int id)",
+        "body": [
+          "pi([permissions.id, permissions.controller, permissions.action, permissions.id_field], sigma(groups_permissions.id=id, join(groups_permissions, permissions)))"
+        ]
+      },
+      {
+        "signature": "void readPermissionGroupPermission(int id)",
+        "body": [
+          "pi([groups_permissions.id, groups_permissions.group_id, groups_permissions.permission_id], sigma(permissions.id=id, join(groups_permissions, permissions)))"
+        ]
+      },
+      {
+        "signature": "void readGroupUserGroup(int id)",
+        "body": [
+          "pi([groups.id, groups.name, groups.description], sigma(groups_users.id=id, join(groups_users, groups)))"
+        ]
+      },
+      {
+        "signature": "void readGroupGroupUser(int id)",
+        "body": [
+          "pi([groups_users.id, groups_users.group_id, groups_users.user_id], sigma(groups.id=id, join(groups_users, groups)))"
+        ]
+      },
+      {
+        "signature": "void readGroupUserUser(int id)",
+        "body": [
+          "pi([users.id, users.first_name, users.last_name, users.email, users.phone, users.spire_id, users.department_id, users.active], sigma(groups_users.id=id, join(groups_users, users)))"
+        ]
+      },
+      {
+        "signature": "void readUserGroupUser(int id)",
+        "body": [
+          "pi([groups_users.id, groups_users.group_id, groups_users.user_id], sigma(users.id=id, join(groups_users, users)))"
+        ]
+      },
+      {
+        "signature": "void readIncurredIncidentalIncidentalType(int id)",
+        "body": [
+          "pi([incidental_types.id, incidental_types.name, incidental_types.description, incidental_types.base, incidental_types.modifier_amount, incidental_types.modifier_description], sigma(incurred_incidentals.id=id, join(incurred_incidentals, incidental_types)))"
+        ]
+      },
+      {
+        "signature": "void readIncidentalTypeIncurredIncidental(int id)",
+        "body": [
+          "pi([incurred_incidentals.id, incurred_incidentals.incidental_type_id, incurred_incidentals.times_modified, incurred_incidentals.notes, incurred_incidentals.document], sigma(incidental_types.id=id, join(incurred_incidentals, incidental_types)))"
+        ]
+      },
+      {
+        "signature": "void readRentalUser(int id)",
+        "body": [
+          "pi([users.id, users.first_name, users.last_name, users.email, users.phone, users.spire_id, users.department_id, users.active], sigma(rentals.id=id, join(rentals, users)))"
+        ]
+      },
+      {
+        "signature": "void readUserRental(int id)",
+        "body": [
+          "pi([rentals.id, rentals.rental_status, rentals.user_id, rentals.department_id, rentals.reservation_id, rentals.item_type_id, rentals.start_date, rentals.end_date, rentals.checked_in_at, rentals.checked_out_at], sigma(users.id=id, join(rentals, users)))"
+        ]
+      },
+      {
+        "signature": "void readRentalDepartment(int id)",
+        "body": [
+          "pi([departments.id, departments.name, departments.user_id, departments.active], sigma(rentals.id=id, join(rentals, departments)))"
+        ]
+      },
+      {
+        "signature": "void readDepartmentRental(int id)",
+        "body": [
+          "pi([rentals.id, rentals.rental_status, rentals.user_id, rentals.department_id, rentals.reservation_id, rentals.item_type_id, rentals.start_date, rentals.end_date, rentals.checked_in_at, rentals.checked_out_at], sigma(departments.id=id, join(rentals, departments)))"
+        ]
+      },
+      {
+        "signature": "void readRentalItemType(int id)",
+        "body": [
+          "pi([item_types.id, item_types.name, item_types.disclaimer, fee_schedules.base_amount, fee_schedules.amount_per_day], sigma(rentals.id=id, join(join(rentals, item_types), fee_schedules)))"
+        ]
+      },
+      {
+        "signature": "void readItemTypeRental(int id)",
+        "body": [
+          "pi([rentals.id, rentals.rental_status, rentals.user_id, rentals.department_id, rentals.reservation_id, rentals.item_type_id, rentals.start_date, rentals.end_date, rentals.checked_in_at, rentals.checked_out_at], sigma(item_types.id=id, join(rentals, item_types)))"
+        ]
+      },
+      {
+        "signature": "void readUserDepartment(int id)",
+        "body": [
+          "pi([departments.id, departments.name, departments.user_id, departments.active], sigma(users.id=id, join(users, departments)))"
+        ]
+      },
+      {
+        "signature": "void readDepartmentUser(int id)",
+        "body": [
+          "pi([users.id, users.first_name, users.last_name, users.email, users.phone, users.spire_id, users.department_id, users.active], sigma(departments.id=id, join(users, departments)))"
+        ]
+      }
+    ]
+  },
+  "target": {
+    "relations": [
+      "departments(int departments.id, String departments.name, int departments.user_id, String departments.active, String departments.created_at, String departments.updated_at)",
+      "groups(int groups.id, String groups.name, String groups.description, String groups.created_at, String groups.updated_at)",
+      "groups_permissions(int groups_permissions.id, int groups_permissions.group_id, int groups_permissions.permission_id, String groups_permissions.created_at, String groups_permissions.updated_at)",
+      "groups_users(int groups_users.id, int groups_users.group_id, int groups_users.user_id, String groups_users.created_at, String groups_users.updated_at)",
+      "incidental_types(int incidental_types.id, String incidental_types.name, String incidental_types.description, String incidental_types.base, String incidental_types.modifier_amount, String incidental_types.modifier_description, String incidental_types.created_at, String incidental_types.updated_at)",
+      "incurred_incidentals(int incurred_incidentals.id, int incurred_incidentals.incidental_type_id, String incurred_incidentals.times_modified, String incurred_incidentals.notes, String incurred_incidentals.document, String incurred_incidentals.created_at, String incurred_incidentals.updated_at)",
+      "item_types(int item_types.id, String item_types.name, String item_types.disclaimer, String item_types.base_fee, String item_types.fee_per_day, String item_types.created_at, String item_types.updated_at)",
+      "permissions(int permissions.id, String permissions.controller, String permissions.action, String permissions.id_field, String permissions.created_at, String permissions.updated_at)",
+      "rentals(int rentals.id, String rentals.rental_status, int rentals.user_id, int rentals.department_id, int rentals.reservation_id, int rentals.item_type_id, String rentals.start_date, String rentals.end_date, String rentals.checked_in_at, String rentals.checked_out_at, String rentals.created_at, String rentals.updated_at)",
+      "users(int users.id, String users.first_name, String users.last_name, String users.email, int users.phone, int users.spire_id, int users.department_id, String users.active, String users.created_at, String users.updated_at)",
+      "versions(int versions.id, String versions.item_type, int versions.item_id, String versions.event, String versions.whodunnit, String versions.object, String versions.created_at)"
+    ],
+    "primarykeys": [
+      "departments(departments.id)",
+      "groups(groups.id)",
+      "groups_permissions(groups_permissions.id)",
+      "groups_users(groups_users.id)",
+      "incidental_types(incidental_types.id)",
+      "incurred_incidentals(incurred_incidentals.id)",
+      "item_types(item_types.id)",
+      "permissions(permissions.id)",
+      "rentals(rentals.id)",
+      "users(users.id)",
+      "versions(versions.id)"
+    ],
+    "foreignkeys": [
+      "departments(departments.user_id) -> users(users.id)",
+      "groups_permissions(groups_permissions.group_id) -> groups(groups.id)",
+      "groups_permissions(groups_permissions.permission_id) -> permissions(permissions.id)",
+      "groups_users(groups_users.group_id) -> groups(groups.id)",
+      "groups_users(groups_users.user_id) -> users(users.id)",
+      "incurred_incidentals(incurred_incidentals.incidental_type_id) -> incidental_types(incidental_types.id)",
+      "rentals(rentals.user_id) -> users(users.id)",
+      "rentals(rentals.department_id) -> departments(departments.id)",
+      "rentals(rentals.item_type_id) -> item_types(item_types.id)",
+      "users(users.department_id) -> departments(departments.id)"
+    ],
+    "transactions": [
+      {
+        "signature": "void createDepartment(int id, String name, int user_id, String active, String created_at, String updated_at)",
+        "body": [
+          "ins(departments, (id, name, user_id, active, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteDepartment(int id)",
+        "body": [
+          "del(departments, departments.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateDepartment(int id, String name, int user_id, String active, String updated_at)",
+        "body": [
+          "upd(departments, departments.id=id, departments.name, name)",
+          "upd(departments, departments.id=id, departments.user_id, user_id)",
+          "upd(departments, departments.id=id, departments.active, active)",
+          "upd(departments, departments.id=id, departments.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readDepartment(int id)",
+        "body": [
+          "pi([departments.name, departments.user_id, departments.active], sigma(departments.id=id, departments))"
+        ]
+      },
+      {
+        "signature": "void readDepartmentCreateTime(int id)",
+        "body": [
+          "pi([departments.created_at], sigma(departments.id=id, departments))"
+        ]
+      },
+      {
+        "signature": "void readDepartmentUpdateTime(int id)",
+        "body": [
+          "pi([departments.updated_at], sigma(departments.id=id, departments))"
+        ]
+      },
+      {
+        "signature": "void createGroup(int id, String name, String description, String created_at, String updated_at)",
+        "body": [
+          "ins(groups, (id, name, description, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteGroup(int id)",
+        "body": [
+          "del(groups, groups.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateGroup(int id, String name, String description, String updated_at)",
+        "body": [
+          "upd(groups, groups.id=id, groups.name, name)",
+          "upd(groups, groups.id=id, groups.description, description)",
+          "upd(groups, groups.id=id, groups.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readGroup(int id)",
+        "body": [
+          "pi([groups.name, groups.description], sigma(groups.id=id, groups))"
+        ]
+      },
+      {
+        "signature": "void readGroupCreateTime(int id)",
+        "body": [
+          "pi([groups.created_at], sigma(groups.id=id, groups))"
+        ]
+      },
+      {
+        "signature": "void readGroupUpdateTime(int id)",
+        "body": [
+          "pi([groups.updated_at], sigma(groups.id=id, groups))"
+        ]
+      },
+      {
+        "signature": "void createGroupPermission(int id, int group_id, int permission_id, String created_at, String updated_at)",
+        "body": [
+          "ins(groups_permissions, (id, group_id, permission_id, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteGroupPermission(int id)",
+        "body": [
+          "del(groups_permissions, groups_permissions.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateGroupPermission(int id, int group_id, int permission_id, String updated_at)",
+        "body": [
+          "upd(groups_permissions, groups_permissions.id=id, groups_permissions.group_id, group_id)",
+          "upd(groups_permissions, groups_permissions.id=id, groups_permissions.permission_id, permission_id)",
+          "upd(groups_permissions, groups_permissions.id=id, groups_permissions.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readGroupPermission(int id)",
+        "body": [
+          "pi([groups_permissions.group_id, groups_permissions.permission_id], sigma(groups_permissions.id=id, groups_permissions))"
+        ]
+      },
+      {
+        "signature": "void readGroupPermissionCreateTime(int id)",
+        "body": [
+          "pi([groups_permissions.created_at], sigma(groups_permissions.id=id, groups_permissions))"
+        ]
+      },
+      {
+        "signature": "void readGroupPermissionUpdateTime(int id)",
+        "body": [
+          "pi([groups_permissions.updated_at], sigma(groups_permissions.id=id, groups_permissions))"
+        ]
+      },
+      {
+        "signature": "void createGroupUser(int id, int group_id, int user_id, String created_at, String updated_at)",
+        "body": [
+          "ins(groups_users, (id, group_id, user_id, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteGroupUser(int id)",
+        "body": [
+          "del(groups_users, groups_users.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateGroupUser(int id, int group_id, int user_id, String updated_at)",
+        "body": [
+          "upd(groups_users, groups_users.id=id, groups_users.group_id, group_id)",
+          "upd(groups_users, groups_users.id=id, groups_users.user_id, user_id)",
+          "upd(groups_users, groups_users.id=id, groups_users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readGroupUser(int id)",
+        "body": [
+          "pi([groups_users.group_id, groups_users.user_id], sigma(groups_users.id=id, groups_users))"
+        ]
+      },
+      {
+        "signature": "void readGroupUserCreateTime(int id)",
+        "body": [
+          "pi([groups_users.created_at], sigma(groups_users.id=id, groups_users))"
+        ]
+      },
+      {
+        "signature": "void readGroupUserUpdateTime(int id)",
+        "body": [
+          "pi([groups_users.updated_at], sigma(groups_users.id=id, groups_users))"
+        ]
+      },
+      {
+        "signature": "void createIncidentalType(int id, String name, String description, String base, String modifier_amount, String modifier_description, String created_at, String updated_at)",
+        "body": [
+          "ins(incidental_types, (id, name, description, base, modifier_amount, modifier_description, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteIncidentalType(int id)",
+        "body": [
+          "del(incidental_types, incidental_types.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateIncidentalType(int id, String name, String description, String base, String modifier_amount, String modifier_description, String updated_at)",
+        "body": [
+          "upd(incidental_types, incidental_types.id=id, incidental_types.name, name)",
+          "upd(incidental_types, incidental_types.id=id, incidental_types.description, description)",
+          "upd(incidental_types, incidental_types.id=id, incidental_types.base, base)",
+          "upd(incidental_types, incidental_types.id=id, incidental_types.modifier_amount, modifier_amount)",
+          "upd(incidental_types, incidental_types.id=id, incidental_types.modifier_description, modifier_description)",
+          "upd(incidental_types, incidental_types.id=id, incidental_types.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readIncidentalType(int id)",
+        "body": [
+          "pi([incidental_types.name, incidental_types.description, incidental_types.base, incidental_types.modifier_amount, incidental_types.modifier_description], sigma(incidental_types.id=id, incidental_types))"
+        ]
+      },
+      {
+        "signature": "void readIncidentalTypeCreateTime(int id)",
+        "body": [
+          "pi([incidental_types.created_at], sigma(incidental_types.id=id, incidental_types))"
+        ]
+      },
+      {
+        "signature": "void readIncidentalTypeUpdateTime(int id)",
+        "body": [
+          "pi([incidental_types.updated_at], sigma(incidental_types.id=id, incidental_types))"
+        ]
+      },
+      {
+        "signature": "void createIncurredIncidental(int id, int incidental_type_id, String times_modified, String notes, String document, String created_at, String updated_at)",
+        "body": [
+          "ins(incurred_incidentals, (id, incidental_type_id, times_modified, notes, document, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteIncurredIncidental(int id)",
+        "body": [
+          "del(incurred_incidentals, incurred_incidentals.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateIncurredIncidental(int id, int incidental_type_id, String times_modified, String notes, String document, String updated_at)",
+        "body": [
+          "upd(incurred_incidentals, incurred_incidentals.id=id, incurred_incidentals.incidental_type_id, incidental_type_id)",
+          "upd(incurred_incidentals, incurred_incidentals.id=id, incurred_incidentals.times_modified, times_modified)",
+          "upd(incurred_incidentals, incurred_incidentals.id=id, incurred_incidentals.notes, notes)",
+          "upd(incurred_incidentals, incurred_incidentals.id=id, incurred_incidentals.document, document)",
+          "upd(incurred_incidentals, incurred_incidentals.id=id, incurred_incidentals.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readIncurredIncidental(int id)",
+        "body": [
+          "pi([incurred_incidentals.incidental_type_id, incurred_incidentals.times_modified, incurred_incidentals.notes, incurred_incidentals.document], sigma(incurred_incidentals.id=id, incurred_incidentals))"
+        ]
+      },
+      {
+        "signature": "void readIncurredIncidentalCreateTime(int id)",
+        "body": [
+          "pi([incurred_incidentals.created_at], sigma(incurred_incidentals.id=id, incurred_incidentals))"
+        ]
+      },
+      {
+        "signature": "void readIncurredIncidentalUpdateTime(int id)",
+        "body": [
+          "pi([incurred_incidentals.updated_at], sigma(incurred_incidentals.id=id, incurred_incidentals))"
+        ]
+      },
+      {
+        "signature": "void createItemType(int id, String name, String disclaimer, String base_amount, String amount_per_day, String created_at, String updated_at)",
+        "body": [
+          "ins(item_types, (id, name, disclaimer, base_amount, amount_per_day, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteItemType(int id)",
+        "body": [
+          "del(item_types, item_types.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateItemType(int id, String name, String disclaimer, String base_amount, String amount_per_day, String updated_at)",
+        "body": [
+          "upd(item_types, item_types.id=id, item_types.name, name)",
+          "upd(item_types, item_types.id=id, item_types.disclaimer, disclaimer)",
+          "upd(item_types, item_types.id=id, item_types.base_fee, base_amount)",
+          "upd(item_types, item_types.id=id, item_types.fee_per_day, amount_per_day)",
+          "upd(item_types, item_types.id=id, item_types.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readItemType(int id)",
+        "body": [
+          "pi([item_types.name, item_types.disclaimer, item_types.base_fee, item_types.fee_per_day], sigma(item_types.id=id, item_types))"
+        ]
+      },
+      {
+        "signature": "void readItemTypeCreateTime(int id)",
+        "body": [
+          "pi([item_types.created_at], sigma(item_types.id=id, item_types))"
+        ]
+      },
+      {
+        "signature": "void readItemTypeUpdateTime(int id)",
+        "body": [
+          "pi([item_types.updated_at], sigma(item_types.id=id, item_types))"
+        ]
+      },
+      {
+        "signature": "void createPermission(int id, String controller, String action, String id_field, String created_at, String updated_at)",
+        "body": [
+          "ins(permissions, (id, controller, action, id_field, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deletePermission(int id)",
+        "body": [
+          "del(permissions, permissions.id=id)"
+        ]
+      },
+      {
+        "signature": "void updatePermission(int id, String controller, String action, String id_field, String updated_at)",
+        "body": [
+          "upd(permissions, permissions.id=id, permissions.controller, controller)",
+          "upd(permissions, permissions.id=id, permissions.action, action)",
+          "upd(permissions, permissions.id=id, permissions.id_field, id_field)",
+          "upd(permissions, permissions.id=id, permissions.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readPermission(int id)",
+        "body": [
+          "pi([permissions.controller, permissions.action, permissions.id_field], sigma(permissions.id=id, permissions))"
+        ]
+      },
+      {
+        "signature": "void readPermissionCreateTime(int id)",
+        "body": [
+          "pi([permissions.created_at], sigma(permissions.id=id, permissions))"
+        ]
+      },
+      {
+        "signature": "void readPermissionUpdateTime(int id)",
+        "body": [
+          "pi([permissions.updated_at], sigma(permissions.id=id, permissions))"
+        ]
+      },
+      {
+        "signature": "void createRental(int id, String rental_status, int user_id, int department_id, int reservation_id, int item_type_id, String start_date, String end_date, String checked_in_at, String checked_out_at, String created_at, String updated_at)",
+        "body": [
+          "ins(rentals, (id, rental_status, user_id, department_id, reservation_id, item_type_id, start_date, end_date, checked_in_at, checked_out_at, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteRental(int id)",
+        "body": [
+          "del(rentals, rentals.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateRental(int id, String rental_status, int user_id, int department_id, int reservation_id, int item_type_id, String start_date, String end_date, String checked_in_at, String checked_out_at, String updated_at)",
+        "body": [
+          "upd(rentals, rentals.id=id, rentals.rental_status, rental_status)",
+          "upd(rentals, rentals.id=id, rentals.user_id, user_id)",
+          "upd(rentals, rentals.id=id, rentals.department_id, department_id)",
+          "upd(rentals, rentals.id=id, rentals.reservation_id, reservation_id)",
+          "upd(rentals, rentals.id=id, rentals.item_type_id, item_type_id)",
+          "upd(rentals, rentals.id=id, rentals.start_date, start_date)",
+          "upd(rentals, rentals.id=id, rentals.end_date, end_date)",
+          "upd(rentals, rentals.id=id, rentals.checked_in_at, checked_in_at)",
+          "upd(rentals, rentals.id=id, rentals.checked_out_at, checked_out_at)",
+          "upd(rentals, rentals.id=id, rentals.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readRental(int id)",
+        "body": [
+          "pi([rentals.rental_status, rentals.user_id, rentals.department_id, rentals.reservation_id, rentals.item_type_id, rentals.start_date, rentals.end_date, rentals.checked_in_at, rentals.checked_out_at], sigma(rentals.id=id, rentals))"
+        ]
+      },
+      {
+        "signature": "void readRentalCreateTime(int id)",
+        "body": [
+          "pi([rentals.created_at], sigma(rentals.id=id, rentals))"
+        ]
+      },
+      {
+        "signature": "void readRentalUpdateTime(int id)",
+        "body": [
+          "pi([rentals.updated_at], sigma(rentals.id=id, rentals))"
+        ]
+      },
+      {
+        "signature": "void createUser(int id, String first_name, String last_name, String email, int phone, int spire_id, int department_id, String active, String created_at, String updated_at)",
+        "body": [
+          "ins(users, (id, first_name, last_name, email, phone, spire_id, department_id, active, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteUser(int id)",
+        "body": [
+          "del(users, users.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateUser(int id, String first_name, String last_name, String email, int phone, int spire_id, int department_id, String active, String updated_at)",
+        "body": [
+          "upd(users, users.id=id, users.first_name, first_name)",
+          "upd(users, users.id=id, users.last_name, last_name)",
+          "upd(users, users.id=id, users.email, email)",
+          "upd(users, users.id=id, users.phone, phone)",
+          "upd(users, users.id=id, users.spire_id, spire_id)",
+          "upd(users, users.id=id, users.department_id, department_id)",
+          "upd(users, users.id=id, users.active, active)",
+          "upd(users, users.id=id, users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readUser(int id)",
+        "body": [
+          "pi([users.first_name, users.last_name, users.email, users.phone, users.spire_id, users.department_id, users.active], sigma(users.id=id, users))"
+        ]
+      },
+      {
+        "signature": "void readUserCreateTime(int id)",
+        "body": [
+          "pi([users.created_at], sigma(users.id=id, users))"
+        ]
+      },
+      {
+        "signature": "void readUserUpdateTime(int id)",
+        "body": [
+          "pi([users.updated_at], sigma(users.id=id, users))"
+        ]
+      },
+      {
+        "signature": "void createVersion(int id, String item_type, int item_id, String event, String whodunnit, String object, String created_at)",
+        "body": [
+          "ins(versions, (id, item_type, item_id, event, whodunnit, object, created_at))"
+        ]
+      },
+      {
+        "signature": "void deleteVersion(int id)",
+        "body": [
+          "del(versions, versions.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateVersion(int id, String item_type, int item_id, String event, String whodunnit, String object)",
+        "body": [
+          "upd(versions, versions.id=id, versions.item_type, item_type)",
+          "upd(versions, versions.id=id, versions.item_id, item_id)",
+          "upd(versions, versions.id=id, versions.event, event)",
+          "upd(versions, versions.id=id, versions.whodunnit, whodunnit)",
+          "upd(versions, versions.id=id, versions.object, object)"
+        ]
+      },
+      {
+        "signature": "void readVersion(int id)",
+        "body": [
+          "pi([versions.item_type, versions.item_id, versions.event, versions.whodunnit, versions.object], sigma(versions.id=id, versions))"
+        ]
+      },
+      {
+        "signature": "void readVersionCreateTime(int id)",
+        "body": [
+          "pi([versions.created_at], sigma(versions.id=id, versions))"
+        ]
+      },
+      {
+        "signature": "void readDepartmentUser(int id)",
+        "body": [
+          "pi([users.id, users.first_name, users.last_name, users.email, users.phone, users.spire_id, users.department_id, users.active], sigma(departments.id=id, join(departments, users)))"
+        ]
+      },
+      {
+        "signature": "void readUserDepartment(int id)",
+        "body": [
+          "pi([departments.id, departments.name, departments.user_id, departments.active], sigma(users.id=id, join(departments, users)))"
+        ]
+      },
+      {
+        "signature": "void readGroupPermissionGroup(int id)",
+        "body": [
+          "pi([groups.id, groups.name, groups.description], sigma(groups_permissions.id=id, join(groups_permissions, groups)))"
+        ]
+      },
+      {
+        "signature": "void readGroupGroupPermission(int id)",
+        "body": [
+          "pi([groups_permissions.id, groups_permissions.group_id, groups_permissions.permission_id], sigma(groups.id=id, join(groups_permissions, groups)))"
+        ]
+      },
+      {
+        "signature": "void readGroupPermissionPermission(int id)",
+        "body": [
+          "pi([permissions.id, permissions.controller, permissions.action, permissions.id_field], sigma(groups_permissions.id=id, join(groups_permissions, permissions)))"
+        ]
+      },
+      {
+        "signature": "void readPermissionGroupPermission(int id)",
+        "body": [
+          "pi([groups_permissions.id, groups_permissions.group_id, groups_permissions.permission_id], sigma(permissions.id=id, join(groups_permissions, permissions)))"
+        ]
+      },
+      {
+        "signature": "void readGroupUserGroup(int id)",
+        "body": [
+          "pi([groups.id, groups.name, groups.description], sigma(groups_users.id=id, join(groups_users, groups)))"
+        ]
+      },
+      {
+        "signature": "void readGroupGroupUser(int id)",
+        "body": [
+          "pi([groups_users.id, groups_users.group_id, groups_users.user_id], sigma(groups.id=id, join(groups_users, groups)))"
+        ]
+      },
+      {
+        "signature": "void readGroupUserUser(int id)",
+        "body": [
+          "pi([users.id, users.first_name, users.last_name, users.email, users.phone, users.spire_id, users.department_id, users.active], sigma(groups_users.id=id, join(groups_users, users)))"
+        ]
+      },
+      {
+        "signature": "void readUserGroupUser(int id)",
+        "body": [
+          "pi([groups_users.id, groups_users.group_id, groups_users.user_id], sigma(users.id=id, join(groups_users, users)))"
+        ]
+      },
+      {
+        "signature": "void readIncurredIncidentalIncidentalType(int id)",
+        "body": [
+          "pi([incidental_types.id, incidental_types.name, incidental_types.description, incidental_types.base, incidental_types.modifier_amount, incidental_types.modifier_description], sigma(incurred_incidentals.id=id, join(incurred_incidentals, incidental_types)))"
+        ]
+      },
+      {
+        "signature": "void readIncidentalTypeIncurredIncidental(int id)",
+        "body": [
+          "pi([incurred_incidentals.id, incurred_incidentals.incidental_type_id, incurred_incidentals.times_modified, incurred_incidentals.notes, incurred_incidentals.document], sigma(incidental_types.id=id, join(incurred_incidentals, incidental_types)))"
+        ]
+      },
+      {
+        "signature": "void readRentalUser(int id)",
+        "body": [
+          "pi([users.id, users.first_name, users.last_name, users.email, users.phone, users.spire_id, users.department_id, users.active], sigma(rentals.id=id, join(rentals, users)))"
+        ]
+      },
+      {
+        "signature": "void readUserRental(int id)",
+        "body": [
+          "pi([rentals.id, rentals.rental_status, rentals.user_id, rentals.department_id, rentals.reservation_id, rentals.item_type_id, rentals.start_date, rentals.end_date, rentals.checked_in_at, rentals.checked_out_at], sigma(users.id=id, join(rentals, users)))"
+        ]
+      },
+      {
+        "signature": "void readRentalDepartment(int id)",
+        "body": [
+          "pi([departments.id, departments.name, departments.user_id, departments.active], sigma(rentals.id=id, join(rentals, departments)))"
+        ]
+      },
+      {
+        "signature": "void readDepartmentRental(int id)",
+        "body": [
+          "pi([rentals.id, rentals.rental_status, rentals.user_id, rentals.department_id, rentals.reservation_id, rentals.item_type_id, rentals.start_date, rentals.end_date, rentals.checked_in_at, rentals.checked_out_at], sigma(departments.id=id, join(rentals, departments)))"
+        ]
+      },
+      {
+        "signature": "void readRentalItemType(int id)",
+        "body": [
+          "pi([item_types.id, item_types.name, item_types.disclaimer, item_types.base_fee, item_types.fee_per_day], sigma(rentals.id=id, join(rentals, item_types)))"
+        ]
+      },
+      {
+        "signature": "void readItemTypeRental(int id)",
+        "body": [
+          "pi([rentals.id, rentals.rental_status, rentals.user_id, rentals.department_id, rentals.reservation_id, rentals.item_type_id, rentals.start_date, rentals.end_date, rentals.checked_in_at, rentals.checked_out_at], sigma(item_types.id=id, join(rentals, item_types)))"
+        ]
+      },
+      {
+        "signature": "void readUserDepartment(int id)",
+        "body": [
+          "pi([departments.id, departments.name, departments.user_id, departments.active], sigma(users.id=id, join(users, departments)))"
+        ]
+      },
+      {
+        "signature": "void readDepartmentUser(int id)",
+        "body": [
+          "pi([users.id, users.first_name, users.last_name, users.email, users.phone, users.spire_id, users.department_id, users.active], sigma(departments.id=id, join(users, departments)))"
+        ]
+      }
+    ]
+  }
+}

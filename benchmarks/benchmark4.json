@@ -1,0 +1,150 @@
+{
+  "source": {
+    "relations": [
+      "Employee(int EmployeeNumber, String Name, String PhoneNumber)",
+      "EmployeeIdentification(int EmployeeNumber_fk, String Picture, String VoicePrint, String RetinalPrint)"
+    ],
+    "primarykeys": [
+      "Employee(EmployeeNumber)",
+      "EmployeeIdentification(EmployeeNumber_fk)"
+    ],
+    "foreignkeys": [
+      "EmployeeIdentification(EmployeeNumber_fk) -> Employee(EmployeeNumber)"
+    ],
+    "transactions": [
+      {
+        "signature": "void createEmployee(int eid, String name, String phone, String pic, String voice, String retinal)",
+        "body": [
+          "ins(Employee, (eid, name, phone))",
+          "ins(EmployeeIdentification, (eid, pic, voice, retinal))"
+        ]
+      },
+      {
+        "signature": "void deleteEmployee(int eid)",
+        "body": [
+          "del(Employee, EmployeeNumber=eid)",
+          "del(EmployeeIdentification, EmployeeNumber_fk=eid)"
+        ]
+      },
+      {
+        "signature": "void updateEmpPhone(int eid, String phone)",
+        "body": [
+          "upd(Employee, EmployeeNumber=eid, PhoneNumber, phone)"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getEmployeeNumber(String name)",
+        "body": [
+          "pi([EmployeeNumber], sigma(Name=name, Employee))"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getEmpName(int eid)",
+        "body": [
+          "pi([Name], sigma(EmployeeNumber=eid, Employee))"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getEmpPhone(int eid)",
+        "body": [
+          "pi([PhoneNumber], sigma(EmployeeNumber=eid, Employee))"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getEmpPicture(int eid)",
+        "body": [
+          "pi([Picture], sigma(EmployeeNumber_fk=eid, EmployeeIdentification))"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getEmpVoice(int eid)",
+        "body": [
+          "pi([VoicePrint], sigma(EmployeeNumber_fk=eid, EmployeeIdentification))"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getEmpRetina(int eid)",
+        "body": [
+          "pi([RetinalPrint], sigma(EmployeeNumber_fk=eid, EmployeeIdentification))"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getEmployeeInfo(int eid)",
+        "body": [
+          "pi([Name, PhoneNumber, Picture, VoicePrint, RetinalPrint], sigma(EmployeeNumber=eid, join(Employee, EmployeeIdentification)))"
+        ]
+      }
+    ]
+  },
+  "target": {
+    "relations": [
+      "Employee(int EmployeeNumber, String Name, String PhoneNumber, String Picture, String VoicePrint, String RetinalPrint)"
+    ],
+    "primarykeys": [
+      "Employee(EmployeeNumber)"
+    ],
+    "foreignkeys": [],
+    "transactions": [
+      {
+        "signature": "void createEmployee(int eid, String name, String phone, String pic, String voice, String retinal)",
+        "body": [
+          "ins(Employee, (eid, name, phone, pic, voice, retinal))"
+        ]
+      },
+      {
+        "signature": "void deleteEmployee(int eid)",
+        "body": [
+          "del(Employee, EmployeeNumber=eid)"
+        ]
+      },
+      {
+        "signature": "void updateEmpPhone(int eid, String phone)",
+        "body": [
+          "upd(Employee, EmployeeNumber=eid, PhoneNumber, phone)"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getEmployeeNumber(String name)",
+        "body": [
+          "pi([EmployeeNumber], sigma(Name=name, Employee))"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getEmpName(int eid)",
+        "body": [
+          "pi([Name], sigma(EmployeeNumber=eid, Employee))"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getEmpPhone(int eid)",
+        "body": [
+          "pi([PhoneNumber], sigma(EmployeeNumber=eid, Employee))"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getEmpPicture(int eid)",
+        "body": [
+          "pi([Picture], sigma(EmployeeNumber=eid, Employee))"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getEmpVoice(int eid)",
+        "body": [
+          "pi([VoicePrint], sigma(EmployeeNumber=eid, Employee))"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getEmpRetina(int eid)",
+        "body": [
+          "pi([RetinalPrint], sigma(EmployeeNumber=eid, Employee))"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getEmployeeInfo(int eid)",
+        "body": [
+          "pi([Name, PhoneNumber, Picture, VoicePrint, RetinalPrint], sigma(EmployeeNumber=eid, Employee))"
+        ]
+      }
+    ]
+  }
+}

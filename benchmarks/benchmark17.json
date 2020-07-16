@@ -1,0 +1,826 @@
+{
+  "source": {
+    "relations": [
+      "carts(int carts.id, String carts.created_at, String carts.updated_at, int carts.user_id)",
+      "categories(int categories.id, String categories.title, String categories.description, String categories.created_at, String categories.updated_at)",
+      "item_categories(int item_categories.id, int item_categories.item_id, int item_categories.category_id, String item_categories.created_at, String item_categories.updated_at)",
+      "items(int items.id, String items.title, String items.description, String items.price, String items.created_at, String items.updated_at, String items.image_file_name, String items.image_content_type, int items.image_file_size, String items.image_updated_at, String items.available, String items.status)",
+      "line_items(int line_items.id, int line_items.item_id, int line_items.cart_id, int line_items.quantity, String line_items.created_at, String line_items.updated_at)",
+      "orders(int orders.id, int orders.user_id, String orders.status, String orders.pickup_or_delivery, String orders.street_number, String orders.street, String orders.city, String orders.state, String orders.zip, String orders.created_at, String orders.updated_at, String orders.line_items)",
+      "users(int users.id, String users.name, String users.password_digest, String users.created_at, String users.updated_at, String users.admin, String users.email, String users.username)"
+    ],
+    "primarykeys": [
+      "carts(carts.id)",
+      "categories(categories.id)",
+      "item_categories(item_categories.id)",
+      "items(items.id)",
+      "line_items(line_items.id)",
+      "orders(orders.id)",
+      "users(users.id)"
+    ],
+    "foreignkeys": [
+      "carts(carts.user_id) -> users(users.id)",
+      "item_categories(item_categories.item_id) -> items(items.id)",
+      "item_categories(item_categories.category_id) -> categories(categories.id)",
+      "line_items(line_items.item_id) -> items(items.id)",
+      "line_items(line_items.cart_id) -> carts(carts.id)",
+      "orders(orders.user_id) -> users(users.id)"
+    ],
+    "transactions": [
+      {
+        "signature": "void createCart(int id, String created_at, String updated_at, int user_id)",
+        "body": [
+          "ins(carts, (id, created_at, updated_at, user_id))"
+        ]
+      },
+      {
+        "signature": "void deleteCart(int id)",
+        "body": [
+          "del(carts, carts.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateCart(int id, String updated_at, int user_id)",
+        "body": [
+          "upd(carts, carts.id=id, carts.updated_at, updated_at)",
+          "upd(carts, carts.id=id, carts.user_id, user_id)"
+        ]
+      },
+      {
+        "signature": "void readCart(int id)",
+        "body": [
+          "pi([carts.user_id], sigma(carts.id=id, carts))"
+        ]
+      },
+      {
+        "signature": "void readCartCreateTime(int id)",
+        "body": [
+          "pi([carts.created_at], sigma(carts.id=id, carts))"
+        ]
+      },
+      {
+        "signature": "void readCartUpdateTime(int id)",
+        "body": [
+          "pi([carts.updated_at], sigma(carts.id=id, carts))"
+        ]
+      },
+      {
+        "signature": "void createCategory(int id, String title, String description, String created_at, String updated_at)",
+        "body": [
+          "ins(categories, (id, title, description, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteCategory(int id)",
+        "body": [
+          "del(categories, categories.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateCategory(int id, String title, String description, String updated_at)",
+        "body": [
+          "upd(categories, categories.id=id, categories.title, title)",
+          "upd(categories, categories.id=id, categories.description, description)",
+          "upd(categories, categories.id=id, categories.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readCategory(int id)",
+        "body": [
+          "pi([categories.title, categories.description], sigma(categories.id=id, categories))"
+        ]
+      },
+      {
+        "signature": "void readCategoryCreateTime(int id)",
+        "body": [
+          "pi([categories.created_at], sigma(categories.id=id, categories))"
+        ]
+      },
+      {
+        "signature": "void readCategoryUpdateTime(int id)",
+        "body": [
+          "pi([categories.updated_at], sigma(categories.id=id, categories))"
+        ]
+      },
+      {
+        "signature": "void createItemCategory(int id, int item_id, int category_id, String created_at, String updated_at)",
+        "body": [
+          "ins(item_categories, (id, item_id, category_id, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteItemCategory(int id)",
+        "body": [
+          "del(item_categories, item_categories.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateItemCategory(int id, int item_id, int category_id, String updated_at)",
+        "body": [
+          "upd(item_categories, item_categories.id=id, item_categories.item_id, item_id)",
+          "upd(item_categories, item_categories.id=id, item_categories.category_id, category_id)",
+          "upd(item_categories, item_categories.id=id, item_categories.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readItemCategory(int id)",
+        "body": [
+          "pi([item_categories.item_id, item_categories.category_id], sigma(item_categories.id=id, item_categories))"
+        ]
+      },
+      {
+        "signature": "void readItemCategoryCreateTime(int id)",
+        "body": [
+          "pi([item_categories.created_at], sigma(item_categories.id=id, item_categories))"
+        ]
+      },
+      {
+        "signature": "void readItemCategoryUpdateTime(int id)",
+        "body": [
+          "pi([item_categories.updated_at], sigma(item_categories.id=id, item_categories))"
+        ]
+      },
+      {
+        "signature": "void createItem(int id, String title, String description, String price, String created_at, String updated_at, String image_file_name, String image_content_type, int image_file_size, String image_updated_at, String available, String status)",
+        "body": [
+          "ins(items, (id, title, description, price, created_at, updated_at, image_file_name, image_content_type, image_file_size, image_updated_at, available, status))"
+        ]
+      },
+      {
+        "signature": "void deleteItem(int id)",
+        "body": [
+          "del(items, items.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateItem(int id, String title, String description, String price, String updated_at, String image_file_name, String image_content_type, int image_file_size, String image_updated_at, String available, String status)",
+        "body": [
+          "upd(items, items.id=id, items.title, title)",
+          "upd(items, items.id=id, items.description, description)",
+          "upd(items, items.id=id, items.price, price)",
+          "upd(items, items.id=id, items.updated_at, updated_at)",
+          "upd(items, items.id=id, items.image_file_name, image_file_name)",
+          "upd(items, items.id=id, items.image_content_type, image_content_type)",
+          "upd(items, items.id=id, items.image_file_size, image_file_size)",
+          "upd(items, items.id=id, items.image_updated_at, image_updated_at)",
+          "upd(items, items.id=id, items.available, available)",
+          "upd(items, items.id=id, items.status, status)"
+        ]
+      },
+      {
+        "signature": "void readItem(int id)",
+        "body": [
+          "pi([items.title, items.description, items.price, items.image_file_name, items.image_content_type, items.image_file_size, items.image_updated_at, items.available, items.status], sigma(items.id=id, items))"
+        ]
+      },
+      {
+        "signature": "void readItemCreateTime(int id)",
+        "body": [
+          "pi([items.created_at], sigma(items.id=id, items))"
+        ]
+      },
+      {
+        "signature": "void readItemUpdateTime(int id)",
+        "body": [
+          "pi([items.updated_at], sigma(items.id=id, items))"
+        ]
+      },
+      {
+        "signature": "void createLineItem(int id, int item_id, int cart_id, int quantity, String created_at, String updated_at)",
+        "body": [
+          "ins(line_items, (id, item_id, cart_id, quantity, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteLineItem(int id)",
+        "body": [
+          "del(line_items, line_items.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateLineItem(int id, int item_id, int cart_id, int quantity, String updated_at)",
+        "body": [
+          "upd(line_items, line_items.id=id, line_items.item_id, item_id)",
+          "upd(line_items, line_items.id=id, line_items.cart_id, cart_id)",
+          "upd(line_items, line_items.id=id, line_items.quantity, quantity)",
+          "upd(line_items, line_items.id=id, line_items.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readLineItem(int id)",
+        "body": [
+          "pi([line_items.item_id, line_items.cart_id, line_items.quantity], sigma(line_items.id=id, line_items))"
+        ]
+      },
+      {
+        "signature": "void readLineItemCreateTime(int id)",
+        "body": [
+          "pi([line_items.created_at], sigma(line_items.id=id, line_items))"
+        ]
+      },
+      {
+        "signature": "void readLineItemUpdateTime(int id)",
+        "body": [
+          "pi([line_items.updated_at], sigma(line_items.id=id, line_items))"
+        ]
+      },
+      {
+        "signature": "void createOrder(int id, int user_id, String status, String pickup_or_delivery, String street_number, String street, String city, String state, String zip, String created_at, String updated_at, String line_items)",
+        "body": [
+          "ins(orders, (id, user_id, status, pickup_or_delivery, street_number, street, city, state, zip, created_at, updated_at, line_items))"
+        ]
+      },
+      {
+        "signature": "void deleteOrder(int id)",
+        "body": [
+          "del(orders, orders.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateOrderStatus(int id, String status, String updated_at)",
+        "body": [
+          "upd(orders, orders.id=id, orders.status, status)",
+          "upd(orders, orders.id=id, orders.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateOrderPickup(int id, String pickup_or_delivery, String updated_at)",
+        "body": [
+          "upd(orders, orders.id=id, orders.pickup_or_delivery, pickup_or_delivery)",
+          "upd(orders, orders.id=id, orders.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateOrderLineItem(int id, String line_items, String updated_at)",
+        "body": [
+          "upd(orders, orders.id=id, orders.line_items, line_items)",
+          "upd(orders, orders.id=id, orders.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateOrderStreet(int id, String street_number, String street, String updated_at)",
+        "body": [
+          "upd(orders, orders.id=id, orders.street_number, street_number)",
+          "upd(orders, orders.id=id, orders.street, street)",
+          "upd(orders, orders.id=id, orders.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateOrderCity(int id, String city, String state, String zip, String updated_at)",
+        "body": [
+          "upd(orders, orders.id=id, orders.city, city)",
+          "upd(orders, orders.id=id, orders.state, state)",
+          "upd(orders, orders.id=id, orders.zip, zip)",
+          "upd(orders, orders.id=id, orders.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readOrder(int id)",
+        "body": [
+          "pi([orders.user_id, orders.status, orders.pickup_or_delivery, orders.street_number, orders.street, orders.city, orders.state, orders.zip, orders.line_items], sigma(orders.id=id, orders))"
+        ]
+      },
+      {
+        "signature": "void readOrderCreateTime(int id)",
+        "body": [
+          "pi([orders.created_at], sigma(orders.id=id, orders))"
+        ]
+      },
+      {
+        "signature": "void readOrderUpdateTime(int id)",
+        "body": [
+          "pi([orders.updated_at], sigma(orders.id=id, orders))"
+        ]
+      },
+      {
+        "signature": "void createUser(int id, String name, String password_digest, String created_at, String updated_at, String admin, String email, String username)",
+        "body": [
+          "ins(users, (id, name, password_digest, created_at, updated_at, admin, email, username))"
+        ]
+      },
+      {
+        "signature": "void deleteUser(int id)",
+        "body": [
+          "del(users, users.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateUser(int id, String name, String password_digest, String updated_at, String admin, String email, String username)",
+        "body": [
+          "upd(users, users.id=id, users.name, name)",
+          "upd(users, users.id=id, users.password_digest, password_digest)",
+          "upd(users, users.id=id, users.updated_at, updated_at)",
+          "upd(users, users.id=id, users.admin, admin)",
+          "upd(users, users.id=id, users.email, email)",
+          "upd(users, users.id=id, users.username, username)"
+        ]
+      },
+      {
+        "signature": "void readUser(int id)",
+        "body": [
+          "pi([users.name, users.password_digest, users.admin, users.email, users.username], sigma(users.id=id, users))"
+        ]
+      },
+      {
+        "signature": "void readUserCreateTime(int id)",
+        "body": [
+          "pi([users.created_at], sigma(users.id=id, users))"
+        ]
+      },
+      {
+        "signature": "void readUserUpdateTime(int id)",
+        "body": [
+          "pi([users.updated_at], sigma(users.id=id, users))"
+        ]
+      },
+      {
+        "signature": "void readCartUser(int id)",
+        "body": [
+          "pi([users.id, users.name, users.password_digest, users.admin, users.email, users.username], sigma(carts.id=id, join(carts, users)))"
+        ]
+      },
+      {
+        "signature": "void readUserCart(int id)",
+        "body": [
+          "pi([carts.id, carts.user_id], sigma(users.id=id, join(carts, users)))"
+        ]
+      },
+      {
+        "signature": "void readItemCategoryItem(int id)",
+        "body": [
+          "pi([items.id, items.title, items.description, items.price, items.image_file_name, items.image_content_type, items.image_file_size, items.image_updated_at, items.available, items.status], sigma(item_categories.id=id, join(item_categories, items)))"
+        ]
+      },
+      {
+        "signature": "void readItemItemCategory(int id)",
+        "body": [
+          "pi([item_categories.id, item_categories.item_id, item_categories.category_id], sigma(items.id=id, join(item_categories, items)))"
+        ]
+      },
+      {
+        "signature": "void readItemCategoryCategory(int id)",
+        "body": [
+          "pi([categories.id, categories.title, categories.description], sigma(item_categories.id=id, join(item_categories, categories)))"
+        ]
+      },
+      {
+        "signature": "void readCategoryItemCategory(int id)",
+        "body": [
+          "pi([item_categories.id, item_categories.item_id, item_categories.category_id], sigma(categories.id=id, join(item_categories, categories)))"
+        ]
+      },
+      {
+        "signature": "void readLineItemItem(int id)",
+        "body": [
+          "pi([items.id, items.title, items.description, items.price, items.image_file_name, items.image_content_type, items.image_file_size, items.image_updated_at, items.available, items.status], sigma(line_items.id=id, join(line_items, items)))"
+        ]
+      },
+      {
+        "signature": "void readItemLineItem(int id)",
+        "body": [
+          "pi([line_items.id, line_items.item_id, line_items.cart_id, line_items.quantity], sigma(items.id=id, join(line_items, items)))"
+        ]
+      },
+      {
+        "signature": "void readLineItemCart(int id)",
+        "body": [
+          "pi([carts.id, carts.user_id], sigma(line_items.id=id, join(line_items, carts)))"
+        ]
+      },
+      {
+        "signature": "void readCartLineItem(int id)",
+        "body": [
+          "pi([line_items.id, line_items.item_id, line_items.cart_id, line_items.quantity], sigma(carts.id=id, join(line_items, carts)))"
+        ]
+      },
+      {
+        "signature": "void readOrderUser(int id)",
+        "body": [
+          "pi([users.id, users.name, users.password_digest, users.admin, users.email, users.username], sigma(orders.id=id, join(orders, users)))"
+        ]
+      },
+      {
+        "signature": "void readUserOrder(int id)",
+        "body": [
+          "pi([orders.id, orders.user_id, orders.status, orders.pickup_or_delivery, orders.street_number, orders.street, orders.city, orders.state, orders.zip, orders.line_items], sigma(users.id=id, join(orders, users)))"
+        ]
+      }
+    ]
+  },
+  "target": {
+    "relations": [
+      "addresses(int addresses.id, int addresses.user_id, String addresses.street_number, String addresses.street, String addresses.city, String addresses.state, String addresses.zip, String addresses.created_at, String addresses.updated_at)",
+      "carts(int carts.id, String carts.created_at, String carts.updated_at, int carts.user_id)",
+      "categories(int categories.id, String categories.title, String categories.description, String categories.created_at, String categories.updated_at)",
+      "item_categories(int item_categories.id, int item_categories.item_id, int item_categories.category_id, String item_categories.created_at, String item_categories.updated_at)",
+      "items(int items.id, String items.title, String items.description, String items.price, String items.created_at, String items.updated_at, String items.image_file_name, String items.image_content_type, int items.image_file_size, String items.image_updated_at, String items.available, String items.status)",
+      "line_items(int line_items.id, int line_items.item_id, int line_items.cart_id, int line_items.quantity, String line_items.created_at, String line_items.updated_at)",
+      "orders(int orders.id, int orders.user_id, String orders.status, String orders.pickup_or_delivery, String orders.created_at, String orders.updated_at, String orders.line_items, int orders.address_id)",
+      "users(int users.id, String users.name, String users.password_digest, String users.created_at, String users.updated_at, String users.admin, String users.email, String users.username)"
+    ],
+    "primarykeys": [
+      "addresses(addresses.id)",
+      "carts(carts.id)",
+      "categories(categories.id)",
+      "item_categories(item_categories.id)",
+      "items(items.id)",
+      "line_items(line_items.id)",
+      "orders(orders.id)",
+      "users(users.id)"
+    ],
+    "foreignkeys": [
+      "carts(carts.user_id) -> users(users.id)",
+      "item_categories(item_categories.item_id) -> items(items.id)",
+      "item_categories(item_categories.category_id) -> categories(categories.id)",
+      "line_items(line_items.item_id) -> items(items.id)",
+      "line_items(line_items.cart_id) -> carts(carts.id)",
+      "orders(orders.user_id) -> users(users.id)",
+      "orders(orders.address_id) -> addresses(addresses.id)",
+      "addresses(addresses.user_id) -> users(users.id)"
+    ],
+    "transactions": [
+      {
+        "signature": "void createCart(int id, String created_at, String updated_at, int user_id)",
+        "body": [
+          "ins(carts, (id, created_at, updated_at, user_id))"
+        ]
+      },
+      {
+        "signature": "void deleteCart(int id)",
+        "body": [
+          "del(carts, carts.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateCart(int id, String updated_at, int user_id)",
+        "body": [
+          "upd(carts, carts.id=id, carts.updated_at, updated_at)",
+          "upd(carts, carts.id=id, carts.user_id, user_id)"
+        ]
+      },
+      {
+        "signature": "void readCart(int id)",
+        "body": [
+          "pi([carts.user_id], sigma(carts.id=id, carts))"
+        ]
+      },
+      {
+        "signature": "void readCartCreateTime(int id)",
+        "body": [
+          "pi([carts.created_at], sigma(carts.id=id, carts))"
+        ]
+      },
+      {
+        "signature": "void readCartUpdateTime(int id)",
+        "body": [
+          "pi([carts.updated_at], sigma(carts.id=id, carts))"
+        ]
+      },
+      {
+        "signature": "void createCategory(int id, String title, String description, String created_at, String updated_at)",
+        "body": [
+          "ins(categories, (id, title, description, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteCategory(int id)",
+        "body": [
+          "del(categories, categories.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateCategory(int id, String title, String description, String updated_at)",
+        "body": [
+          "upd(categories, categories.id=id, categories.title, title)",
+          "upd(categories, categories.id=id, categories.description, description)",
+          "upd(categories, categories.id=id, categories.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readCategory(int id)",
+        "body": [
+          "pi([categories.title, categories.description], sigma(categories.id=id, categories))"
+        ]
+      },
+      {
+        "signature": "void readCategoryCreateTime(int id)",
+        "body": [
+          "pi([categories.created_at], sigma(categories.id=id, categories))"
+        ]
+      },
+      {
+        "signature": "void readCategoryUpdateTime(int id)",
+        "body": [
+          "pi([categories.updated_at], sigma(categories.id=id, categories))"
+        ]
+      },
+      {
+        "signature": "void createItemCategory(int id, int item_id, int category_id, String created_at, String updated_at)",
+        "body": [
+          "ins(item_categories, (id, item_id, category_id, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteItemCategory(int id)",
+        "body": [
+          "del(item_categories, item_categories.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateItemCategory(int id, int item_id, int category_id, String updated_at)",
+        "body": [
+          "upd(item_categories, item_categories.id=id, item_categories.item_id, item_id)",
+          "upd(item_categories, item_categories.id=id, item_categories.category_id, category_id)",
+          "upd(item_categories, item_categories.id=id, item_categories.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readItemCategory(int id)",
+        "body": [
+          "pi([item_categories.item_id, item_categories.category_id], sigma(item_categories.id=id, item_categories))"
+        ]
+      },
+      {
+        "signature": "void readItemCategoryCreateTime(int id)",
+        "body": [
+          "pi([item_categories.created_at], sigma(item_categories.id=id, item_categories))"
+        ]
+      },
+      {
+        "signature": "void readItemCategoryUpdateTime(int id)",
+        "body": [
+          "pi([item_categories.updated_at], sigma(item_categories.id=id, item_categories))"
+        ]
+      },
+      {
+        "signature": "void createItem(int id, String title, String description, String price, String created_at, String updated_at, String image_file_name, String image_content_type, int image_file_size, String image_updated_at, String available, String status)",
+        "body": [
+          "ins(items, (id, title, description, price, created_at, updated_at, image_file_name, image_content_type, image_file_size, image_updated_at, available, status))"
+        ]
+      },
+      {
+        "signature": "void deleteItem(int id)",
+        "body": [
+          "del(items, items.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateItem(int id, String title, String description, String price, String updated_at, String image_file_name, String image_content_type, int image_file_size, String image_updated_at, String available, String status)",
+        "body": [
+          "upd(items, items.id=id, items.title, title)",
+          "upd(items, items.id=id, items.description, description)",
+          "upd(items, items.id=id, items.price, price)",
+          "upd(items, items.id=id, items.updated_at, updated_at)",
+          "upd(items, items.id=id, items.image_file_name, image_file_name)",
+          "upd(items, items.id=id, items.image_content_type, image_content_type)",
+          "upd(items, items.id=id, items.image_file_size, image_file_size)",
+          "upd(items, items.id=id, items.image_updated_at, image_updated_at)",
+          "upd(items, items.id=id, items.available, available)",
+          "upd(items, items.id=id, items.status, status)"
+        ]
+      },
+      {
+        "signature": "void readItem(int id)",
+        "body": [
+          "pi([items.title, items.description, items.price, items.image_file_name, items.image_content_type, items.image_file_size, items.image_updated_at, items.available, items.status], sigma(items.id=id, items))"
+        ]
+      },
+      {
+        "signature": "void readItemCreateTime(int id)",
+        "body": [
+          "pi([items.created_at], sigma(items.id=id, items))"
+        ]
+      },
+      {
+        "signature": "void readItemUpdateTime(int id)",
+        "body": [
+          "pi([items.updated_at], sigma(items.id=id, items))"
+        ]
+      },
+      {
+        "signature": "void createLineItem(int id, int item_id, int cart_id, int quantity, String created_at, String updated_at)",
+        "body": [
+          "ins(line_items, (id, item_id, cart_id, quantity, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteLineItem(int id)",
+        "body": [
+          "del(line_items, line_items.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateLineItem(int id, int item_id, int cart_id, int quantity, String updated_at)",
+        "body": [
+          "upd(line_items, line_items.id=id, line_items.item_id, item_id)",
+          "upd(line_items, line_items.id=id, line_items.cart_id, cart_id)",
+          "upd(line_items, line_items.id=id, line_items.quantity, quantity)",
+          "upd(line_items, line_items.id=id, line_items.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readLineItem(int id)",
+        "body": [
+          "pi([line_items.item_id, line_items.cart_id, line_items.quantity], sigma(line_items.id=id, line_items))"
+        ]
+      },
+      {
+        "signature": "void readLineItemCreateTime(int id)",
+        "body": [
+          "pi([line_items.created_at], sigma(line_items.id=id, line_items))"
+        ]
+      },
+      {
+        "signature": "void readLineItemUpdateTime(int id)",
+        "body": [
+          "pi([line_items.updated_at], sigma(line_items.id=id, line_items))"
+        ]
+      },
+      {
+        "signature": "void createOrder(int id, int user_id, String status, String pickup_or_delivery, String street_number, String street, String city, String state, String zip, String created_at, String updated_at, String line_items)",
+        "body": [
+          "ins(addresses, (UUID_x1, user_id, street_number, street, city, state, zip, created_at, updated_at))",
+          "ins(orders, (id, user_id, status, pickup_or_delivery, created_at, updated_at, line_items, UUID_x1))"
+        ]
+      },
+      {
+        "signature": "void deleteOrder(int id)",
+        "body": [
+          "del(addresses, in(addresses.id, pi([orders.address_id], sigma(orders.id=id, orders))))",
+          "del(orders, orders.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateOrderStatus(int id, String status, String updated_at)",
+        "body": [
+          "upd(orders, orders.id=id, orders.status, status)",
+          "upd(orders, orders.id=id, orders.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateOrderPickup(int id, String pickup_or_delivery, String updated_at)",
+        "body": [
+          "upd(orders, orders.id=id, orders.pickup_or_delivery, pickup_or_delivery)",
+          "upd(orders, orders.id=id, orders.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateOrderLineItem(int id, String line_items, String updated_at)",
+        "body": [
+          "upd(orders, orders.id=id, orders.line_items, line_items)",
+          "upd(orders, orders.id=id, orders.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateOrderStreet(int id, String street_number, String street, String zip, String updated_at)",
+        "body": [
+          "upd(addresses, in(addresses.id, pi([orders.address_id], sigma(orders.id=id, orders))), addresses.street_number, street_number)",
+          "upd(addresses, in(addresses.id, pi([orders.address_id], sigma(orders.id=id, orders))), addresses.street, street)",
+          "upd(addresses, in(addresses.id, pi([orders.address_id], sigma(orders.id=id, orders))), addresses.updated_at, updated_at)",
+          "upd(orders, orders.id=id, orders.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateOrderCity(int id, String city, String state, String zip, String updated_at)",
+        "body": [
+          "upd(addresses, in(addresses.id, pi([orders.address_id], sigma(orders.id=id, orders))), addresses.city, city)",
+          "upd(addresses, in(addresses.id, pi([orders.address_id], sigma(orders.id=id, orders))), addresses.state, state)",
+          "upd(addresses, in(addresses.id, pi([orders.address_id], sigma(orders.id=id, orders))), addresses.zip, zip)",
+          "upd(addresses, in(addresses.id, pi([orders.address_id], sigma(orders.id=id, orders))), addresses.updated_at, updated_at)",
+          "upd(orders, orders.id=id, orders.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readOrder(int id)",
+        "body": [
+          "pi([orders.user_id, orders.status, orders.pickup_or_delivery, addresses.street_number, addresses.street, addresses.city, addresses.state, addresses.zip, orders.line_items], sigma(orders.id=id, join(orders, addresses)))"
+        ]
+      },
+      {
+        "signature": "void readOrderCreateTime(int id)",
+        "body": [
+          "pi([orders.created_at], sigma(orders.id=id, orders))"
+        ]
+      },
+      {
+        "signature": "void readOrderUpdateTime(int id)",
+        "body": [
+          "pi([orders.updated_at], sigma(orders.id=id, orders))"
+        ]
+      },
+      {
+        "signature": "void createUser(int id, String name, String password_digest, String created_at, String updated_at, String admin, String email, String username)",
+        "body": [
+          "ins(users, (id, name, password_digest, created_at, updated_at, admin, email, username))"
+        ]
+      },
+      {
+        "signature": "void deleteUser(int id)",
+        "body": [
+          "del(users, users.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateUser(int id, String name, String password_digest, String updated_at, String admin, String email, String username)",
+        "body": [
+          "upd(users, users.id=id, users.name, name)",
+          "upd(users, users.id=id, users.password_digest, password_digest)",
+          "upd(users, users.id=id, users.updated_at, updated_at)",
+          "upd(users, users.id=id, users.admin, admin)",
+          "upd(users, users.id=id, users.email, email)",
+          "upd(users, users.id=id, users.username, username)"
+        ]
+      },
+      {
+        "signature": "void readUser(int id)",
+        "body": [
+          "pi([users.name, users.password_digest, users.admin, users.email, users.username], sigma(users.id=id, users))"
+        ]
+      },
+      {
+        "signature": "void readUserCreateTime(int id)",
+        "body": [
+          "pi([users.created_at], sigma(users.id=id, users))"
+        ]
+      },
+      {
+        "signature": "void readUserUpdateTime(int id)",
+        "body": [
+          "pi([users.updated_at], sigma(users.id=id, users))"
+        ]
+      },
+      {
+        "signature": "void readCartUser(int id)",
+        "body": [
+          "pi([users.id, users.name, users.password_digest, users.admin, users.email, users.username], sigma(carts.id=id, join(carts, users)))"
+        ]
+      },
+      {
+        "signature": "void readUserCart(int id)",
+        "body": [
+          "pi([carts.id, carts.user_id], sigma(users.id=id, join(carts, users)))"
+        ]
+      },
+      {
+        "signature": "void readItemCategoryItem(int id)",
+        "body": [
+          "pi([items.id, items.title, items.description, items.price, items.image_file_name, items.image_content_type, items.image_file_size, items.image_updated_at, items.available, items.status], sigma(item_categories.id=id, join(item_categories, items)))"
+        ]
+      },
+      {
+        "signature": "void readItemItemCategory(int id)",
+        "body": [
+          "pi([item_categories.id, item_categories.item_id, item_categories.category_id], sigma(items.id=id, join(item_categories, items)))"
+        ]
+      },
+      {
+        "signature": "void readItemCategoryCategory(int id)",
+        "body": [
+          "pi([categories.id, categories.title, categories.description], sigma(item_categories.id=id, join(item_categories, categories)))"
+        ]
+      },
+      {
+        "signature": "void readCategoryItemCategory(int id)",
+        "body": [
+          "pi([item_categories.id, item_categories.item_id, item_categories.category_id], sigma(categories.id=id, join(item_categories, categories)))"
+        ]
+      },
+      {
+        "signature": "void readLineItemItem(int id)",
+        "body": [
+          "pi([items.id, items.title, items.description, items.price, items.image_file_name, items.image_content_type, items.image_file_size, items.image_updated_at, items.available, items.status], sigma(line_items.id=id, join(line_items, items)))"
+        ]
+      },
+      {
+        "signature": "void readItemLineItem(int id)",
+        "body": [
+          "pi([line_items.id, line_items.item_id, line_items.cart_id, line_items.quantity], sigma(items.id=id, join(line_items, items)))"
+        ]
+      },
+      {
+        "signature": "void readLineItemCart(int id)",
+        "body": [
+          "pi([carts.id, carts.user_id], sigma(line_items.id=id, join(line_items, carts)))"
+        ]
+      },
+      {
+        "signature": "void readCartLineItem(int id)",
+        "body": [
+          "pi([line_items.id, line_items.item_id, line_items.cart_id, line_items.quantity], sigma(carts.id=id, join(line_items, carts)))"
+        ]
+      },
+      {
+        "signature": "void readOrderUser(int id)",
+        "body": [
+          "pi([users.id, users.name, users.password_digest, users.admin, users.email, users.username], sigma(orders.id=id, join(orders, users)))"
+        ]
+      },
+      {
+        "signature": "void readUserOrder(int id)",
+        "body": [
+          "pi([orders.id, orders.user_id, orders.status, orders.pickup_or_delivery, addresses.street_number, addresses.street, addresses.city, addresses.state, addresses.zip, orders.line_items], sigma(users.id=id, join(join(orders, users), addresses)))"
+        ]
+      }
+    ]
+  }
+}

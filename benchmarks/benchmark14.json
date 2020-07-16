@@ -1,0 +1,939 @@
+{
+  "source": {
+    "relations": [
+      "active_admin_comments(int active_admin_comments.id, String active_admin_comments.resource_id, String active_admin_comments.resource_type, int active_admin_comments.author_id, String active_admin_comments.author_type, String active_admin_comments.body, String active_admin_comments.created_at, String active_admin_comments.updated_at, String active_admin_comments.namespace)",
+      "admin_users(int admin_users.id, String admin_users.email, String admin_users.encrypted_password, String admin_users.reset_password_token, String admin_users.reset_password_sent_at, String admin_users.remember_created_at, int admin_users.sign_in_count, String admin_users.current_sign_in_at, String admin_users.last_sign_in_at, String admin_users.current_sign_in_ip, String admin_users.last_sign_in_ip, String admin_users.created_at, String admin_users.updated_at)",
+      "customers(int customers.id, String customers.first_name, String customers.last_name, String customers.address, String customers.city, String customers.postal_code, String customers.email, String customers.created_at, String customers.updated_at, int customers.province_id)",
+      "line_items(int line_items.id, int line_items.quantity, String line_items.price, String line_items.created_at, String line_items.updated_at, int line_items.order_id, int line_items.product_id)",
+      "orders(int orders.id, String orders.status, String orders.pst_rate, String orders.gst_rate, String orders.hst_rate, String orders.created_at, String orders.updated_at, int orders.customer_id)",
+      "products(int products.id, String products.name, String products.description, String products.price, int products.stock_quantity, String products.created_at, String products.updated_at, String products.category)",
+      "provinces(int provinces.id, String provinces.name, String provinces.pst, String provinces.gst, String provinces.hst, String provinces.created_at, String provinces.updated_at)",
+      "reviews(int reviews.id, String reviews.content, String reviews.rating, String reviews.created_at, String reviews.updated_at, int reviews.customer_id, int reviews.product_id)"
+    ],
+    "primarykeys": [
+      "active_admin_comments(active_admin_comments.id)",
+      "admin_users(admin_users.id)",
+      "customers(customers.id)",
+      "line_items(line_items.id)",
+      "orders(orders.id)",
+      "products(products.id)",
+      "provinces(provinces.id)",
+      "reviews(reviews.id)"
+    ],
+    "foreignkeys": [
+      "customers(customers.province_id) -> provinces(provinces.id)",
+      "line_items(line_items.order_id) -> orders(orders.id)",
+      "line_items(line_items.product_id) -> products(products.id)",
+      "orders(orders.customer_id) -> customers(customers.id)",
+      "reviews(reviews.customer_id) -> customers(customers.id)",
+      "reviews(reviews.product_id) -> products(products.id)"
+    ],
+    "transactions": [
+      {
+        "signature": "void createActiveAdminComment(int id, String resource_id, String resource_type, int author_id, String author_type, String body, String created_at, String updated_at, String namespace)",
+        "body": [
+          "ins(active_admin_comments, (id, resource_id, resource_type, author_id, author_type, body, created_at, updated_at, namespace))"
+        ]
+      },
+      {
+        "signature": "void deleteActiveAdminComment(int id)",
+        "body": [
+          "del(active_admin_comments, active_admin_comments.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateActiveAdminComment(int id, String resource_id, String resource_type, int author_id, String author_type, String body, String updated_at, String namespace)",
+        "body": [
+          "upd(active_admin_comments, active_admin_comments.id=id, active_admin_comments.resource_id, resource_id)",
+          "upd(active_admin_comments, active_admin_comments.id=id, active_admin_comments.resource_type, resource_type)",
+          "upd(active_admin_comments, active_admin_comments.id=id, active_admin_comments.author_id, author_id)",
+          "upd(active_admin_comments, active_admin_comments.id=id, active_admin_comments.author_type, author_type)",
+          "upd(active_admin_comments, active_admin_comments.id=id, active_admin_comments.body, body)",
+          "upd(active_admin_comments, active_admin_comments.id=id, active_admin_comments.updated_at, updated_at)",
+          "upd(active_admin_comments, active_admin_comments.id=id, active_admin_comments.namespace, namespace)"
+        ]
+      },
+      {
+        "signature": "void readActiveAdminComment(int id)",
+        "body": [
+          "pi([active_admin_comments.resource_id, active_admin_comments.resource_type, active_admin_comments.author_id, active_admin_comments.author_type, active_admin_comments.body, active_admin_comments.namespace], sigma(active_admin_comments.id=id, active_admin_comments))"
+        ]
+      },
+      {
+        "signature": "void readActiveAdminCommentCreateTime(int id)",
+        "body": [
+          "pi([active_admin_comments.created_at], sigma(active_admin_comments.id=id, active_admin_comments))"
+        ]
+      },
+      {
+        "signature": "void readActiveAdminCommentUpdateTime(int id)",
+        "body": [
+          "pi([active_admin_comments.updated_at], sigma(active_admin_comments.id=id, active_admin_comments))"
+        ]
+      },
+      {
+        "signature": "void createAdminUser(int id, String email, String encrypted_password, String reset_password_token, String reset_password_sent_at, String remember_created_at, int sign_in_count, String current_sign_in_at, String last_sign_in_at, String current_sign_in_ip, String last_sign_in_ip, String created_at, String updated_at)",
+        "body": [
+          "ins(admin_users, (id, email, encrypted_password, reset_password_token, reset_password_sent_at, remember_created_at, sign_in_count, current_sign_in_at, last_sign_in_at, current_sign_in_ip, last_sign_in_ip, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteAdminUser(int id)",
+        "body": [
+          "del(admin_users, admin_users.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateAdminUserEmail(int id, String email, String updated_at)",
+        "body": [
+          "upd(admin_users, admin_users.id=id, admin_users.email, email)",
+          "upd(admin_users, admin_users.id=id, admin_users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateAdminUserPassword(int id, String encrypted_password, String updated_at)",
+        "body": [
+          "upd(admin_users, admin_users.id=id, admin_users.encrypted_password, encrypted_password)",
+          "upd(admin_users, admin_users.id=id, admin_users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateAdminUserResetPassword(int id, String reset_password_token, String reset_password_sent_at, String updated_at)",
+        "body": [
+          "upd(admin_users, admin_users.id=id, admin_users.reset_password_token, reset_password_token)",
+          "upd(admin_users, admin_users.id=id, admin_users.reset_password_sent_at, reset_password_sent_at)",
+          "upd(admin_users, admin_users.id=id, admin_users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateAdminUserRememberCreatedAt(int id, String remember_created_at, String updated_at)",
+        "body": [
+          "upd(admin_users, admin_users.id=id, admin_users.remember_created_at, remember_created_at)",
+          "upd(admin_users, admin_users.id=id, admin_users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateUserSignIn(int id, int sign_in_count, String current_sign_in_at, String last_sign_in_at, String current_sign_in_ip, String last_sign_in_ip, String updated_at)",
+        "body": [
+          "upd(admin_users, admin_users.id=id, admin_users.sign_in_count, sign_in_count)",
+          "upd(admin_users, admin_users.id=id, admin_users.current_sign_in_at, current_sign_in_at)",
+          "upd(admin_users, admin_users.id=id, admin_users.last_sign_in_at, last_sign_in_at)",
+          "upd(admin_users, admin_users.id=id, admin_users.current_sign_in_ip, current_sign_in_ip)",
+          "upd(admin_users, admin_users.id=id, admin_users.last_sign_in_ip, last_sign_in_ip)",
+          "upd(admin_users, admin_users.id=id, admin_users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void findUserByEmail(String email)",
+        "body": [
+          "pi([admin_users.id], sigma(admin_users.email=email, admin_users))"
+        ]
+      },
+      {
+        "signature": "void readAdminUser(int id)",
+        "body": [
+          "pi([admin_users.email, admin_users.encrypted_password, admin_users.reset_password_token, admin_users.reset_password_sent_at, admin_users.remember_created_at, admin_users.sign_in_count, admin_users.current_sign_in_at, admin_users.last_sign_in_at, admin_users.current_sign_in_ip, admin_users.last_sign_in_ip], sigma(admin_users.id=id, admin_users))"
+        ]
+      },
+      {
+        "signature": "void readAdminUserCreateTime(int id)",
+        "body": [
+          "pi([admin_users.created_at], sigma(admin_users.id=id, admin_users))"
+        ]
+      },
+      {
+        "signature": "void readAdminUserUpdateTime(int id)",
+        "body": [
+          "pi([admin_users.updated_at], sigma(admin_users.id=id, admin_users))"
+        ]
+      },
+      {
+        "signature": "void createCustomer(int id, String first_name, String last_name, String address, String city, String postal_code, String email, String created_at, String updated_at, int province_id)",
+        "body": [
+          "ins(customers, (id, first_name, last_name, address, city, postal_code, email, created_at, updated_at, province_id))"
+        ]
+      },
+      {
+        "signature": "void deleteCustomer(int id)",
+        "body": [
+          "del(customers, customers.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateCustomer(int id, String first_name, String last_name, String address, String city, String postal_code, String email, String updated_at, int province_id)",
+        "body": [
+          "upd(customers, customers.id=id, customers.first_name, first_name)",
+          "upd(customers, customers.id=id, customers.last_name, last_name)",
+          "upd(customers, customers.id=id, customers.address, address)",
+          "upd(customers, customers.id=id, customers.city, city)",
+          "upd(customers, customers.id=id, customers.postal_code, postal_code)",
+          "upd(customers, customers.id=id, customers.email, email)",
+          "upd(customers, customers.id=id, customers.updated_at, updated_at)",
+          "upd(customers, customers.id=id, customers.province_id, province_id)"
+        ]
+      },
+      {
+        "signature": "void readCustomer(int id)",
+        "body": [
+          "pi([customers.first_name, customers.last_name, customers.address, customers.city, customers.postal_code, customers.email, customers.province_id], sigma(customers.id=id, customers))"
+        ]
+      },
+      {
+        "signature": "void readCustomerCreateTime(int id)",
+        "body": [
+          "pi([customers.created_at], sigma(customers.id=id, customers))"
+        ]
+      },
+      {
+        "signature": "void readCustomerUpdateTime(int id)",
+        "body": [
+          "pi([customers.updated_at], sigma(customers.id=id, customers))"
+        ]
+      },
+      {
+        "signature": "void createLineItem(int id, int quantity, String price, String created_at, String updated_at, int order_id, int product_id)",
+        "body": [
+          "ins(line_items, (id, quantity, price, created_at, updated_at, order_id, product_id))"
+        ]
+      },
+      {
+        "signature": "void deleteLineItem(int id)",
+        "body": [
+          "del(line_items, line_items.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateLineItem(int id, int quantity, String price, String updated_at, int order_id, int product_id)",
+        "body": [
+          "upd(line_items, line_items.id=id, line_items.quantity, quantity)",
+          "upd(line_items, line_items.id=id, line_items.price, price)",
+          "upd(line_items, line_items.id=id, line_items.updated_at, updated_at)",
+          "upd(line_items, line_items.id=id, line_items.order_id, order_id)",
+          "upd(line_items, line_items.id=id, line_items.product_id, product_id)"
+        ]
+      },
+      {
+        "signature": "void readLineItem(int id)",
+        "body": [
+          "pi([line_items.quantity, line_items.price, line_items.order_id, line_items.product_id], sigma(line_items.id=id, line_items))"
+        ]
+      },
+      {
+        "signature": "void readLineItemCreateTime(int id)",
+        "body": [
+          "pi([line_items.created_at], sigma(line_items.id=id, line_items))"
+        ]
+      },
+      {
+        "signature": "void readLineItemUpdateTime(int id)",
+        "body": [
+          "pi([line_items.updated_at], sigma(line_items.id=id, line_items))"
+        ]
+      },
+      {
+        "signature": "void createOrder(int id, String status, String pst_rate, String gst_rate, String hst_rate, String created_at, String updated_at, int customer_id)",
+        "body": [
+          "ins(orders, (id, status, pst_rate, gst_rate, hst_rate, created_at, updated_at, customer_id))"
+        ]
+      },
+      {
+        "signature": "void deleteOrder(int id)",
+        "body": [
+          "del(orders, orders.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateOrder(int id, String status, String pst_rate, String gst_rate, String hst_rate, String updated_at, int customer_id)",
+        "body": [
+          "upd(orders, orders.id=id, orders.status, status)",
+          "upd(orders, orders.id=id, orders.pst_rate, pst_rate)",
+          "upd(orders, orders.id=id, orders.gst_rate, gst_rate)",
+          "upd(orders, orders.id=id, orders.hst_rate, hst_rate)",
+          "upd(orders, orders.id=id, orders.updated_at, updated_at)",
+          "upd(orders, orders.id=id, orders.customer_id, customer_id)"
+        ]
+      },
+      {
+        "signature": "void readOrder(int id)",
+        "body": [
+          "pi([orders.status, orders.pst_rate, orders.gst_rate, orders.hst_rate, orders.customer_id], sigma(orders.id=id, orders))"
+        ]
+      },
+      {
+        "signature": "void readOrderCreateTime(int id)",
+        "body": [
+          "pi([orders.created_at], sigma(orders.id=id, orders))"
+        ]
+      },
+      {
+        "signature": "void readOrderUpdateTime(int id)",
+        "body": [
+          "pi([orders.updated_at], sigma(orders.id=id, orders))"
+        ]
+      },
+      {
+        "signature": "void createProduct(int id, String name, String description, String price, int stock_quantity, String created_at, String updated_at, String category)",
+        "body": [
+          "ins(products, (id, name, description, price, stock_quantity, created_at, updated_at, category))"
+        ]
+      },
+      {
+        "signature": "void deleteProduct(int id)",
+        "body": [
+          "del(products, products.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateProduct(int id, String name, String description, String price, int stock_quantity, String updated_at, String category)",
+        "body": [
+          "upd(products, products.id=id, products.name, name)",
+          "upd(products, products.id=id, products.description, description)",
+          "upd(products, products.id=id, products.price, price)",
+          "upd(products, products.id=id, products.stock_quantity, stock_quantity)",
+          "upd(products, products.id=id, products.updated_at, updated_at)",
+          "upd(products, products.id=id, products.category, category)"
+        ]
+      },
+      {
+        "signature": "void readProduct(int id)",
+        "body": [
+          "pi([products.name, products.description, products.price, products.stock_quantity, products.category], sigma(products.id=id, products))"
+        ]
+      },
+      {
+        "signature": "void readProductCreateTime(int id)",
+        "body": [
+          "pi([products.created_at], sigma(products.id=id, products))"
+        ]
+      },
+      {
+        "signature": "void readProductUpdateTime(int id)",
+        "body": [
+          "pi([products.updated_at], sigma(products.id=id, products))"
+        ]
+      },
+      {
+        "signature": "void createProvince(int id, String name, String pst, String gst, String hst, String created_at, String updated_at)",
+        "body": [
+          "ins(provinces, (id, name, pst, gst, hst, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteProvince(int id)",
+        "body": [
+          "del(provinces, provinces.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateProvince(int id, String name, String pst, String gst, String hst, String updated_at)",
+        "body": [
+          "upd(provinces, provinces.id=id, provinces.name, name)",
+          "upd(provinces, provinces.id=id, provinces.pst, pst)",
+          "upd(provinces, provinces.id=id, provinces.gst, gst)",
+          "upd(provinces, provinces.id=id, provinces.hst, hst)",
+          "upd(provinces, provinces.id=id, provinces.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readProvince(int id)",
+        "body": [
+          "pi([provinces.name, provinces.pst, provinces.gst, provinces.hst], sigma(provinces.id=id, provinces))"
+        ]
+      },
+      {
+        "signature": "void readProvinceCreateTime(int id)",
+        "body": [
+          "pi([provinces.created_at], sigma(provinces.id=id, provinces))"
+        ]
+      },
+      {
+        "signature": "void readProvinceUpdateTime(int id)",
+        "body": [
+          "pi([provinces.updated_at], sigma(provinces.id=id, provinces))"
+        ]
+      },
+      {
+        "signature": "void createReview(int id, String content, String rating, String created_at, String updated_at, int customer_id, int product_id)",
+        "body": [
+          "ins(reviews, (id, content, rating, created_at, updated_at, customer_id, product_id))"
+        ]
+      },
+      {
+        "signature": "void deleteReview(int id)",
+        "body": [
+          "del(reviews, reviews.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateReview(int id, String content, String rating, String updated_at, int customer_id, int product_id)",
+        "body": [
+          "upd(reviews, reviews.id=id, reviews.content, content)",
+          "upd(reviews, reviews.id=id, reviews.rating, rating)",
+          "upd(reviews, reviews.id=id, reviews.updated_at, updated_at)",
+          "upd(reviews, reviews.id=id, reviews.customer_id, customer_id)",
+          "upd(reviews, reviews.id=id, reviews.product_id, product_id)"
+        ]
+      },
+      {
+        "signature": "void readReview(int id)",
+        "body": [
+          "pi([reviews.content, reviews.rating, reviews.customer_id, reviews.product_id], sigma(reviews.id=id, reviews))"
+        ]
+      },
+      {
+        "signature": "void readReviewCreateTime(int id)",
+        "body": [
+          "pi([reviews.created_at], sigma(reviews.id=id, reviews))"
+        ]
+      },
+      {
+        "signature": "void readReviewUpdateTime(int id)",
+        "body": [
+          "pi([reviews.updated_at], sigma(reviews.id=id, reviews))"
+        ]
+      },
+      {
+        "signature": "void readCustomerProvince(int id)",
+        "body": [
+          "pi([provinces.id, provinces.name, provinces.pst, provinces.gst, provinces.hst], sigma(customers.id=id, join(customers, provinces)))"
+        ]
+      },
+      {
+        "signature": "void readProvinceCustomer(int id)",
+        "body": [
+          "pi([customers.id, customers.first_name, customers.last_name, customers.address, customers.city, customers.postal_code, customers.email, customers.province_id], sigma(provinces.id=id, join(customers, provinces)))"
+        ]
+      },
+      {
+        "signature": "void readLineItemOrder(int id)",
+        "body": [
+          "pi([orders.id, orders.status, orders.pst_rate, orders.gst_rate, orders.hst_rate, orders.customer_id], sigma(line_items.id=id, join(line_items, orders)))"
+        ]
+      },
+      {
+        "signature": "void readOrderLineItem(int id)",
+        "body": [
+          "pi([line_items.id, line_items.quantity, line_items.price, line_items.order_id, line_items.product_id], sigma(orders.id=id, join(line_items, orders)))"
+        ]
+      },
+      {
+        "signature": "void readLineItemProduct(int id)",
+        "body": [
+          "pi([products.id, products.name, products.description, products.price, products.stock_quantity, products.category], sigma(line_items.id=id, join(line_items, products)))"
+        ]
+      },
+      {
+        "signature": "void readProductLineItem(int id)",
+        "body": [
+          "pi([line_items.id, line_items.quantity, line_items.price, line_items.order_id, line_items.product_id], sigma(products.id=id, join(line_items, products)))"
+        ]
+      },
+      {
+        "signature": "void readOrderCustomer(int id)",
+        "body": [
+          "pi([customers.id, customers.first_name, customers.last_name, customers.address, customers.city, customers.postal_code, customers.email, customers.province_id], sigma(orders.id=id, join(orders, customers)))"
+        ]
+      },
+      {
+        "signature": "void readCustomerOrder(int id)",
+        "body": [
+          "pi([orders.id, orders.status, orders.pst_rate, orders.gst_rate, orders.hst_rate, orders.customer_id], sigma(customers.id=id, join(orders, customers)))"
+        ]
+      },
+      {
+        "signature": "void readReviewCustomer(int id)",
+        "body": [
+          "pi([customers.id, customers.first_name, customers.last_name, customers.address, customers.city, customers.postal_code, customers.email, customers.province_id], sigma(reviews.id=id, join(reviews, customers)))"
+        ]
+      },
+      {
+        "signature": "void readCustomerReview(int id)",
+        "body": [
+          "pi([reviews.id, reviews.content, reviews.rating, reviews.customer_id, reviews.product_id], sigma(customers.id=id, join(reviews, customers)))"
+        ]
+      },
+      {
+        "signature": "void readReviewProduct(int id)",
+        "body": [
+          "pi([products.id, products.name, products.description, products.price, products.stock_quantity, products.category], sigma(reviews.id=id, join(reviews, products)))"
+        ]
+      },
+      {
+        "signature": "void readProductReview(int id)",
+        "body": [
+          "pi([reviews.id, reviews.content, reviews.rating, reviews.customer_id, reviews.product_id], sigma(products.id=id, join(reviews, products)))"
+        ]
+      }
+    ]
+  },
+  "target": {
+    "relations": [
+      "active_admin_comments(int active_admin_comments.id, String active_admin_comments.resource_id, String active_admin_comments.resource_type, int active_admin_comments.author_id, String active_admin_comments.author_type, String active_admin_comments.body, String active_admin_comments.created_at, String active_admin_comments.updated_at, String active_admin_comments.namespace)",
+      "categories(int categories.id, String categories.title, String categories.description, String categories.created_at, String categories.updated_at)",
+      "admin_users(int admin_users.id, String admin_users.email, String admin_users.encrypted_password, String admin_users.reset_password_token, String admin_users.reset_password_sent_at, String admin_users.remember_created_at, int admin_users.sign_in_count, String admin_users.current_sign_in_at, String admin_users.last_sign_in_at, String admin_users.current_sign_in_ip, String admin_users.last_sign_in_ip, String admin_users.created_at, String admin_users.updated_at)",
+      "customers(int customers.id, String customers.first_name, String customers.last_name, String customers.address, String customers.city, String customers.postal_code, String customers.email, String customers.created_at, String customers.updated_at, int customers.province_id)",
+      "line_items(int line_items.id, int line_items.quantity, String line_items.price, String line_items.created_at, String line_items.updated_at, int line_items.order_id, int line_items.product_id)",
+      "orders(int orders.id, String orders.status, String orders.pst_rate, String orders.gst_rate, String orders.hst_rate, String orders.created_at, String orders.updated_at, int orders.customer_id, String orders.order_total)",
+      "products(int products.id, String products.name, String products.description, String products.price, int products.stock_quantity, String products.created_at, String products.updated_at, int products.category_id)",
+      "provinces(int provinces.id, String provinces.name, String provinces.pst, String provinces.gst, String provinces.hst, String provinces.created_at, String provinces.updated_at)",
+      "reviews(int reviews.id, String reviews.content, String reviews.rating, String reviews.created_at, String reviews.updated_at, int reviews.customer_id, int reviews.product_id)"
+    ],
+    "primarykeys": [
+      "active_admin_comments(active_admin_comments.id)",
+      "admin_users(admin_users.id)",
+      "customers(customers.id)",
+      "line_items(line_items.id)",
+      "orders(orders.id)",
+      "products(products.id)",
+      "provinces(provinces.id)",
+      "reviews(reviews.id)"
+    ],
+    "foreignkeys": [
+      "customers(customers.province_id) -> provinces(provinces.id)",
+      "line_items(line_items.order_id) -> orders(orders.id)",
+      "line_items(line_items.product_id) -> products(products.id)",
+      "orders(orders.customer_id) -> customers(customers.id)",
+      "reviews(reviews.customer_id) -> customers(customers.id)",
+      "reviews(reviews.product_id) -> products(products.id)",
+      "products(products.category_id) -> categories(categories.id)"
+    ],
+    "transactions": [
+      {
+        "signature": "void createActiveAdminComment(int id, String resource_id, String resource_type, int author_id, String author_type, String body, String created_at, String updated_at, String namespace)",
+        "body": [
+          "ins(active_admin_comments, (id, resource_id, resource_type, author_id, author_type, body, created_at, updated_at, namespace))"
+        ]
+      },
+      {
+        "signature": "void deleteActiveAdminComment(int id)",
+        "body": [
+          "del(active_admin_comments, active_admin_comments.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateActiveAdminComment(int id, String resource_id, String resource_type, int author_id, String author_type, String body, String updated_at, String namespace)",
+        "body": [
+          "upd(active_admin_comments, active_admin_comments.id=id, active_admin_comments.resource_id, resource_id)",
+          "upd(active_admin_comments, active_admin_comments.id=id, active_admin_comments.resource_type, resource_type)",
+          "upd(active_admin_comments, active_admin_comments.id=id, active_admin_comments.author_id, author_id)",
+          "upd(active_admin_comments, active_admin_comments.id=id, active_admin_comments.author_type, author_type)",
+          "upd(active_admin_comments, active_admin_comments.id=id, active_admin_comments.body, body)",
+          "upd(active_admin_comments, active_admin_comments.id=id, active_admin_comments.updated_at, updated_at)",
+          "upd(active_admin_comments, active_admin_comments.id=id, active_admin_comments.namespace, namespace)"
+        ]
+      },
+      {
+        "signature": "void readActiveAdminComment(int id)",
+        "body": [
+          "pi([active_admin_comments.resource_id, active_admin_comments.resource_type, active_admin_comments.author_id, active_admin_comments.author_type, active_admin_comments.body, active_admin_comments.namespace], sigma(active_admin_comments.id=id, active_admin_comments))"
+        ]
+      },
+      {
+        "signature": "void readActiveAdminCommentCreateTime(int id)",
+        "body": [
+          "pi([active_admin_comments.created_at], sigma(active_admin_comments.id=id, active_admin_comments))"
+        ]
+      },
+      {
+        "signature": "void readActiveAdminCommentUpdateTime(int id)",
+        "body": [
+          "pi([active_admin_comments.updated_at], sigma(active_admin_comments.id=id, active_admin_comments))"
+        ]
+      },
+      {
+        "signature": "void createAdminUser(int id, String email, String encrypted_password, String reset_password_token, String reset_password_sent_at, String remember_created_at, int sign_in_count, String current_sign_in_at, String last_sign_in_at, String current_sign_in_ip, String last_sign_in_ip, String created_at, String updated_at)",
+        "body": [
+          "ins(admin_users, (id, email, encrypted_password, reset_password_token, reset_password_sent_at, remember_created_at, sign_in_count, current_sign_in_at, last_sign_in_at, current_sign_in_ip, last_sign_in_ip, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteAdminUser(int id)",
+        "body": [
+          "del(admin_users, admin_users.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateAdminUserEmail(int id, String email, String updated_at)",
+        "body": [
+          "upd(admin_users, admin_users.id=id, admin_users.email, email)",
+          "upd(admin_users, admin_users.id=id, admin_users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateAdminUserPassword(int id, String encrypted_password, String updated_at)",
+        "body": [
+          "upd(admin_users, admin_users.id=id, admin_users.encrypted_password, encrypted_password)",
+          "upd(admin_users, admin_users.id=id, admin_users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateAdminUserResetPassword(int id, String reset_password_token, String reset_password_sent_at, String updated_at)",
+        "body": [
+          "upd(admin_users, admin_users.id=id, admin_users.reset_password_token, reset_password_token)",
+          "upd(admin_users, admin_users.id=id, admin_users.reset_password_sent_at, reset_password_sent_at)",
+          "upd(admin_users, admin_users.id=id, admin_users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateAdminUserRememberCreatedAt(int id, String remember_created_at, String updated_at)",
+        "body": [
+          "upd(admin_users, admin_users.id=id, admin_users.remember_created_at, remember_created_at)",
+          "upd(admin_users, admin_users.id=id, admin_users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateUserSignIn(int id, int sign_in_count, String current_sign_in_at, String last_sign_in_at, String current_sign_in_ip, String last_sign_in_ip, String updated_at)",
+        "body": [
+          "upd(admin_users, admin_users.id=id, admin_users.sign_in_count, sign_in_count)",
+          "upd(admin_users, admin_users.id=id, admin_users.current_sign_in_at, current_sign_in_at)",
+          "upd(admin_users, admin_users.id=id, admin_users.last_sign_in_at, last_sign_in_at)",
+          "upd(admin_users, admin_users.id=id, admin_users.current_sign_in_ip, current_sign_in_ip)",
+          "upd(admin_users, admin_users.id=id, admin_users.last_sign_in_ip, last_sign_in_ip)",
+          "upd(admin_users, admin_users.id=id, admin_users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void findUserByEmail(String email)",
+        "body": [
+          "pi([admin_users.id], sigma(admin_users.email=email, admin_users))"
+        ]
+      },
+      {
+        "signature": "void readAdminUser(int id)",
+        "body": [
+          "pi([admin_users.email, admin_users.encrypted_password, admin_users.reset_password_token, admin_users.reset_password_sent_at, admin_users.remember_created_at, admin_users.sign_in_count, admin_users.current_sign_in_at, admin_users.last_sign_in_at, admin_users.current_sign_in_ip, admin_users.last_sign_in_ip], sigma(admin_users.id=id, admin_users))"
+        ]
+      },
+      {
+        "signature": "void readAdminUserCreateTime(int id)",
+        "body": [
+          "pi([admin_users.created_at], sigma(admin_users.id=id, admin_users))"
+        ]
+      },
+      {
+        "signature": "void readAdminUserUpdateTime(int id)",
+        "body": [
+          "pi([admin_users.updated_at], sigma(admin_users.id=id, admin_users))"
+        ]
+      },
+      {
+        "signature": "void createCustomer(int id, String first_name, String last_name, String address, String city, String postal_code, String email, String created_at, String updated_at, int province_id)",
+        "body": [
+          "ins(customers, (id, first_name, last_name, address, city, postal_code, email, created_at, updated_at, province_id))"
+        ]
+      },
+      {
+        "signature": "void deleteCustomer(int id)",
+        "body": [
+          "del(customers, customers.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateCustomer(int id, String first_name, String last_name, String address, String city, String postal_code, String email, String updated_at, int province_id)",
+        "body": [
+          "upd(customers, customers.id=id, customers.first_name, first_name)",
+          "upd(customers, customers.id=id, customers.last_name, last_name)",
+          "upd(customers, customers.id=id, customers.address, address)",
+          "upd(customers, customers.id=id, customers.city, city)",
+          "upd(customers, customers.id=id, customers.postal_code, postal_code)",
+          "upd(customers, customers.id=id, customers.email, email)",
+          "upd(customers, customers.id=id, customers.updated_at, updated_at)",
+          "upd(customers, customers.id=id, customers.province_id, province_id)"
+        ]
+      },
+      {
+        "signature": "void readCustomer(int id)",
+        "body": [
+          "pi([customers.first_name, customers.last_name, customers.address, customers.city, customers.postal_code, customers.email, customers.province_id], sigma(customers.id=id, customers))"
+        ]
+      },
+      {
+        "signature": "void readCustomerCreateTime(int id)",
+        "body": [
+          "pi([customers.created_at], sigma(customers.id=id, customers))"
+        ]
+      },
+      {
+        "signature": "void readCustomerUpdateTime(int id)",
+        "body": [
+          "pi([customers.updated_at], sigma(customers.id=id, customers))"
+        ]
+      },
+      {
+        "signature": "void createLineItem(int id, int quantity, String price, String created_at, String updated_at, int order_id, int product_id)",
+        "body": [
+          "ins(line_items, (id, quantity, price, created_at, updated_at, order_id, product_id))"
+        ]
+      },
+      {
+        "signature": "void deleteLineItem(int id)",
+        "body": [
+          "del(line_items, line_items.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateLineItem(int id, int quantity, String price, String updated_at, int order_id, int product_id)",
+        "body": [
+          "upd(line_items, line_items.id=id, line_items.quantity, quantity)",
+          "upd(line_items, line_items.id=id, line_items.price, price)",
+          "upd(line_items, line_items.id=id, line_items.updated_at, updated_at)",
+          "upd(line_items, line_items.id=id, line_items.order_id, order_id)",
+          "upd(line_items, line_items.id=id, line_items.product_id, product_id)"
+        ]
+      },
+      {
+        "signature": "void readLineItem(int id)",
+        "body": [
+          "pi([line_items.quantity, line_items.price, line_items.order_id, line_items.product_id], sigma(line_items.id=id, line_items))"
+        ]
+      },
+      {
+        "signature": "void readLineItemCreateTime(int id)",
+        "body": [
+          "pi([line_items.created_at], sigma(line_items.id=id, line_items))"
+        ]
+      },
+      {
+        "signature": "void readLineItemUpdateTime(int id)",
+        "body": [
+          "pi([line_items.updated_at], sigma(line_items.id=id, line_items))"
+        ]
+      },
+      {
+        "signature": "void createOrder(int id, String status, String pst_rate, String gst_rate, String hst_rate, String created_at, String updated_at, int customer_id, String order_total)",
+        "body": [
+          "ins(orders, (id, status, pst_rate, gst_rate, hst_rate, created_at, updated_at, customer_id, order_total))"
+        ]
+      },
+      {
+        "signature": "void deleteOrder(int id)",
+        "body": [
+          "del(orders, orders.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateOrder(int id, String status, String pst_rate, String gst_rate, String hst_rate, String updated_at, int customer_id)",
+        "body": [
+          "upd(orders, orders.id=id, orders.status, status)",
+          "upd(orders, orders.id=id, orders.pst_rate, pst_rate)",
+          "upd(orders, orders.id=id, orders.gst_rate, gst_rate)",
+          "upd(orders, orders.id=id, orders.hst_rate, hst_rate)",
+          "upd(orders, orders.id=id, orders.updated_at, updated_at)",
+          "upd(orders, orders.id=id, orders.customer_id, customer_id)"
+        ]
+      },
+      {
+        "signature": "void readOrder(int id)",
+        "body": [
+          "pi([orders.status, orders.pst_rate, orders.gst_rate, orders.hst_rate, orders.customer_id, orders.order_total], sigma(orders.id=id, orders))"
+        ]
+      },
+      {
+        "signature": "void readOrderCreateTime(int id)",
+        "body": [
+          "pi([orders.created_at], sigma(orders.id=id, orders))"
+        ]
+      },
+      {
+        "signature": "void readOrderUpdateTime(int id)",
+        "body": [
+          "pi([orders.updated_at], sigma(orders.id=id, orders))"
+        ]
+      },
+      {
+        "signature": "void createProduct(int id, String name, String description, String price, int stock_quantity, String created_at, String updated_at, String category, String category_desc)",
+        "body": [
+          "ins(categories, (UUID_x1, category, category_desc, created_at, updated_at))",
+          "ins(products, (id, name, description, price, stock_quantity, created_at, updated_at, UUID_x1))"
+        ]
+      },
+      {
+        "signature": "void deleteProduct(int id)",
+        "body": [
+          "del(products, products.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateProduct(int id, String name, String description, String price, int stock_quantity, String updated_at, String category)",
+        "body": [
+          "upd(products, products.id=id, products.name, name)",
+          "upd(products, products.id=id, products.description, description)",
+          "upd(products, products.id=id, products.price, price)",
+          "upd(products, products.id=id, products.stock_quantity, stock_quantity)",
+          "upd(products, products.id=id, products.updated_at, updated_at)",
+          "upd(categories, in(categories.id, pi([products.category_id], sigma(products.id=id, products))), categories.title, category)"
+        ]
+      },
+      {
+        "signature": "void readProduct(int id)",
+        "body": [
+          "pi([products.name, products.description, products.price, products.stock_quantity, categories.title, categories.description], sigma(products.id=id, join(products, categories)))"
+        ]
+      },
+      {
+        "signature": "void readProductCreateTime(int id)",
+        "body": [
+          "pi([products.created_at], sigma(products.id=id, products))"
+        ]
+      },
+      {
+        "signature": "void readProductUpdateTime(int id)",
+        "body": [
+          "pi([products.updated_at], sigma(products.id=id, products))"
+        ]
+      },
+      {
+        "signature": "void createProvince(int id, String name, String pst, String gst, String hst, String created_at, String updated_at)",
+        "body": [
+          "ins(provinces, (id, name, pst, gst, hst, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteProvince(int id)",
+        "body": [
+          "del(provinces, provinces.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateProvince(int id, String name, String pst, String gst, String hst, String updated_at)",
+        "body": [
+          "upd(provinces, provinces.id=id, provinces.name, name)",
+          "upd(provinces, provinces.id=id, provinces.pst, pst)",
+          "upd(provinces, provinces.id=id, provinces.gst, gst)",
+          "upd(provinces, provinces.id=id, provinces.hst, hst)",
+          "upd(provinces, provinces.id=id, provinces.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readProvince(int id)",
+        "body": [
+          "pi([provinces.name, provinces.pst, provinces.gst, provinces.hst], sigma(provinces.id=id, provinces))"
+        ]
+      },
+      {
+        "signature": "void readProvinceCreateTime(int id)",
+        "body": [
+          "pi([provinces.created_at], sigma(provinces.id=id, provinces))"
+        ]
+      },
+      {
+        "signature": "void readProvinceUpdateTime(int id)",
+        "body": [
+          "pi([provinces.updated_at], sigma(provinces.id=id, provinces))"
+        ]
+      },
+      {
+        "signature": "void createReview(int id, String content, String rating, String created_at, String updated_at, int customer_id, int product_id)",
+        "body": [
+          "ins(reviews, (id, content, rating, created_at, updated_at, customer_id, product_id))"
+        ]
+      },
+      {
+        "signature": "void deleteReview(int id)",
+        "body": [
+          "del(reviews, reviews.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateReview(int id, String content, String rating, String updated_at, int customer_id, int product_id)",
+        "body": [
+          "upd(reviews, reviews.id=id, reviews.content, content)",
+          "upd(reviews, reviews.id=id, reviews.rating, rating)",
+          "upd(reviews, reviews.id=id, reviews.updated_at, updated_at)",
+          "upd(reviews, reviews.id=id, reviews.customer_id, customer_id)",
+          "upd(reviews, reviews.id=id, reviews.product_id, product_id)"
+        ]
+      },
+      {
+        "signature": "void readReview(int id)",
+        "body": [
+          "pi([reviews.content, reviews.rating, reviews.customer_id, reviews.product_id], sigma(reviews.id=id, reviews))"
+        ]
+      },
+      {
+        "signature": "void readReviewCreateTime(int id)",
+        "body": [
+          "pi([reviews.created_at], sigma(reviews.id=id, reviews))"
+        ]
+      },
+      {
+        "signature": "void readReviewUpdateTime(int id)",
+        "body": [
+          "pi([reviews.updated_at], sigma(reviews.id=id, reviews))"
+        ]
+      },
+      {
+        "signature": "void readCustomerProvince(int id)",
+        "body": [
+          "pi([provinces.id, provinces.name, provinces.pst, provinces.gst, provinces.hst], sigma(customers.id=id, join(customers, provinces)))"
+        ]
+      },
+      {
+        "signature": "void readProvinceCustomer(int id)",
+        "body": [
+          "pi([customers.id, customers.first_name, customers.last_name, customers.address, customers.city, customers.postal_code, customers.email, customers.province_id], sigma(provinces.id=id, join(customers, provinces)))"
+        ]
+      },
+      {
+        "signature": "void readLineItemOrder(int id)",
+        "body": [
+          "pi([orders.id, orders.status, orders.pst_rate, orders.gst_rate, orders.hst_rate, orders.customer_id, orders.order_total], sigma(line_items.id=id, join(line_items, orders)))"
+        ]
+      },
+      {
+        "signature": "void readOrderLineItem(int id)",
+        "body": [
+          "pi([line_items.id, line_items.quantity, line_items.price, line_items.order_id, line_items.product_id], sigma(orders.id=id, join(line_items, orders)))"
+        ]
+      },
+      {
+        "signature": "void readLineItemProduct(int id)",
+        "body": [
+          "pi([products.id, products.name, products.description, products.price, products.stock_quantity, categories.title, categories.description], sigma(line_items.id=id, join(join(line_items, products), categories)))"
+        ]
+      },
+      {
+        "signature": "void readProductLineItem(int id)",
+        "body": [
+          "pi([line_items.id, line_items.quantity, line_items.price, line_items.order_id, line_items.product_id], sigma(products.id=id, join(line_items, products)))"
+        ]
+      },
+      {
+        "signature": "void readOrderCustomer(int id)",
+        "body": [
+          "pi([customers.id, customers.first_name, customers.last_name, customers.address, customers.city, customers.postal_code, customers.email, customers.province_id], sigma(orders.id=id, join(orders, customers)))"
+        ]
+      },
+      {
+        "signature": "void readCustomerOrder(int id)",
+        "body": [
+          "pi([orders.id, orders.status, orders.pst_rate, orders.gst_rate, orders.hst_rate, orders.customer_id, orders.order_total], sigma(customers.id=id, join(orders, customers)))"
+        ]
+      },
+      {
+        "signature": "void readReviewCustomer(int id)",
+        "body": [
+          "pi([customers.id, customers.first_name, customers.last_name, customers.address, customers.city, customers.postal_code, customers.email, customers.province_id], sigma(reviews.id=id, join(reviews, customers)))"
+        ]
+      },
+      {
+        "signature": "void readCustomerReview(int id)",
+        "body": [
+          "pi([reviews.id, reviews.content, reviews.rating, reviews.customer_id, reviews.product_id], sigma(customers.id=id, join(reviews, customers)))"
+        ]
+      },
+      {
+        "signature": "void readReviewProduct(int id)",
+        "body": [
+          "pi([products.id, products.name, products.description, products.price, products.stock_quantity, categories.title, categories.description], sigma(reviews.id=id, join(join(reviews, products), categories)))"
+        ]
+      },
+      {
+        "signature": "void readProductReview(int id)",
+        "body": [
+          "pi([reviews.id, reviews.content, reviews.rating, reviews.customer_id, reviews.product_id], sigma(products.id=id, join(reviews, products)))"
+        ]
+      }
+    ]
+  }
+}

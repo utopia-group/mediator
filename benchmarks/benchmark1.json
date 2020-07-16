@@ -1,0 +1,84 @@
+{
+  "source": {
+    "relations": [
+      "MEMBER(int mid, String mname, int afk)",
+      "ADDRESS(int aid, String address, String city, String state, int zipcode)"
+    ],
+    "primarykeys": [
+      "MEMBER(mid)",
+      "ADDRESS(aid)"
+    ],
+    "foreignkeys": [
+      "MEMBER(afk) -> ADDRESS(aid)"
+    ],
+    "transactions": [
+      {
+        "signature": "void insertMember(String name, String addr, String ct, String st, int zip)",
+        "body": [
+          "ins(ADDRESS, (UUID_x1, addr, ct, st, zip))",
+          "ins(MEMBER, (UUID_x2, name, UUID_x1))"
+        ]
+      },
+      {
+        "signature": "void deleteMember(string name)",
+        "body": [
+          "del(ADDRESS, in(aid, pi([afk], sigma(mname=name, MEMBER))))",
+          "del(MEMBER, mname=name)"
+        ]
+      },
+      {
+        "signature": "void updateAddress(String name, String addr, String ct, String st, int zip)",
+        "body": [
+          "upd(ADDRESS, in(aid, pi([afk], sigma(mname=name, MEMBER))), address, addr)",
+          "upd(ADDRESS, in(aid, pi([afk], sigma(mname=name, MEMBER))), city, ct)",
+          "upd(ADDRESS, in(aid, pi([afk], sigma(mname=name, MEMBER))), state, st)",
+          "upd(ADDRESS, in(aid, pi([afk], sigma(mname=name, MEMBER))), zipcode, zip)"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getMemberAddress(string name)",
+        "body": [
+          "pi([address, city, state, zipcode], sigma(mname=name, join(MEMBER, ADDRESS)))"
+        ]
+      }
+    ]
+  },
+  "target": {
+    "relations": [
+      "MEMBER(int mid, String mname, String address, String city, String state, String zipcode)"
+    ],
+    "primarykeys": [
+      "MEMBER(mid)"
+    ],
+    "foreignkeys": [],
+    "transactions": [
+      {
+        "signature": "void insertMember(String name, String addr, String ct, String st, int zip)",
+        "body": [
+          "ins(MEMBER, (UUID_x3, name, addr, ct, st, zip))"
+        ]
+      },
+      {
+        "signature": "void deleteMember(string name)",
+        "body": [
+          "del(MEMBER, mname=name)"
+        ]
+      },
+      {
+        "signature": "void updateAddress(String name, String addr, String ct, String st, int zip)",
+        "body": [
+          "upd(MEMBER, mname=name, address, addr)",
+          "upd(MEMBER, mname=name, city, ct)",
+          "upd(MEMBER, mname=name, state, st)",
+          "upd(MEMBER, mname=name, zipcode, zip)"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getMemberAddress(string name)",
+        "body": [
+          "pi([address, city, state, zipcode], sigma(mname=name, MEMBER))"
+        ]
+      }
+    ]
+  }
+}

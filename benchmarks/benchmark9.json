@@ -1,0 +1,135 @@
+{
+  "source": {
+    "relations": [
+      "Address(int AddressId, String Street, String City, int StateCode_fk, int ZipCode)",
+      "State(int StateCode, String Name)"
+    ],
+    "primarykeys": [
+      "Address(AddressId)",
+      "State(StateCode)"
+    ],
+    "foreignkeys": [
+      "Address(StateCode_fk) -> State(StateCode)"
+    ],
+    "transactions": [
+      {
+        "signature": "void createAddress(int aid, String street, String city, int state, int zip)",
+        "body": [
+          "ins(Address, (aid, street, city, state, zip))"
+        ]
+      },
+      {
+        "signature": "void createState(int sid, String name)",
+        "body": [
+          "ins(State, (sid, name))"
+        ]
+      },
+      {
+        "signature": "void deleteAddress(int aid)",
+        "body": [
+          "del(Address, AddressId=aid)"
+        ]
+      },
+      {
+        "signature": "void deleteState(int sid)",
+        "body": [
+          "del(State, StateCode=sid)"
+        ]
+      },
+      {
+        "signature": "void updateAddress(int aid, String street, String city, int state, int zip)",
+        "body": [
+          "upd(Address, AddressId=aid, Street, street)",
+          "upd(Address, AddressId=aid, City, city)",
+          "upd(Address, AddressId=aid, StateCode_fk, state)",
+          "upd(Address, AddressId=aid, ZipCode, zip)"
+        ]
+      },
+      {
+        "signature": "void updateState(int sid, String name)",
+        "body": [
+          "upd(State, StateCode=sid, Name, name)"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getState(int sid)",
+        "body": [
+          "pi([Name], sigma(StateCode=sid, State))"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getAddress(int aid)",
+        "body": [
+          "pi([Street, City, Name, ZipCode], sigma(AddressId=aid, join(Address, State)))"
+        ]
+      }
+    ]
+  },
+  "target": {
+    "relations": [
+      "Address(int AddressId, String Street, String City, int StateCode_fk, int ZipCode)",
+      "State(int StateCode, String Name, int CountryCode)"
+    ],
+    "primarykeys": [
+      "Address(AddressId)",
+      "State(StateCode)"
+    ],
+    "foreignkeys": [
+      "Address(StateCode_fk) -> State(StateCode)"
+    ],
+    "transactions": [
+      {
+        "signature": "void createAddress(int aid, String street, String city, int state, int zip)",
+        "body": [
+          "ins(Address, (aid, street, city, state, zip))"
+        ]
+      },
+      {
+        "signature": "void createState(int sid, String name, int country)",
+        "body": [
+          "ins(State, (sid, name, country))"
+        ]
+      },
+      {
+        "signature": "void deleteAddress(int aid)",
+        "body": [
+          "del(Address, AddressId=aid)"
+        ]
+      },
+      {
+        "signature": "void deleteState(int sid)",
+        "body": [
+          "del(State, StateCode=sid)"
+        ]
+      },
+      {
+        "signature": "void updateAddress(int aid, String street, String city, int state, int zip)",
+        "body": [
+          "upd(Address, AddressId=aid, Street, street)",
+          "upd(Address, AddressId=aid, City, city)",
+          "upd(Address, AddressId=aid, StateCode_fk, state)",
+          "upd(Address, AddressId=aid, ZipCode, zip)"
+        ]
+      },
+      {
+        "signature": "void updateState(int sid, String name, int country)",
+        "body": [
+          "upd(State, StateCode=sid, Name, name)",
+          "upd(State, StateCode=sid, CountryCode, country)"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getState(int sid)",
+        "body": [
+          "pi([Name, CountryCode], sigma(StateCode=sid, State))"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getAddress(int aid)",
+        "body": [
+          "pi([Street, City, Name, ZipCode, CountryCode], sigma(AddressId=aid, join(Address, State)))"
+        ]
+      }
+    ]
+  }
+}

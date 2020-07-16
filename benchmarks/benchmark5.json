@@ -1,0 +1,120 @@
+{
+  "source": {
+    "relations": [
+      "Customer(String FirstName, int CustomerID, int Balance)",
+      "Account(int AccountID, int CustomerID_fk)"
+    ],
+    "primarykeys": [
+      "Customer(CustomerID)",
+      "Account(AccountID)"
+    ],
+    "foreignkeys": [
+      "Account(CustomerID_fk) -> Customer(CustomerID)"
+    ],
+    "transactions": [
+      {
+        "signature": "void createCustomer(int cid, String name, int aid, int balance)",
+        "body": [
+          "ins(Customer, (name, cid, balance))",
+          "ins(Account, (aid, cid))"
+        ]
+      },
+      {
+        "signature": "void deleteCustomer(int cid)",
+        "body": [
+          "del(Account, CustomerID_fk=cid)",
+          "del(Customer, CustomerID=cid)"
+        ]
+      },
+      {
+        "signature": "void updateCustomerName(int cid, String name)",
+        "body": [
+          "upd(Customer, CustomerID=cid, FirstName, name)"
+        ]
+      },
+      {
+        "signature": "void updateBalance(int cid, int balance)",
+        "body": [
+          "upd(Customer, CustomerID=cid, Balance, balance)"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getCustomerID(String name)",
+        "body": [
+          "pi([CustomerID], sigma(FirstName=name, Customer))"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getAccountID(int cid)",
+        "body": [
+          "pi([AccountID], sigma(CustomerID_fk=cid, Account))"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getBalance(int cid)",
+        "body": [
+          "pi([Balance], sigma(CustomerID=cid, Customer))"
+        ]
+      }
+    ]
+  },
+  "target": {
+    "relations": [
+      "Customer(String FirstName, int CustomerID)",
+      "Account(int AccountID, int CustomerID_fk, int Balance)"
+    ],
+    "primarykeys": [
+      "Customer(CustomerID)",
+      "Account(AccountID)"
+    ],
+    "foreignkeys": [
+      "Account(CustomerID_fk) -> Customer(CustomerID)"
+    ],
+    "transactions": [
+      {
+        "signature": "void createCustomer(int cid, String name, int aid, int balance)",
+        "body": [
+          "ins(Customer, (name, cid))",
+          "ins(Account, (aid, cid, balance))"
+        ]
+      },
+      {
+        "signature": "void deleteCustomer(int cid)",
+        "body": [
+          "del(Account, CustomerID_fk=cid)",
+          "del(Customer, CustomerID=cid)"
+        ]
+      },
+      {
+        "signature": "void updateCustomerName(int cid, String name)",
+        "body": [
+          "upd(Customer, CustomerID=cid, FirstName, name)"
+        ]
+      },
+      {
+        "signature": "void updateBalance(int cid, int balance)",
+        "body": [
+          "upd(Account, CustomerID_fk=cid, Balance, balance)"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getCustomerID(String name)",
+        "body": [
+          "pi([CustomerID], sigma(FirstName=name, Customer))"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getAccountID(int cid)",
+        "body": [
+          "pi([AccountID], sigma(CustomerID_fk=cid, Account))"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getBalance(int cid)",
+        "body": [
+          "pi([Balance], sigma(CustomerID_fk=cid, Account))"
+        ]
+      }
+    ]
+  }
+}

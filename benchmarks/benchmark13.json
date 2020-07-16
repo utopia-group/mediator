@@ -1,0 +1,1833 @@
+{
+  "source": {
+    "relations": [
+      "categories(int categories.id, String categories.name, String categories.created_at, String categories.updated_at)",
+      "email_addresses(int email_addresses.id, String email_addresses.address, int email_addresses.user_id, int email_addresses.email_address_type_id, String email_addresses.primary, String email_addresses.created_at, String email_addresses.updated_at)",
+      "events(int events.id, String events.active, String events.name, String events.start_at, String events.end_at, String events.created_at, String events.updated_at, String events.url_friendly, String events.description, String events.sponsored, int events.max_attendance, String events.sponsor_file_name, String events.sponsor_content_type, int events.sponsor_file_size, String events.sponsor_updated_at)",
+      "guests(int guests.id, String guests.first_name, String guests.last_name, String guests.email, String guests.created_at, String guests.updated_at)",
+      "items(int items.id, int items.product_id, String items.product_type, String items.name, String items.price, String items.created_at, String items.updated_at)",
+      "locations(int locations.id, int locations.participant_id, String locations.region, String locations.address, String locations.address_cont, String locations.city, String locations.state, String locations.zip, String locations.phone, String locations.created_at, String locations.updated_at)",
+      "memberships(int memberships.id, String memberships.name, String memberships.created_at, String memberships.updated_at)",
+      "order_items(int order_items.id, int order_items.order_id, int order_items.item_id, int order_items.quantity, String order_items.created_at, String order_items.updated_at)",
+      "orders(int orders.id, int orders.customer_id, String orders.customer_type, String orders.amount, String orders.express_token, String orders.express_payer_id, String orders.created_at, String orders.updated_at, String orders.complete)",
+      "participants(int participants.id, String participants.name, String participants.url, String participants.bio, String participants.benefit, String participants.instructions, String participants.created_at, String participants.updated_at, String participants.logo_file_name, String participants.logo_content_type, int participants.logo_file_size, String participants.logo_updated_at, int participants.category_id)",
+      "registrations(int registrations.id, int registrations.user_id, String registrations.email, String registrations.first_name, String registrations.last_name, String registrations.address, String registrations.address2, String registrations.city, String registrations.state, String registrations.zip, String registrations.phone_number, String registrations.profession, String registrations.employer, String registrations.education, String registrations.about2030, String registrations.created_at, String registrations.updated_at)",
+      "states(int states.id, String states.title, String states.code)",
+      "user_addresses(int user_addresses.id, int user_addresses.user_id, String user_addresses.address2, int user_addresses.address_type_id, String user_addresses.is_primary, int user_addresses.sort_order, String user_addresses.created_at, String user_addresses.updated_at, String user_addresses.address, String user_addresses.city, String user_addresses.state_code, String user_addresses.zip)",
+      "user_profiles(int user_profiles.id, int user_profiles.user_id, String user_profiles.phone_number, String user_profiles.profession, String user_profiles.employer, String user_profiles.education, String user_profiles.about2030, String user_profiles.birthdate, String user_profiles.bio, String user_profiles.avatar_file_name, String user_profiles.avatar_content_type, int user_profiles.avatar_file_size, String user_profiles.avatar_updated_at, String user_profiles.created_at, String user_profiles.updated_at, String user_profiles.gender, String user_profiles.member_notes)",
+      "users(int users.id, String users.first_name, String users.last_name, String users.url_friendly, String users.email, String users.crypted_password, String users.password_salt, String users.persistence_token, String users.single_access_token, String users.perishable_token, int users.login_count, int users.failed_login_count, String users.last_request_at, String users.current_login_at, String users.last_login_at, String users.current_login_ip, String users.last_login_ip, String users.joined_at, String users.expired_at, String users.activated_at, String users.active, String users.activated, String users.created_at, String users.updated_at)"
+    ],
+    "primarykeys": [
+      "categories(categories.id)",
+      "email_addresses(email_addresses.id)",
+      "events(events.id)",
+      "guests(guests.id)",
+      "items(items.id)",
+      "locations(locations.id)",
+      "memberships(memberships.id)",
+      "order_items(order_items.id)",
+      "orders(orders.id)",
+      "participants(participants.id)",
+      "registrations(registrations.id)",
+      "states(states.id)",
+      "user_addresses(user_addresses.id)",
+      "user_profiles(user_profiles.id)",
+      "users(users.id)"
+    ],
+    "foreignkeys": [
+      "email_addresses(email_addresses.user_id) -> users(users.id)",
+      "locations(locations.participant_id) -> participants(participants.id)",
+      "order_items(order_items.order_id) -> orders(orders.id)",
+      "order_items(order_items.item_id) -> items(items.id)",
+      "participants(participants.category_id) -> categories(categories.id)",
+      "registrations(registrations.user_id) -> users(users.id)",
+      "user_addresses(user_addresses.user_id) -> users(users.id)",
+      "user_profiles(user_profiles.user_id) -> users(users.id)"
+    ],
+    "transactions": [
+      {
+        "signature": "void createCategory(int id, String name, String created_at, String updated_at)",
+        "body": [
+          "ins(categories, (id, name, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteCategory(int id)",
+        "body": [
+          "del(categories, categories.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateCategory(int id, String name, String updated_at)",
+        "body": [
+          "upd(categories, categories.id=id, categories.name, name)",
+          "upd(categories, categories.id=id, categories.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readCategory(int id)",
+        "body": [
+          "pi([categories.name], sigma(categories.id=id, categories))"
+        ]
+      },
+      {
+        "signature": "void readCategoryCreateTime(int id)",
+        "body": [
+          "pi([categories.created_at], sigma(categories.id=id, categories))"
+        ]
+      },
+      {
+        "signature": "void readCategoryUpdateTime(int id)",
+        "body": [
+          "pi([categories.updated_at], sigma(categories.id=id, categories))"
+        ]
+      },
+      {
+        "signature": "void createEmailAddress(int id, String address, int user_id, int email_address_type_id, String primary, String created_at, String updated_at)",
+        "body": [
+          "ins(email_addresses, (id, address, user_id, email_address_type_id, primary, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteEmailAddress(int id)",
+        "body": [
+          "del(email_addresses, email_addresses.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateEmailAddress(int id, String address, int user_id, int email_address_type_id, String primary, String updated_at)",
+        "body": [
+          "upd(email_addresses, email_addresses.id=id, email_addresses.address, address)",
+          "upd(email_addresses, email_addresses.id=id, email_addresses.user_id, user_id)",
+          "upd(email_addresses, email_addresses.id=id, email_addresses.email_address_type_id, email_address_type_id)",
+          "upd(email_addresses, email_addresses.id=id, email_addresses.primary, primary)",
+          "upd(email_addresses, email_addresses.id=id, email_addresses.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readEmailAddress(int id)",
+        "body": [
+          "pi([email_addresses.address, email_addresses.user_id, email_addresses.email_address_type_id, email_addresses.primary], sigma(email_addresses.id=id, email_addresses))"
+        ]
+      },
+      {
+        "signature": "void readEmailAddressCreateTime(int id)",
+        "body": [
+          "pi([email_addresses.created_at], sigma(email_addresses.id=id, email_addresses))"
+        ]
+      },
+      {
+        "signature": "void readEmailAddressUpdateTime(int id)",
+        "body": [
+          "pi([email_addresses.updated_at], sigma(email_addresses.id=id, email_addresses))"
+        ]
+      },
+      {
+        "signature": "void createEvent(int id, String active, String name, String start_at, String end_at, String created_at, String updated_at, String url_friendly, String description, String sponsored, int max_attendance, String sponsor_file_name, String sponsor_content_type, int sponsor_file_size, String sponsor_updated_at)",
+        "body": [
+          "ins(events, (id, active, name, start_at, end_at, created_at, updated_at, url_friendly, description, sponsored, max_attendance, sponsor_file_name, sponsor_content_type, sponsor_file_size, sponsor_updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteEvent(int id)",
+        "body": [
+          "del(events, events.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateEvent(int id, String active, String name, String start_at, String end_at, String updated_at, String description, String sponsored)",
+        "body": [
+          "upd(events, events.id=id, events.active, active)",
+          "upd(events, events.id=id, events.name, name)",
+          "upd(events, events.id=id, events.start_at, start_at)",
+          "upd(events, events.id=id, events.end_at, end_at)",
+          "upd(events, events.id=id, events.updated_at, updated_at)",
+          "upd(events, events.id=id, events.description, description)",
+          "upd(events, events.id=id, events.sponsored, sponsored)"
+        ]
+      },
+      {
+        "signature": "void updateEventUrl(int id, String url_friendly, String updated_at)",
+        "body": [
+          "upd(events, events.id=id, events.url_friendly, url_friendly)",
+          "upd(events, events.id=id, events.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateEventMaxAttendance(int id, int max_attendance, String updated_at)",
+        "body": [
+          "upd(events, events.id=id, events.max_attendance, max_attendance)",
+          "upd(events, events.id=id, events.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateEventSponsor(int id, String sponsor_file_name, String sponsor_content_type, String sponsor_file_size, String sponsor_updated_at, String updated_at)",
+        "body": [
+          "upd(events, events.id=id, events.sponsor_file_name, sponsor_file_name)",
+          "upd(events, events.id=id, events.sponsor_content_type, sponsor_content_type)",
+          "upd(events, events.id=id, events.sponsor_file_size, sponsor_file_size)",
+          "upd(events, events.id=id, events.sponsor_updated_at, sponsor_updated_at)",
+          "upd(events, events.id=id, events.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readEvent(int id)",
+        "body": [
+          "pi([events.active, events.name, events.start_at, events.end_at, events.url_friendly, events.description, events.sponsored, events.max_attendance, events.sponsor_file_name, events.sponsor_content_type, events.sponsor_file_size, events.sponsor_updated_at], sigma(events.id=id, events))"
+        ]
+      },
+      {
+        "signature": "void readEventCreateTime(int id)",
+        "body": [
+          "pi([events.created_at], sigma(events.id=id, events))"
+        ]
+      },
+      {
+        "signature": "void readEventUpdateTime(int id)",
+        "body": [
+          "pi([events.updated_at], sigma(events.id=id, events))"
+        ]
+      },
+      {
+        "signature": "void createGuest(int id, String first_name, String last_name, String email, String created_at, String updated_at)",
+        "body": [
+          "ins(guests, (id, first_name, last_name, email, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteGuest(int id)",
+        "body": [
+          "del(guests, guests.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateGuest(int id, String first_name, String last_name, String email, String updated_at)",
+        "body": [
+          "upd(guests, guests.id=id, guests.first_name, first_name)",
+          "upd(guests, guests.id=id, guests.last_name, last_name)",
+          "upd(guests, guests.id=id, guests.email, email)",
+          "upd(guests, guests.id=id, guests.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readGuest(int id)",
+        "body": [
+          "pi([guests.first_name, guests.last_name, guests.email], sigma(guests.id=id, guests))"
+        ]
+      },
+      {
+        "signature": "void readGuestCreateTime(int id)",
+        "body": [
+          "pi([guests.created_at], sigma(guests.id=id, guests))"
+        ]
+      },
+      {
+        "signature": "void readGuestUpdateTime(int id)",
+        "body": [
+          "pi([guests.updated_at], sigma(guests.id=id, guests))"
+        ]
+      },
+      {
+        "signature": "void createItem(int id, int product_id, String product_type, String name, String price, String created_at, String updated_at)",
+        "body": [
+          "ins(items, (id, product_id, product_type, name, price, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteItem(int id)",
+        "body": [
+          "del(items, items.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateItem(int id, int product_id, String product_type, String name, String price, String updated_at)",
+        "body": [
+          "upd(items, items.id=id, items.product_id, product_id)",
+          "upd(items, items.id=id, items.product_type, product_type)",
+          "upd(items, items.id=id, items.name, name)",
+          "upd(items, items.id=id, items.price, price)",
+          "upd(items, items.id=id, items.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readItem(int id)",
+        "body": [
+          "pi([items.product_id, items.product_type, items.name, items.price], sigma(items.id=id, items))"
+        ]
+      },
+      {
+        "signature": "void readItemCreateTime(int id)",
+        "body": [
+          "pi([items.created_at], sigma(items.id=id, items))"
+        ]
+      },
+      {
+        "signature": "void readItemUpdateTime(int id)",
+        "body": [
+          "pi([items.updated_at], sigma(items.id=id, items))"
+        ]
+      },
+      {
+        "signature": "void createLocation(int id, int participant_id, String region, String address, String address_cont, String city, String state, String zip, String phone, String created_at, String updated_at)",
+        "body": [
+          "ins(locations, (id, participant_id, region, address, address_cont, city, state, zip, phone, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteLocation(int id)",
+        "body": [
+          "del(locations, locations.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateLocation(int id, int participant_id, String region, String address, String address_cont, String city, String state, String zip, String phone, String updated_at)",
+        "body": [
+          "upd(locations, locations.id=id, locations.participant_id, participant_id)",
+          "upd(locations, locations.id=id, locations.region, region)",
+          "upd(locations, locations.id=id, locations.address, address)",
+          "upd(locations, locations.id=id, locations.address_cont, address_cont)",
+          "upd(locations, locations.id=id, locations.city, city)",
+          "upd(locations, locations.id=id, locations.state, state)",
+          "upd(locations, locations.id=id, locations.zip, zip)",
+          "upd(locations, locations.id=id, locations.phone, phone)",
+          "upd(locations, locations.id=id, locations.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readLocation(int id)",
+        "body": [
+          "pi([locations.participant_id, locations.region, locations.address, locations.address_cont, locations.city, locations.state, locations.zip, locations.phone], sigma(locations.id=id, locations))"
+        ]
+      },
+      {
+        "signature": "void readLocationCreateTime(int id)",
+        "body": [
+          "pi([locations.created_at], sigma(locations.id=id, locations))"
+        ]
+      },
+      {
+        "signature": "void readLocationUpdateTime(int id)",
+        "body": [
+          "pi([locations.updated_at], sigma(locations.id=id, locations))"
+        ]
+      },
+      {
+        "signature": "void createMembership(int id, String name, String created_at, String updated_at)",
+        "body": [
+          "ins(memberships, (id, name, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteMembership(int id)",
+        "body": [
+          "del(memberships, memberships.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateMembership(int id, String name, String updated_at)",
+        "body": [
+          "upd(memberships, memberships.id=id, memberships.name, name)",
+          "upd(memberships, memberships.id=id, memberships.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readMembership(int id)",
+        "body": [
+          "pi([memberships.name], sigma(memberships.id=id, memberships))"
+        ]
+      },
+      {
+        "signature": "void readMembershipCreateTime(int id)",
+        "body": [
+          "pi([memberships.created_at], sigma(memberships.id=id, memberships))"
+        ]
+      },
+      {
+        "signature": "void readMembershipUpdateTime(int id)",
+        "body": [
+          "pi([memberships.updated_at], sigma(memberships.id=id, memberships))"
+        ]
+      },
+      {
+        "signature": "void createOrderItem(int id, int order_id, int item_id, int quantity, String created_at, String updated_at)",
+        "body": [
+          "ins(order_items, (id, order_id, item_id, quantity, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteOrderItem(int id)",
+        "body": [
+          "del(order_items, order_items.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateOrderItem(int id, int order_id, int item_id, int quantity, String updated_at)",
+        "body": [
+          "upd(order_items, order_items.id=id, order_items.order_id, order_id)",
+          "upd(order_items, order_items.id=id, order_items.item_id, item_id)",
+          "upd(order_items, order_items.id=id, order_items.quantity, quantity)",
+          "upd(order_items, order_items.id=id, order_items.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readOrderItem(int id)",
+        "body": [
+          "pi([order_items.order_id, items.name, order_items.quantity], sigma(order_items.id=id, join(order_items, items)))"
+        ]
+      },
+      {
+        "signature": "void readOrderItemCreateTime(int id)",
+        "body": [
+          "pi([order_items.created_at], sigma(order_items.id=id, order_items))"
+        ]
+      },
+      {
+        "signature": "void readOrderItemUpdateTime(int id)",
+        "body": [
+          "pi([order_items.updated_at], sigma(order_items.id=id, order_items))"
+        ]
+      },
+      {
+        "signature": "void createOrder(int id, int customer_id, String customer_type, String amount, String express_token, String express_payer_id, String created_at, String updated_at, String complete)",
+        "body": [
+          "ins(orders, (id, customer_id, customer_type, amount, express_token, express_payer_id, created_at, updated_at, complete))"
+        ]
+      },
+      {
+        "signature": "void deleteOrder(int id)",
+        "body": [
+          "del(orders, orders.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateOrder(int id, int customer_id, String customer_type, String amount, String express_token, String express_payer_id, String updated_at, String complete)",
+        "body": [
+          "upd(orders, orders.id=id, orders.customer_id, customer_id)",
+          "upd(orders, orders.id=id, orders.customer_type, customer_type)",
+          "upd(orders, orders.id=id, orders.amount, amount)",
+          "upd(orders, orders.id=id, orders.express_token, express_token)",
+          "upd(orders, orders.id=id, orders.express_payer_id, express_payer_id)",
+          "upd(orders, orders.id=id, orders.updated_at, updated_at)",
+          "upd(orders, orders.id=id, orders.complete, complete)"
+        ]
+      },
+      {
+        "signature": "void updateOrderExpress(int id, String express_token, String express_payer_id, String updated_at)",
+        "body": [
+          "upd(orders, orders.id=id, orders.express_token, express_token)",
+          "upd(orders, orders.id=id, orders.express_payer_id, express_payer_id)",
+          "upd(orders, orders.id=id, orders.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateOrderAmount(int id, int amount, String updated_at)",
+        "body": [
+          "upd(orders, orders.id=id, orders.amount, amount)",
+          "upd(orders, orders.id=id, orders.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateOrderComplete(int id, String complete, String updated_at)",
+        "body": [
+          "upd(orders, orders.id=id, orders.complete, complete)",
+          "upd(orders, orders.id=id, orders.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readOrder(int id)",
+        "body": [
+          "pi([orders.customer_id, orders.customer_type, orders.amount, orders.express_token, orders.express_payer_id, orders.complete], sigma(orders.id=id, orders))"
+        ]
+      },
+      {
+        "signature": "void readOrderCreateTime(int id)",
+        "body": [
+          "pi([orders.created_at], sigma(orders.id=id, orders))"
+        ]
+      },
+      {
+        "signature": "void readOrderUpdateTime(int id)",
+        "body": [
+          "pi([orders.updated_at], sigma(orders.id=id, orders))"
+        ]
+      },
+      {
+        "signature": "void createParticipant(int id, String name, String url, String bio, String benefit, String instructions, String created_at, String updated_at, String logo_file_name, String logo_content_type, int logo_file_size, String logo_updated_at, int category_id)",
+        "body": [
+          "ins(participants, (id, name, url, bio, benefit, instructions, created_at, updated_at, logo_file_name, logo_content_type, logo_file_size, logo_updated_at, category_id))"
+        ]
+      },
+      {
+        "signature": "void deleteParticipant(int id)",
+        "body": [
+          "del(participants, participants.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateParticipant(int id, String name, String url, String bio, String benefit, String instructions, String updated_at, String logo_file_name, String logo_content_type, int logo_file_size, String logo_updated_at, int category_id)",
+        "body": [
+          "upd(participants, participants.id=id, participants.name, name)",
+          "upd(participants, participants.id=id, participants.url, url)",
+          "upd(participants, participants.id=id, participants.bio, bio)",
+          "upd(participants, participants.id=id, participants.benefit, benefit)",
+          "upd(participants, participants.id=id, participants.instructions, instructions)",
+          "upd(participants, participants.id=id, participants.updated_at, updated_at)",
+          "upd(participants, participants.id=id, participants.logo_file_name, logo_file_name)",
+          "upd(participants, participants.id=id, participants.logo_content_type, logo_content_type)",
+          "upd(participants, participants.id=id, participants.logo_file_size, logo_file_size)",
+          "upd(participants, participants.id=id, participants.logo_updated_at, logo_updated_at)",
+          "upd(participants, participants.id=id, participants.category_id, category_id)"
+        ]
+      },
+      {
+        "signature": "void readParticipant(int id)",
+        "body": [
+          "pi([participants.name, participants.url, participants.bio, participants.benefit, participants.instructions, participants.logo_file_name, participants.logo_content_type, participants.logo_file_size, participants.logo_updated_at, participants.category_id], sigma(participants.id=id, participants))"
+        ]
+      },
+      {
+        "signature": "void readParticipantCreateTime(int id)",
+        "body": [
+          "pi([participants.created_at], sigma(participants.id=id, participants))"
+        ]
+      },
+      {
+        "signature": "void readParticipantUpdateTime(int id)",
+        "body": [
+          "pi([participants.updated_at], sigma(participants.id=id, participants))"
+        ]
+      },
+      {
+        "signature": "void createRegistration(int id, int user_id, String email, String first_name, String last_name, String address, String address2, String city, String state, String zip, String phone_number, String profession, String employer, String education, String about2030, String created_at, String updated_at)",
+        "body": [
+          "ins(registrations, (id, user_id, email, first_name, last_name, address, address2, city, state, zip, phone_number, profession, employer, education, about2030, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteRegistration(int id)",
+        "body": [
+          "del(registrations, registrations.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateRegistration(int id, int user_id, String email, String first_name, String last_name, String address, String address2, String city, String state, String zip, String phone_number, String profession, String employer, String education, String about2030, String updated_at)",
+        "body": [
+          "upd(registrations, registrations.id=id, registrations.user_id, user_id)",
+          "upd(registrations, registrations.id=id, registrations.email, email)",
+          "upd(registrations, registrations.id=id, registrations.first_name, first_name)",
+          "upd(registrations, registrations.id=id, registrations.last_name, last_name)",
+          "upd(registrations, registrations.id=id, registrations.address, address)",
+          "upd(registrations, registrations.id=id, registrations.address2, address2)",
+          "upd(registrations, registrations.id=id, registrations.city, city)",
+          "upd(registrations, registrations.id=id, registrations.state, state)",
+          "upd(registrations, registrations.id=id, registrations.zip, zip)",
+          "upd(registrations, registrations.id=id, registrations.phone_number, phone_number)",
+          "upd(registrations, registrations.id=id, registrations.profession, profession)",
+          "upd(registrations, registrations.id=id, registrations.employer, employer)",
+          "upd(registrations, registrations.id=id, registrations.education, education)",
+          "upd(registrations, registrations.id=id, registrations.about2030, about2030)",
+          "upd(registrations, registrations.id=id, registrations.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readRegistration(int id)",
+        "body": [
+          "pi([registrations.user_id, registrations.email, registrations.first_name, registrations.last_name, registrations.address, registrations.address2, registrations.city, registrations.state, registrations.zip, registrations.phone_number, registrations.profession, registrations.employer, registrations.education, registrations.about2030], sigma(registrations.id=id, registrations))"
+        ]
+      },
+      {
+        "signature": "void readRegistrationCreateTime(int id)",
+        "body": [
+          "pi([registrations.created_at], sigma(registrations.id=id, registrations))"
+        ]
+      },
+      {
+        "signature": "void readRegistrationUpdateTime(int id)",
+        "body": [
+          "pi([registrations.updated_at], sigma(registrations.id=id, registrations))"
+        ]
+      },
+      {
+        "signature": "void createState(int id, String title, String code)",
+        "body": [
+          "ins(states, (id, title, code))"
+        ]
+      },
+      {
+        "signature": "void deleteState(int id)",
+        "body": [
+          "del(states, states.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateState(int id, String title, String code)",
+        "body": [
+          "upd(states, states.id=id, states.title, title)",
+          "upd(states, states.id=id, states.code, code)"
+        ]
+      },
+      {
+        "signature": "void readState(int id)",
+        "body": [
+          "pi([states.title, states.code], sigma(states.id=id, states))"
+        ]
+      },
+      {
+        "signature": "void createUserAddress(int id, int user_id, String address2, int address_type_id, String is_primary, int sort_order, String created_at, String updated_at, String address, String city, String state_code, String zip)",
+        "body": [
+          "ins(user_addresses, (id, user_id, address2, address_type_id, is_primary, sort_order, created_at, updated_at, address, city, state_code, zip))"
+        ]
+      },
+      {
+        "signature": "void deleteUserAddress(int id)",
+        "body": [
+          "del(user_addresses, user_addresses.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateUserAddress(int id, int user_id, String address2, int address_type_id, String is_primary, int sort_order, String updated_at, String address, String city, String state_code, String zip)",
+        "body": [
+          "upd(user_addresses, user_addresses.id=id, user_addresses.user_id, user_id)",
+          "upd(user_addresses, user_addresses.id=id, user_addresses.address2, address2)",
+          "upd(user_addresses, user_addresses.id=id, user_addresses.address_type_id, address_type_id)",
+          "upd(user_addresses, user_addresses.id=id, user_addresses.is_primary, is_primary)",
+          "upd(user_addresses, user_addresses.id=id, user_addresses.sort_order, sort_order)",
+          "upd(user_addresses, user_addresses.id=id, user_addresses.updated_at, updated_at)",
+          "upd(user_addresses, user_addresses.id=id, user_addresses.address, address)",
+          "upd(user_addresses, user_addresses.id=id, user_addresses.city, city)",
+          "upd(user_addresses, user_addresses.id=id, user_addresses.state_code, state_code)",
+          "upd(user_addresses, user_addresses.id=id, user_addresses.zip, zip)"
+        ]
+      },
+      {
+        "signature": "void readUserAddress(int id)",
+        "body": [
+          "pi([user_addresses.user_id, user_addresses.address2, user_addresses.address_type_id, user_addresses.is_primary, user_addresses.sort_order, user_addresses.address, user_addresses.city, user_addresses.state_code, user_addresses.zip], sigma(user_addresses.id=id, user_addresses))"
+        ]
+      },
+      {
+        "signature": "void readUserAddressCreateTime(int id)",
+        "body": [
+          "pi([user_addresses.created_at], sigma(user_addresses.id=id, user_addresses))"
+        ]
+      },
+      {
+        "signature": "void readUserAddressUpdateTime(int id)",
+        "body": [
+          "pi([user_addresses.updated_at], sigma(user_addresses.id=id, user_addresses))"
+        ]
+      },
+      {
+        "signature": "void createUserProfile(int id, int user_id, String phone_number, String profession, String employer, String education, String about2030, String birthdate, String bio, String avatar_file_name, String avatar_content_type, int avatar_file_size, String avatar_updated_at, String created_at, String updated_at, String gender, String member_notes)",
+        "body": [
+          "ins(user_profiles, (id, user_id, phone_number, profession, employer, education, about2030, birthdate, bio, avatar_file_name, avatar_content_type, avatar_file_size, avatar_updated_at, created_at, updated_at, gender, member_notes))"
+        ]
+      },
+      {
+        "signature": "void deleteUserProfile(int id)",
+        "body": [
+          "del(user_profiles, user_profiles.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateUserProfile(int id, int user_id, String phone_number, String profession, String employer, String education, String birthdate, String bio, String updated_at, String gender)",
+        "body": [
+          "upd(user_profiles, user_profiles.id=id, user_profiles.user_id, user_id)",
+          "upd(user_profiles, user_profiles.id=id, user_profiles.phone_number, phone_number)",
+          "upd(user_profiles, user_profiles.id=id, user_profiles.profession, profession)",
+          "upd(user_profiles, user_profiles.id=id, user_profiles.employer, employer)",
+          "upd(user_profiles, user_profiles.id=id, user_profiles.education, education)",
+          "upd(user_profiles, user_profiles.id=id, user_profiles.birthdate, birthdate)",
+          "upd(user_profiles, user_profiles.id=id, user_profiles.bio, bio)",
+          "upd(user_profiles, user_profiles.id=id, user_profiles.updated_at, updated_at)",
+          "upd(user_profiles, user_profiles.id=id, user_profiles.gender, gender)"
+        ]
+      },
+      {
+        "signature": "void updateUserProfileAvatar(int id, String avatar_file_name, String avatar_content_type, int avatar_file_size, String avatar_updated_at, String updated_at)",
+        "body": [
+          "upd(user_profiles, user_profiles.id=id, user_profiles.avatar_file_name, avatar_file_name)",
+          "upd(user_profiles, user_profiles.id=id, user_profiles.avatar_content_type, avatar_content_type)",
+          "upd(user_profiles, user_profiles.id=id, user_profiles.avatar_file_size, avatar_file_size)",
+          "upd(user_profiles, user_profiles.id=id, user_profiles.avatar_updated_at, avatar_updated_at)",
+          "upd(user_profiles, user_profiles.id=id, user_profiles.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateUserProfileMemberNotes(int id, String member_notes, String updated_at)",
+        "body": [
+          "upd(user_profiles, user_profiles.id=id, user_profiles.member_notes, member_notes)",
+          "upd(user_profiles, user_profiles.id=id, user_profiles.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateUserProfileAbout2030(int id, String about2030, String updated_at)",
+        "body": [
+          "upd(user_profiles, user_profiles.id=id, user_profiles.about2030, about2030)",
+          "upd(user_profiles, user_profiles.id=id, user_profiles.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readUserProfile(int id)",
+        "body": [
+          "pi([user_profiles.phone_number, user_profiles.profession, user_profiles.employer, user_profiles.education, user_profiles.birthdate, user_profiles.bio, user_profiles.gender, user_profiles.member_notes], sigma(user_profiles.id=id, user_profiles))"
+        ]
+      },
+      {
+        "signature": "void readUserProfileAvatar(int id)",
+        "body": [
+          "pi([user_profiles.avatar_file_name, user_profiles.avatar_content_type, user_profiles.avatar_file_size, user_profiles.avatar_updated_at], sigma(user_profiles.id=id, user_profiles))"
+        ]
+      },
+      {
+        "signature": "void readUserProfileCreateTime(int id)",
+        "body": [
+          "pi([user_profiles.created_at], sigma(user_profiles.id=id, user_profiles))"
+        ]
+      },
+      {
+        "signature": "void readUserProfileUpdateTime(int id)",
+        "body": [
+          "pi([user_profiles.updated_at], sigma(user_profiles.id=id, user_profiles))"
+        ]
+      },
+      {
+        "signature": "void createUser(int id, String first_name, String last_name, String url_friendly, String email, String crypted_password, String password_salt, String persistence_token, String single_access_token, String perishable_token, int login_count, int failed_login_count, String last_request_at, String current_login_at, String last_login_at, String current_login_ip, String last_login_ip, String joined_at, String expired_at, String activated_at, String active, String activated, String created_at, String updated_at)",
+        "body": [
+          "ins(users, (id, first_name, last_name, url_friendly, email, crypted_password, password_salt, persistence_token, single_access_token, perishable_token, login_count, failed_login_count, last_request_at, current_login_at, last_login_at, current_login_ip, last_login_ip, joined_at, expired_at, activated_at, active, activated, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteUser(int id)",
+        "body": [
+          "del(users, users.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateUserName(int id, String first_name, String last_name, String updated_at)",
+        "body": [
+          "upd(users, users.id=id, users.first_name, first_name)",
+          "upd(users, users.id=id, users.last_name, last_name)",
+          "upd(users, users.id=id, users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateUserUrl(int id, String url_friendly, String updated_at)",
+        "body": [
+          "upd(users, users.id=id, users.url_friendly, url_friendly)",
+          "upd(users, users.id=id, users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateUserEmail(int id, String email, String updated_at)",
+        "body": [
+          "upd(users, users.id=id, users.email, email)",
+          "upd(users, users.id=id, users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateUserPassword(int id, String crypted_password, String password_salt, String updated_at)",
+        "body": [
+          "upd(users, users.id=id, users.crypted_password, crypted_password)",
+          "upd(users, users.id=id, users.password_salt, password_salt)",
+          "upd(users, users.id=id, users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateUserToken(int id, String persistence_token, String single_access_token, String perishable_token, String updated_at)",
+        "body": [
+          "upd(users, users.id=id, users.persistence_token, persistence_token)",
+          "upd(users, users.id=id, users.single_access_token, single_access_token)",
+          "upd(users, users.id=id, users.perishable_token, perishable_token)",
+          "upd(users, users.id=id, users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateUserSignIn(int id, int login_count, int failed_login_count, String last_request_at, String current_login_at, String last_login_at, String current_login_ip, String last_login_ip, String updated_at)",
+        "body": [
+          "upd(users, users.id=id, users.login_count, login_count)",
+          "upd(users, users.id=id, users.failed_login_count, failed_login_count)",
+          "upd(users, users.id=id, users.last_request_at, last_request_at)",
+          "upd(users, users.id=id, users.current_login_at, current_login_at)",
+          "upd(users, users.id=id, users.last_login_at, last_login_at)",
+          "upd(users, users.id=id, users.current_login_ip, current_login_ip)",
+          "upd(users, users.id=id, users.last_login_ip, last_login_ip)",
+          "upd(users, users.id=id, users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateUserStatus(int id, String joined_at, String expired_at, String activated_at, String active, String activated, String updated_at)",
+        "body": [
+          "upd(users, users.id=id, users.joined_at, joined_at)",
+          "upd(users, users.id=id, users.expired_at, expired_at)",
+          "upd(users, users.id=id, users.activated_at, activated_at)",
+          "upd(users, users.id=id, users.active, active)",
+          "upd(users, users.id=id, users.activated, activated)",
+          "upd(users, users.id=id, users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readUserContact(int id)",
+        "body": [
+          "pi([users.first_name, users.last_name, users.url_friendly, users.email], sigma(users.id=id, users))"
+        ]
+      },
+      {
+        "signature": "void readUserPassword(int id)",
+        "body": [
+          "pi([users.crypted_password, users.password_salt], sigma(users.id=id, users))"
+        ]
+      },
+      {
+        "signature": "void readUserTokens(int id)",
+        "body": [
+          "pi([users.persistence_token, users.single_access_token, users.perishable_token], sigma(users.id=id, users))"
+        ]
+      },
+      {
+        "signature": "void readUserLoginInfo(int id)",
+        "body": [
+          "pi([users.login_count, users.failed_login_count, users.last_request_at, users.current_login_at, users.last_login_at, users.current_login_ip, users.last_login_ip], sigma(users.id=id, users))"
+        ]
+      },
+      {
+        "signature": "void readUserStatus(int id)",
+        "body": [
+          "pi([users.joined_at, users.expired_at, users.activated_at, users.active, users.activated], sigma(users.id=id, users))"
+        ]
+      },
+      {
+        "signature": "void findUserByEmail(String email)",
+        "body": [
+          "pi([users.id], sigma(users.email=email, users))"
+        ]
+      },
+      {
+        "signature": "void readUserCreateTime(int id)",
+        "body": [
+          "pi([users.created_at], sigma(users.id=id, users))"
+        ]
+      },
+      {
+        "signature": "void readUserUpdateTime(int id)",
+        "body": [
+          "pi([users.updated_at], sigma(users.id=id, users))"
+        ]
+      },
+      {
+        "signature": "void readEmailAddressUser(int id)",
+        "body": [
+          "pi([users.id, users.first_name, users.last_name, users.url_friendly, users.email, users.crypted_password, users.password_salt, users.persistence_token, users.single_access_token, users.perishable_token, users.login_count, users.failed_login_count, users.last_request_at, users.current_login_at, users.last_login_at, users.current_login_ip, users.last_login_ip, users.joined_at, users.expired_at, users.activated_at, users.active, users.activated], sigma(email_addresses.id=id, join(email_addresses, users)))"
+        ]
+      },
+      {
+        "signature": "void readUserEmailAddress(int id)",
+        "body": [
+          "pi([email_addresses.id, email_addresses.address, email_addresses.user_id, email_addresses.email_address_type_id, email_addresses.primary], sigma(users.id=id, join(email_addresses, users)))"
+        ]
+      },
+      {
+        "signature": "void readLocationParticipant(int id)",
+        "body": [
+          "pi([participants.id, participants.name, participants.url, participants.bio, participants.benefit, participants.instructions, participants.logo_file_name, participants.logo_content_type, participants.logo_file_size, participants.logo_updated_at, participants.category_id], sigma(locations.id=id, join(locations, participants)))"
+        ]
+      },
+      {
+        "signature": "void readParticipantLocation(int id)",
+        "body": [
+          "pi([locations.id, locations.participant_id, locations.region, locations.address, locations.address_cont, locations.city, locations.state, locations.zip, locations.phone], sigma(participants.id=id, join(locations, participants)))"
+        ]
+      },
+      {
+        "signature": "void readOrderItemOrder(int id)",
+        "body": [
+          "pi([orders.id, orders.customer_id, orders.customer_type, orders.amount, orders.express_token, orders.express_payer_id, orders.complete], sigma(order_items.id=id, join(order_items, orders)))"
+        ]
+      },
+      {
+        "signature": "void readOrderOrderItem(int id)",
+        "body": [
+          "pi([order_items.id, order_items.order_id, order_items.item_id, order_items.quantity], sigma(orders.id=id, join(order_items, orders)))"
+        ]
+      },
+      {
+        "signature": "void readOrderItemItem(int id)",
+        "body": [
+          "pi([items.id, items.product_id, items.product_type, items.name, items.price], sigma(order_items.id=id, join(order_items, items)))"
+        ]
+      },
+      {
+        "signature": "void readItemOrderItem(int id)",
+        "body": [
+          "pi([order_items.id, order_items.order_id, order_items.item_id, order_items.quantity], sigma(items.id=id, join(order_items, items)))"
+        ]
+      },
+      {
+        "signature": "void readParticipantCategory(int id)",
+        "body": [
+          "pi([categories.id, categories.name], sigma(participants.id=id, join(participants, categories)))"
+        ]
+      },
+      {
+        "signature": "void readCategoryParticipant(int id)",
+        "body": [
+          "pi([participants.id, participants.name, participants.url, participants.bio, participants.benefit, participants.instructions, participants.logo_file_name, participants.logo_content_type, participants.logo_file_size, participants.logo_updated_at, participants.category_id], sigma(categories.id=id, join(participants, categories)))"
+        ]
+      },
+      {
+        "signature": "void readRegistrationUser(int id)",
+        "body": [
+          "pi([users.id, users.first_name, users.last_name, users.url_friendly, users.email, users.crypted_password, users.password_salt, users.persistence_token, users.single_access_token, users.perishable_token, users.login_count, users.failed_login_count, users.last_request_at, users.current_login_at, users.last_login_at, users.current_login_ip, users.last_login_ip, users.joined_at, users.expired_at, users.activated_at, users.active, users.activated], sigma(registrations.id=id, join(registrations, users)))"
+        ]
+      },
+      {
+        "signature": "void readUserRegistration(int id)",
+        "body": [
+          "pi([registrations.id, registrations.user_id, registrations.email, registrations.first_name, registrations.last_name, registrations.address, registrations.address2, registrations.city, registrations.state, registrations.zip, registrations.phone_number, registrations.profession, registrations.employer, registrations.education, registrations.about2030], sigma(users.id=id, join(registrations, users)))"
+        ]
+      },
+      {
+        "signature": "void readUserAddressUser(int id)",
+        "body": [
+          "pi([users.id, users.first_name, users.last_name, users.url_friendly, users.email, users.crypted_password, users.password_salt, users.persistence_token, users.single_access_token, users.perishable_token, users.login_count, users.failed_login_count, users.last_request_at, users.current_login_at, users.last_login_at, users.current_login_ip, users.last_login_ip, users.joined_at, users.expired_at, users.activated_at, users.active, users.activated], sigma(user_addresses.id=id, join(user_addresses, users)))"
+        ]
+      },
+      {
+        "signature": "void readUserUserAddress(int id)",
+        "body": [
+          "pi([user_addresses.id, user_addresses.user_id, user_addresses.address2, user_addresses.address_type_id, user_addresses.is_primary, user_addresses.sort_order, user_addresses.address, user_addresses.city, user_addresses.state_code, user_addresses.zip], sigma(users.id=id, join(user_addresses, users)))"
+        ]
+      },
+      {
+        "signature": "void readUserProfileUser(int id)",
+        "body": [
+          "pi([users.id, users.first_name, users.last_name, users.url_friendly, users.email, users.crypted_password, users.password_salt, users.persistence_token, users.single_access_token, users.perishable_token, users.login_count, users.failed_login_count, users.last_request_at, users.current_login_at, users.last_login_at, users.current_login_ip, users.last_login_ip, users.joined_at, users.expired_at, users.activated_at, users.active, users.activated], sigma(user_profiles.id=id, join(user_profiles, users)))"
+        ]
+      },
+      {
+        "signature": "void readUserUserProfile(int id)",
+        "body": [
+          "pi([user_profiles.id, user_profiles.user_id, user_profiles.phone_number, user_profiles.profession, user_profiles.employer, user_profiles.education, user_profiles.about2030, user_profiles.birthdate, user_profiles.bio, user_profiles.avatar_file_name, user_profiles.avatar_content_type, user_profiles.avatar_file_size, user_profiles.avatar_updated_at, user_profiles.gender, user_profiles.member_notes], sigma(users.id=id, join(user_profiles, users)))"
+        ]
+      }
+    ]
+  },
+  "target": {
+    "relations": [
+      "categories(int categories.id, String categories.name, String categories.created_at, String categories.updated_at)",
+      "email_addresses(int email_addresses.id, String email_addresses.address, int email_addresses.user_id, int email_addresses.email_address_type_id, String email_addresses.primary, String email_addresses.created_at, String email_addresses.updated_at)",
+      "events(int events.id, String events.active, String events.name, String events.start_at, String events.end_at, String events.created_at, String events.updated_at, String events.url_friendly, String events.description, String events.sponsored, int events.max_attendance, String events.sponsor_file_name, String events.sponsor_content_type, int events.sponsor_file_size, String events.sponsor_updated_at)",
+      "guests(int guests.id, String guests.first_name, String guests.last_name, String guests.email, String guests.created_at, String guests.updated_at)",
+      "items(int items.id, int items.product_id, String items.product_type, String items.name, String items.price, String items.created_at, String items.updated_at)",
+      "locations(int locations.id, int locations.participant_id, String locations.address, String locations.address_cont, String locations.city, String locations.state, String locations.zip, String locations.phone, int locations.region_id, String locations.created_at, String locations.updated_at)",
+      "memberships(int memberships.id, String memberships.name, String memberships.created_at, String memberships.updated_at)",
+      "order_items(int order_items.id, int order_items.order_id, int order_items.item_id, int order_items.quantity, String order_items.created_at, String order_items.updated_at)",
+      "orders(int orders.id, int orders.customer_id, String orders.customer_type, String orders.amount, String orders.express_token, String orders.express_payer_id, String orders.created_at, String orders.updated_at, String orders.complete)",
+      "participants(int participants.id, String participants.name, String participants.url, String participants.bio, String participants.benefit, String participants.instructions, String participants.created_at, String participants.updated_at, String participants.logo_file_name, String participants.logo_content_type, int participants.logo_file_size, String participants.logo_updated_at, int participants.category_id)",
+      "regions(int regions.id, String regions.name, String regions.created_at, String regions.updated_at)",
+      "registrations(int registrations.id, int registrations.user_id, String registrations.email, String registrations.first_name, String registrations.last_name, String registrations.address, String registrations.address2, String registrations.city, String registrations.state, String registrations.zip, String registrations.phone_number, String registrations.profession, String registrations.employer, String registrations.education, String registrations.about2030, String registrations.created_at, String registrations.updated_at)",
+      "states(int states.id, String states.title, String states.code)",
+      "user_addresses(int user_addresses.id, int user_addresses.user_id, String user_addresses.address2, int user_addresses.address_type_id, String user_addresses.is_primary, int user_addresses.sort_order, String user_addresses.created_at, String user_addresses.updated_at, String user_addresses.address, String user_addresses.city, String user_addresses.state_code, String user_addresses.zip)",
+      "user_profiles(int user_profiles.id, int user_profiles.user_id, String user_profiles.phone_number, String user_profiles.profession, String user_profiles.employer, String user_profiles.education, String user_profiles.about2030, String user_profiles.birthdate, String user_profiles.bio, String user_profiles.avatar_file_name, String user_profiles.avatar_content_type, int user_profiles.avatar_file_size, String user_profiles.avatar_updated_at, String user_profiles.created_at, String user_profiles.updated_at, String user_profiles.gender, String user_profiles.member_notes)",
+      "users(int users.id, String users.first_name, String users.last_name, String users.url_friendly, String users.email, String users.crypted_password, String users.password_salt, String users.persistence_token, String users.single_access_token, String users.perishable_token, int users.login_count, int users.failed_login_count, String users.last_request_at, String users.current_login_at, String users.last_login_at, String users.current_login_ip, String users.last_login_ip, String users.joined_at, String users.expired_at, String users.activated_at, String users.active, String users.activated, String users.created_at, String users.updated_at)"
+    ],
+    "primarykeys": [
+      "categories(categories.id)",
+      "email_addresses(email_addresses.id)",
+      "events(events.id)",
+      "guests(guests.id)",
+      "items(items.id)",
+      "locations(locations.id)",
+      "memberships(memberships.id)",
+      "order_items(order_items.id)",
+      "orders(orders.id)",
+      "participants(participants.id)",
+      "regions(regions.id)",
+      "registrations(registrations.id)",
+      "states(states.id)",
+      "user_addresses(user_addresses.id)",
+      "user_profiles(user_profiles.id)",
+      "users(users.id)"
+    ],
+    "foreignkeys": [
+      "email_addresses(email_addresses.user_id) -> users(users.id)",
+      "locations(locations.participant_id) -> participants(participants.id)",
+      "order_items(order_items.order_id) -> orders(orders.id)",
+      "order_items(order_items.item_id) -> items(items.id)",
+      "participants(participants.category_id) -> categories(categories.id)",
+      "locations(locations.region_id) -> regions(regions.id)",
+      "registrations(registrations.user_id) -> users(users.id)",
+      "user_addresses(user_addresses.user_id) -> users(users.id)",
+      "user_profiles(user_profiles.user_id) -> users(users.id)"
+    ],
+    "transactions": [
+      {
+        "signature": "void createCategory(int id, String name, String created_at, String updated_at)",
+        "body": [
+          "ins(categories, (id, name, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteCategory(int id)",
+        "body": [
+          "del(categories, categories.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateCategory(int id, String name, String updated_at)",
+        "body": [
+          "upd(categories, categories.id=id, categories.name, name)",
+          "upd(categories, categories.id=id, categories.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readCategory(int id)",
+        "body": [
+          "pi([categories.name], sigma(categories.id=id, categories))"
+        ]
+      },
+      {
+        "signature": "void readCategoryCreateTime(int id)",
+        "body": [
+          "pi([categories.created_at], sigma(categories.id=id, categories))"
+        ]
+      },
+      {
+        "signature": "void readCategoryUpdateTime(int id)",
+        "body": [
+          "pi([categories.updated_at], sigma(categories.id=id, categories))"
+        ]
+      },
+      {
+        "signature": "void createEmailAddress(int id, String address, int user_id, int email_address_type_id, String primary, String created_at, String updated_at)",
+        "body": [
+          "ins(email_addresses, (id, address, user_id, email_address_type_id, primary, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteEmailAddress(int id)",
+        "body": [
+          "del(email_addresses, email_addresses.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateEmailAddress(int id, String address, int user_id, int email_address_type_id, String primary, String updated_at)",
+        "body": [
+          "upd(email_addresses, email_addresses.id=id, email_addresses.address, address)",
+          "upd(email_addresses, email_addresses.id=id, email_addresses.user_id, user_id)",
+          "upd(email_addresses, email_addresses.id=id, email_addresses.email_address_type_id, email_address_type_id)",
+          "upd(email_addresses, email_addresses.id=id, email_addresses.primary, primary)",
+          "upd(email_addresses, email_addresses.id=id, email_addresses.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readEmailAddress(int id)",
+        "body": [
+          "pi([email_addresses.address, email_addresses.user_id, email_addresses.email_address_type_id, email_addresses.primary], sigma(email_addresses.id=id, email_addresses))"
+        ]
+      },
+      {
+        "signature": "void readEmailAddressCreateTime(int id)",
+        "body": [
+          "pi([email_addresses.created_at], sigma(email_addresses.id=id, email_addresses))"
+        ]
+      },
+      {
+        "signature": "void readEmailAddressUpdateTime(int id)",
+        "body": [
+          "pi([email_addresses.updated_at], sigma(email_addresses.id=id, email_addresses))"
+        ]
+      },
+      {
+        "signature": "void createEvent(int id, String active, String name, String start_at, String end_at, String created_at, String updated_at, String url_friendly, String description, String sponsored, int max_attendance, String sponsor_file_name, String sponsor_content_type, int sponsor_file_size, String sponsor_updated_at)",
+        "body": [
+          "ins(events, (id, active, name, start_at, end_at, created_at, updated_at, url_friendly, description, sponsored, max_attendance, sponsor_file_name, sponsor_content_type, sponsor_file_size, sponsor_updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteEvent(int id)",
+        "body": [
+          "del(events, events.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateEvent(int id, String active, String name, String start_at, String end_at, String updated_at, String description, String sponsored)",
+        "body": [
+          "upd(events, events.id=id, events.active, active)",
+          "upd(events, events.id=id, events.name, name)",
+          "upd(events, events.id=id, events.start_at, start_at)",
+          "upd(events, events.id=id, events.end_at, end_at)",
+          "upd(events, events.id=id, events.updated_at, updated_at)",
+          "upd(events, events.id=id, events.description, description)",
+          "upd(events, events.id=id, events.sponsored, sponsored)"
+        ]
+      },
+      {
+        "signature": "void updateEventUrl(int id, String url_friendly, String updated_at)",
+        "body": [
+          "upd(events, events.id=id, events.url_friendly, url_friendly)",
+          "upd(events, events.id=id, events.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateEventMaxAttendance(int id, int max_attendance, String updated_at)",
+        "body": [
+          "upd(events, events.id=id, events.max_attendance, max_attendance)",
+          "upd(events, events.id=id, events.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateEventSponsor(int id, String sponsor_file_name, String sponsor_content_type, String sponsor_file_size, String sponsor_updated_at, String updated_at)",
+        "body": [
+          "upd(events, events.id=id, events.sponsor_file_name, sponsor_file_name)",
+          "upd(events, events.id=id, events.sponsor_content_type, sponsor_content_type)",
+          "upd(events, events.id=id, events.sponsor_file_size, sponsor_file_size)",
+          "upd(events, events.id=id, events.sponsor_updated_at, sponsor_updated_at)",
+          "upd(events, events.id=id, events.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readEvent(int id)",
+        "body": [
+          "pi([events.active, events.name, events.start_at, events.end_at, events.url_friendly, events.description, events.sponsored, events.max_attendance, events.sponsor_file_name, events.sponsor_content_type, events.sponsor_file_size, events.sponsor_updated_at], sigma(events.id=id, events))"
+        ]
+      },
+      {
+        "signature": "void readEventCreateTime(int id)",
+        "body": [
+          "pi([events.created_at], sigma(events.id=id, events))"
+        ]
+      },
+      {
+        "signature": "void readEventUpdateTime(int id)",
+        "body": [
+          "pi([events.updated_at], sigma(events.id=id, events))"
+        ]
+      },
+      {
+        "signature": "void createGuest(int id, String first_name, String last_name, String email, String created_at, String updated_at)",
+        "body": [
+          "ins(guests, (id, first_name, last_name, email, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteGuest(int id)",
+        "body": [
+          "del(guests, guests.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateGuest(int id, String first_name, String last_name, String email, String updated_at)",
+        "body": [
+          "upd(guests, guests.id=id, guests.first_name, first_name)",
+          "upd(guests, guests.id=id, guests.last_name, last_name)",
+          "upd(guests, guests.id=id, guests.email, email)",
+          "upd(guests, guests.id=id, guests.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readGuest(int id)",
+        "body": [
+          "pi([guests.first_name, guests.last_name, guests.email], sigma(guests.id=id, guests))"
+        ]
+      },
+      {
+        "signature": "void readGuestCreateTime(int id)",
+        "body": [
+          "pi([guests.created_at], sigma(guests.id=id, guests))"
+        ]
+      },
+      {
+        "signature": "void readGuestUpdateTime(int id)",
+        "body": [
+          "pi([guests.updated_at], sigma(guests.id=id, guests))"
+        ]
+      },
+      {
+        "signature": "void createItem(int id, int product_id, String product_type, String name, String price, String created_at, String updated_at)",
+        "body": [
+          "ins(items, (id, product_id, product_type, name, price, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteItem(int id)",
+        "body": [
+          "del(items, items.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateItem(int id, int product_id, String product_type, String name, String price, String updated_at)",
+        "body": [
+          "upd(items, items.id=id, items.product_id, product_id)",
+          "upd(items, items.id=id, items.product_type, product_type)",
+          "upd(items, items.id=id, items.name, name)",
+          "upd(items, items.id=id, items.price, price)",
+          "upd(items, items.id=id, items.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readItem(int id)",
+        "body": [
+          "pi([items.product_id, items.product_type, items.name, items.price], sigma(items.id=id, items))"
+        ]
+      },
+      {
+        "signature": "void readItemCreateTime(int id)",
+        "body": [
+          "pi([items.created_at], sigma(items.id=id, items))"
+        ]
+      },
+      {
+        "signature": "void readItemUpdateTime(int id)",
+        "body": [
+          "pi([items.updated_at], sigma(items.id=id, items))"
+        ]
+      },
+      {
+        "signature": "void createLocation(int id, int participant_id, String region, String address, String address_cont, String city, String state, String zip, String phone, String created_at, String updated_at)",
+        "body": [
+          "ins(regions, (UUID_x1, region, created_at, updated_at))",
+          "ins(locations, (id, participant_id, address, address_cont, city, state, zip, phone, UUID_x1, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteLocation(int id)",
+        "body": [
+          "del(regions, in(regions.id, pi([locations.region_id], sigma(locations.id=id, locations))))",
+          "del(locations, locations.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateLocation(int id, int participant_id, String region, String address, String address_cont, String city, String state, String zip, String phone, String updated_at)",
+        "body": [
+          "upd(locations, locations.id=id, locations.participant_id, participant_id)",
+          "upd(regions, in(regions.id, pi([locations.region_id], sigma(locations.id=id, locations))), regions.name, region)",
+          "upd(locations, locations.id=id, locations.address, address)",
+          "upd(locations, locations.id=id, locations.address_cont, address_cont)",
+          "upd(locations, locations.id=id, locations.city, city)",
+          "upd(locations, locations.id=id, locations.state, state)",
+          "upd(locations, locations.id=id, locations.zip, zip)",
+          "upd(locations, locations.id=id, locations.phone, phone)",
+          "upd(locations, locations.id=id, locations.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readLocation(int id)",
+        "body": [
+          "pi([locations.participant_id, regions.name, locations.address, locations.address_cont, locations.city, locations.state, locations.zip, locations.phone], sigma(locations.id=id, join(locations, regions)))"
+        ]
+      },
+      {
+        "signature": "void readLocationCreateTime(int id)",
+        "body": [
+          "pi([locations.created_at], sigma(locations.id=id, locations))"
+        ]
+      },
+      {
+        "signature": "void readLocationUpdateTime(int id)",
+        "body": [
+          "pi([locations.updated_at], sigma(locations.id=id, locations))"
+        ]
+      },
+      {
+        "signature": "void createMembership(int id, String name, String created_at, String updated_at)",
+        "body": [
+          "ins(memberships, (id, name, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteMembership(int id)",
+        "body": [
+          "del(memberships, memberships.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateMembership(int id, String name, String updated_at)",
+        "body": [
+          "upd(memberships, memberships.id=id, memberships.name, name)",
+          "upd(memberships, memberships.id=id, memberships.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readMembership(int id)",
+        "body": [
+          "pi([memberships.name], sigma(memberships.id=id, memberships))"
+        ]
+      },
+      {
+        "signature": "void readMembershipCreateTime(int id)",
+        "body": [
+          "pi([memberships.created_at], sigma(memberships.id=id, memberships))"
+        ]
+      },
+      {
+        "signature": "void readMembershipUpdateTime(int id)",
+        "body": [
+          "pi([memberships.updated_at], sigma(memberships.id=id, memberships))"
+        ]
+      },
+      {
+        "signature": "void createOrderItem(int id, int order_id, int item_id, int quantity, String created_at, String updated_at)",
+        "body": [
+          "ins(order_items, (id, order_id, item_id, quantity, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteOrderItem(int id)",
+        "body": [
+          "del(order_items, order_items.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateOrderItem(int id, int order_id, int item_id, int quantity, String updated_at)",
+        "body": [
+          "upd(order_items, order_items.id=id, order_items.order_id, order_id)",
+          "upd(order_items, order_items.id=id, order_items.item_id, item_id)",
+          "upd(order_items, order_items.id=id, order_items.quantity, quantity)",
+          "upd(order_items, order_items.id=id, order_items.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readOrderItem(int id)",
+        "body": [
+          "pi([order_items.order_id, items.name, order_items.quantity], sigma(order_items.id=id, join(order_items, items)))"
+        ]
+      },
+      {
+        "signature": "void readOrderItemCreateTime(int id)",
+        "body": [
+          "pi([order_items.created_at], sigma(order_items.id=id, order_items))"
+        ]
+      },
+      {
+        "signature": "void readOrderItemUpdateTime(int id)",
+        "body": [
+          "pi([order_items.updated_at], sigma(order_items.id=id, order_items))"
+        ]
+      },
+      {
+        "signature": "void createOrder(int id, int customer_id, String customer_type, String amount, String express_token, String express_payer_id, String created_at, String updated_at, String complete)",
+        "body": [
+          "ins(orders, (id, customer_id, customer_type, amount, express_token, express_payer_id, created_at, updated_at, complete))"
+        ]
+      },
+      {
+        "signature": "void deleteOrder(int id)",
+        "body": [
+          "del(orders, orders.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateOrder(int id, int customer_id, String customer_type, String amount, String express_token, String express_payer_id, String updated_at, String complete)",
+        "body": [
+          "upd(orders, orders.id=id, orders.customer_id, customer_id)",
+          "upd(orders, orders.id=id, orders.customer_type, customer_type)",
+          "upd(orders, orders.id=id, orders.amount, amount)",
+          "upd(orders, orders.id=id, orders.express_token, express_token)",
+          "upd(orders, orders.id=id, orders.express_payer_id, express_payer_id)",
+          "upd(orders, orders.id=id, orders.updated_at, updated_at)",
+          "upd(orders, orders.id=id, orders.complete, complete)"
+        ]
+      },
+      {
+        "signature": "void updateOrderExpress(int id, String express_token, String express_payer_id, String updated_at)",
+        "body": [
+          "upd(orders, orders.id=id, orders.express_token, express_token)",
+          "upd(orders, orders.id=id, orders.express_payer_id, express_payer_id)",
+          "upd(orders, orders.id=id, orders.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateOrderAmount(int id, int amount, String updated_at)",
+        "body": [
+          "upd(orders, orders.id=id, orders.amount, amount)",
+          "upd(orders, orders.id=id, orders.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateOrderComplete(int id, String complete, String updated_at)",
+        "body": [
+          "upd(orders, orders.id=id, orders.complete, complete)",
+          "upd(orders, orders.id=id, orders.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readOrder(int id)",
+        "body": [
+          "pi([orders.customer_id, orders.customer_type, orders.amount, orders.express_token, orders.express_payer_id, orders.complete], sigma(orders.id=id, orders))"
+        ]
+      },
+      {
+        "signature": "void readOrderCreateTime(int id)",
+        "body": [
+          "pi([orders.created_at], sigma(orders.id=id, orders))"
+        ]
+      },
+      {
+        "signature": "void readOrderUpdateTime(int id)",
+        "body": [
+          "pi([orders.updated_at], sigma(orders.id=id, orders))"
+        ]
+      },
+      {
+        "signature": "void createParticipant(int id, String name, String url, String bio, String benefit, String instructions, String created_at, String updated_at, String logo_file_name, String logo_content_type, int logo_file_size, String logo_updated_at, int category_id)",
+        "body": [
+          "ins(participants, (id, name, url, bio, benefit, instructions, created_at, updated_at, logo_file_name, logo_content_type, logo_file_size, logo_updated_at, category_id))"
+        ]
+      },
+      {
+        "signature": "void deleteParticipant(int id)",
+        "body": [
+          "del(participants, participants.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateParticipant(int id, String name, String url, String bio, String benefit, String instructions, String updated_at, String logo_file_name, String logo_content_type, int logo_file_size, String logo_updated_at, int category_id)",
+        "body": [
+          "upd(participants, participants.id=id, participants.name, name)",
+          "upd(participants, participants.id=id, participants.url, url)",
+          "upd(participants, participants.id=id, participants.bio, bio)",
+          "upd(participants, participants.id=id, participants.benefit, benefit)",
+          "upd(participants, participants.id=id, participants.instructions, instructions)",
+          "upd(participants, participants.id=id, participants.updated_at, updated_at)",
+          "upd(participants, participants.id=id, participants.logo_file_name, logo_file_name)",
+          "upd(participants, participants.id=id, participants.logo_content_type, logo_content_type)",
+          "upd(participants, participants.id=id, participants.logo_file_size, logo_file_size)",
+          "upd(participants, participants.id=id, participants.logo_updated_at, logo_updated_at)",
+          "upd(participants, participants.id=id, participants.category_id, category_id)"
+        ]
+      },
+      {
+        "signature": "void readParticipant(int id)",
+        "body": [
+          "pi([participants.name, participants.url, participants.bio, participants.benefit, participants.instructions, participants.logo_file_name, participants.logo_content_type, participants.logo_file_size, participants.logo_updated_at, participants.category_id], sigma(participants.id=id, participants))"
+        ]
+      },
+      {
+        "signature": "void readParticipantCreateTime(int id)",
+        "body": [
+          "pi([participants.created_at], sigma(participants.id=id, participants))"
+        ]
+      },
+      {
+        "signature": "void readParticipantUpdateTime(int id)",
+        "body": [
+          "pi([participants.updated_at], sigma(participants.id=id, participants))"
+        ]
+      },
+      {
+        "signature": "void createRegistration(int id, int user_id, String email, String first_name, String last_name, String address, String address2, String city, String state, String zip, String phone_number, String profession, String employer, String education, String about2030, String created_at, String updated_at)",
+        "body": [
+          "ins(registrations, (id, user_id, email, first_name, last_name, address, address2, city, state, zip, phone_number, profession, employer, education, about2030, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteRegistration(int id)",
+        "body": [
+          "del(registrations, registrations.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateRegistration(int id, int user_id, String email, String first_name, String last_name, String address, String address2, String city, String state, String zip, String phone_number, String profession, String employer, String education, String about2030, String updated_at)",
+        "body": [
+          "upd(registrations, registrations.id=id, registrations.user_id, user_id)",
+          "upd(registrations, registrations.id=id, registrations.email, email)",
+          "upd(registrations, registrations.id=id, registrations.first_name, first_name)",
+          "upd(registrations, registrations.id=id, registrations.last_name, last_name)",
+          "upd(registrations, registrations.id=id, registrations.address, address)",
+          "upd(registrations, registrations.id=id, registrations.address2, address2)",
+          "upd(registrations, registrations.id=id, registrations.city, city)",
+          "upd(registrations, registrations.id=id, registrations.state, state)",
+          "upd(registrations, registrations.id=id, registrations.zip, zip)",
+          "upd(registrations, registrations.id=id, registrations.phone_number, phone_number)",
+          "upd(registrations, registrations.id=id, registrations.profession, profession)",
+          "upd(registrations, registrations.id=id, registrations.employer, employer)",
+          "upd(registrations, registrations.id=id, registrations.education, education)",
+          "upd(registrations, registrations.id=id, registrations.about2030, about2030)",
+          "upd(registrations, registrations.id=id, registrations.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readRegistration(int id)",
+        "body": [
+          "pi([registrations.user_id, registrations.email, registrations.first_name, registrations.last_name, registrations.address, registrations.address2, registrations.city, registrations.state, registrations.zip, registrations.phone_number, registrations.profession, registrations.employer, registrations.education, registrations.about2030], sigma(registrations.id=id, registrations))"
+        ]
+      },
+      {
+        "signature": "void readRegistrationCreateTime(int id)",
+        "body": [
+          "pi([registrations.created_at], sigma(registrations.id=id, registrations))"
+        ]
+      },
+      {
+        "signature": "void readRegistrationUpdateTime(int id)",
+        "body": [
+          "pi([registrations.updated_at], sigma(registrations.id=id, registrations))"
+        ]
+      },
+      {
+        "signature": "void createState(int id, String title, String code)",
+        "body": [
+          "ins(states, (id, title, code))"
+        ]
+      },
+      {
+        "signature": "void deleteState(int id)",
+        "body": [
+          "del(states, states.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateState(int id, String title, String code)",
+        "body": [
+          "upd(states, states.id=id, states.title, title)",
+          "upd(states, states.id=id, states.code, code)"
+        ]
+      },
+      {
+        "signature": "void readState(int id)",
+        "body": [
+          "pi([states.title, states.code], sigma(states.id=id, states))"
+        ]
+      },
+      {
+        "signature": "void createUserAddress(int id, int user_id, String address2, int address_type_id, String is_primary, int sort_order, String created_at, String updated_at, String address, String city, String state_code, String zip)",
+        "body": [
+          "ins(user_addresses, (id, user_id, address2, address_type_id, is_primary, sort_order, created_at, updated_at, address, city, state_code, zip))"
+        ]
+      },
+      {
+        "signature": "void deleteUserAddress(int id)",
+        "body": [
+          "del(user_addresses, user_addresses.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateUserAddress(int id, int user_id, String address2, int address_type_id, String is_primary, int sort_order, String updated_at, String address, String city, String state_code, String zip)",
+        "body": [
+          "upd(user_addresses, user_addresses.id=id, user_addresses.user_id, user_id)",
+          "upd(user_addresses, user_addresses.id=id, user_addresses.address2, address2)",
+          "upd(user_addresses, user_addresses.id=id, user_addresses.address_type_id, address_type_id)",
+          "upd(user_addresses, user_addresses.id=id, user_addresses.is_primary, is_primary)",
+          "upd(user_addresses, user_addresses.id=id, user_addresses.sort_order, sort_order)",
+          "upd(user_addresses, user_addresses.id=id, user_addresses.updated_at, updated_at)",
+          "upd(user_addresses, user_addresses.id=id, user_addresses.address, address)",
+          "upd(user_addresses, user_addresses.id=id, user_addresses.city, city)",
+          "upd(user_addresses, user_addresses.id=id, user_addresses.state_code, state_code)",
+          "upd(user_addresses, user_addresses.id=id, user_addresses.zip, zip)"
+        ]
+      },
+      {
+        "signature": "void readUserAddress(int id)",
+        "body": [
+          "pi([user_addresses.user_id, user_addresses.address2, user_addresses.address_type_id, user_addresses.is_primary, user_addresses.sort_order, user_addresses.address, user_addresses.city, user_addresses.state_code, user_addresses.zip], sigma(user_addresses.id=id, user_addresses))"
+        ]
+      },
+      {
+        "signature": "void readUserAddressCreateTime(int id)",
+        "body": [
+          "pi([user_addresses.created_at], sigma(user_addresses.id=id, user_addresses))"
+        ]
+      },
+      {
+        "signature": "void readUserAddressUpdateTime(int id)",
+        "body": [
+          "pi([user_addresses.updated_at], sigma(user_addresses.id=id, user_addresses))"
+        ]
+      },
+      {
+        "signature": "void createUserProfile(int id, int user_id, String phone_number, String profession, String employer, String education, String about2030, String birthdate, String bio, String avatar_file_name, String avatar_content_type, int avatar_file_size, String avatar_updated_at, String created_at, String updated_at, String gender, String member_notes)",
+        "body": [
+          "ins(user_profiles, (id, user_id, phone_number, profession, employer, education, about2030, birthdate, bio, avatar_file_name, avatar_content_type, avatar_file_size, avatar_updated_at, created_at, updated_at, gender, member_notes))"
+        ]
+      },
+      {
+        "signature": "void deleteUserProfile(int id)",
+        "body": [
+          "del(user_profiles, user_profiles.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateUserProfile(int id, int user_id, String phone_number, String profession, String employer, String education, String birthdate, String bio, String updated_at, String gender)",
+        "body": [
+          "upd(user_profiles, user_profiles.id=id, user_profiles.user_id, user_id)",
+          "upd(user_profiles, user_profiles.id=id, user_profiles.phone_number, phone_number)",
+          "upd(user_profiles, user_profiles.id=id, user_profiles.profession, profession)",
+          "upd(user_profiles, user_profiles.id=id, user_profiles.employer, employer)",
+          "upd(user_profiles, user_profiles.id=id, user_profiles.education, education)",
+          "upd(user_profiles, user_profiles.id=id, user_profiles.birthdate, birthdate)",
+          "upd(user_profiles, user_profiles.id=id, user_profiles.bio, bio)",
+          "upd(user_profiles, user_profiles.id=id, user_profiles.updated_at, updated_at)",
+          "upd(user_profiles, user_profiles.id=id, user_profiles.gender, gender)"
+        ]
+      },
+      {
+        "signature": "void updateUserProfileAvatar(int id, String avatar_file_name, String avatar_content_type, int avatar_file_size, String avatar_updated_at, String updated_at)",
+        "body": [
+          "upd(user_profiles, user_profiles.id=id, user_profiles.avatar_file_name, avatar_file_name)",
+          "upd(user_profiles, user_profiles.id=id, user_profiles.avatar_content_type, avatar_content_type)",
+          "upd(user_profiles, user_profiles.id=id, user_profiles.avatar_file_size, avatar_file_size)",
+          "upd(user_profiles, user_profiles.id=id, user_profiles.avatar_updated_at, avatar_updated_at)",
+          "upd(user_profiles, user_profiles.id=id, user_profiles.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateUserProfileMemberNotes(int id, String member_notes, String updated_at)",
+        "body": [
+          "upd(user_profiles, user_profiles.id=id, user_profiles.member_notes, member_notes)",
+          "upd(user_profiles, user_profiles.id=id, user_profiles.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateUserProfileAbout2030(int id, String about2030, String updated_at)",
+        "body": [
+          "upd(user_profiles, user_profiles.id=id, user_profiles.about2030, about2030)",
+          "upd(user_profiles, user_profiles.id=id, user_profiles.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readUserProfile(int id)",
+        "body": [
+          "pi([user_profiles.phone_number, user_profiles.profession, user_profiles.employer, user_profiles.education, user_profiles.birthdate, user_profiles.bio, user_profiles.gender, user_profiles.member_notes], sigma(user_profiles.id=id, user_profiles))"
+        ]
+      },
+      {
+        "signature": "void readUserProfileAvatar(int id)",
+        "body": [
+          "pi([user_profiles.avatar_file_name, user_profiles.avatar_content_type, user_profiles.avatar_file_size, user_profiles.avatar_updated_at], sigma(user_profiles.id=id, user_profiles))"
+        ]
+      },
+      {
+        "signature": "void readUserProfileCreateTime(int id)",
+        "body": [
+          "pi([user_profiles.created_at], sigma(user_profiles.id=id, user_profiles))"
+        ]
+      },
+      {
+        "signature": "void readUserProfileUpdateTime(int id)",
+        "body": [
+          "pi([user_profiles.updated_at], sigma(user_profiles.id=id, user_profiles))"
+        ]
+      },
+      {
+        "signature": "void createUser(int id, String first_name, String last_name, String url_friendly, String email, String crypted_password, String password_salt, String persistence_token, String single_access_token, String perishable_token, int login_count, int failed_login_count, String last_request_at, String current_login_at, String last_login_at, String current_login_ip, String last_login_ip, String joined_at, String expired_at, String activated_at, String active, String activated, String created_at, String updated_at)",
+        "body": [
+          "ins(users, (id, first_name, last_name, url_friendly, email, crypted_password, password_salt, persistence_token, single_access_token, perishable_token, login_count, failed_login_count, last_request_at, current_login_at, last_login_at, current_login_ip, last_login_ip, joined_at, expired_at, activated_at, active, activated, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteUser(int id)",
+        "body": [
+          "del(users, users.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateUserName(int id, String first_name, String last_name, String updated_at)",
+        "body": [
+          "upd(users, users.id=id, users.first_name, first_name)",
+          "upd(users, users.id=id, users.last_name, last_name)",
+          "upd(users, users.id=id, users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateUserUrl(int id, String url_friendly, String updated_at)",
+        "body": [
+          "upd(users, users.id=id, users.url_friendly, url_friendly)",
+          "upd(users, users.id=id, users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateUserEmail(int id, String email, String updated_at)",
+        "body": [
+          "upd(users, users.id=id, users.email, email)",
+          "upd(users, users.id=id, users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateUserPassword(int id, String crypted_password, String password_salt, String updated_at)",
+        "body": [
+          "upd(users, users.id=id, users.crypted_password, crypted_password)",
+          "upd(users, users.id=id, users.password_salt, password_salt)",
+          "upd(users, users.id=id, users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateUserToken(int id, String persistence_token, String single_access_token, String perishable_token, String updated_at)",
+        "body": [
+          "upd(users, users.id=id, users.persistence_token, persistence_token)",
+          "upd(users, users.id=id, users.single_access_token, single_access_token)",
+          "upd(users, users.id=id, users.perishable_token, perishable_token)",
+          "upd(users, users.id=id, users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateUserSignIn(int id, int login_count, int failed_login_count, String last_request_at, String current_login_at, String last_login_at, String current_login_ip, String last_login_ip, String updated_at)",
+        "body": [
+          "upd(users, users.id=id, users.login_count, login_count)",
+          "upd(users, users.id=id, users.failed_login_count, failed_login_count)",
+          "upd(users, users.id=id, users.last_request_at, last_request_at)",
+          "upd(users, users.id=id, users.current_login_at, current_login_at)",
+          "upd(users, users.id=id, users.last_login_at, last_login_at)",
+          "upd(users, users.id=id, users.current_login_ip, current_login_ip)",
+          "upd(users, users.id=id, users.last_login_ip, last_login_ip)",
+          "upd(users, users.id=id, users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateUserStatus(int id, String joined_at, String expired_at, String activated_at, String active, String activated, String updated_at)",
+        "body": [
+          "upd(users, users.id=id, users.joined_at, joined_at)",
+          "upd(users, users.id=id, users.expired_at, expired_at)",
+          "upd(users, users.id=id, users.activated_at, activated_at)",
+          "upd(users, users.id=id, users.active, active)",
+          "upd(users, users.id=id, users.activated, activated)",
+          "upd(users, users.id=id, users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readUserContact(int id)",
+        "body": [
+          "pi([users.first_name, users.last_name, users.url_friendly, users.email], sigma(users.id=id, users))"
+        ]
+      },
+      {
+        "signature": "void readUserPassword(int id)",
+        "body": [
+          "pi([users.crypted_password, users.password_salt], sigma(users.id=id, users))"
+        ]
+      },
+      {
+        "signature": "void readUserTokens(int id)",
+        "body": [
+          "pi([users.persistence_token, users.single_access_token, users.perishable_token], sigma(users.id=id, users))"
+        ]
+      },
+      {
+        "signature": "void readUserLoginInfo(int id)",
+        "body": [
+          "pi([users.login_count, users.failed_login_count, users.last_request_at, users.current_login_at, users.last_login_at, users.current_login_ip, users.last_login_ip], sigma(users.id=id, users))"
+        ]
+      },
+      {
+        "signature": "void readUserStatus(int id)",
+        "body": [
+          "pi([users.joined_at, users.expired_at, users.activated_at, users.active, users.activated], sigma(users.id=id, users))"
+        ]
+      },
+      {
+        "signature": "void findUserByEmail(String email)",
+        "body": [
+          "pi([users.id], sigma(users.email=email, users))"
+        ]
+      },
+      {
+        "signature": "void readUserCreateTime(int id)",
+        "body": [
+          "pi([users.created_at], sigma(users.id=id, users))"
+        ]
+      },
+      {
+        "signature": "void readUserUpdateTime(int id)",
+        "body": [
+          "pi([users.updated_at], sigma(users.id=id, users))"
+        ]
+      },
+      {
+        "signature": "void readEmailAddressUser(int id)",
+        "body": [
+          "pi([users.id, users.first_name, users.last_name, users.url_friendly, users.email, users.crypted_password, users.password_salt, users.persistence_token, users.single_access_token, users.perishable_token, users.login_count, users.failed_login_count, users.last_request_at, users.current_login_at, users.last_login_at, users.current_login_ip, users.last_login_ip, users.joined_at, users.expired_at, users.activated_at, users.active, users.activated], sigma(email_addresses.id=id, join(email_addresses, users)))"
+        ]
+      },
+      {
+        "signature": "void readUserEmailAddress(int id)",
+        "body": [
+          "pi([email_addresses.id, email_addresses.address, email_addresses.user_id, email_addresses.email_address_type_id, email_addresses.primary], sigma(users.id=id, join(email_addresses, users)))"
+        ]
+      },
+      {
+        "signature": "void readLocationParticipant(int id)",
+        "body": [
+          "pi([participants.id, participants.name, participants.url, participants.bio, participants.benefit, participants.instructions, participants.logo_file_name, participants.logo_content_type, participants.logo_file_size, participants.logo_updated_at, participants.category_id], sigma(locations.id=id, join(locations, participants)))"
+        ]
+      },
+      {
+        "signature": "void readParticipantLocation(int id)",
+        "body": [
+          "pi([locations.id, locations.participant_id, regions.name, locations.address, locations.address_cont, locations.city, locations.state, locations.zip, locations.phone], sigma(participants.id=id, join(join(locations, participants), regions)))"
+        ]
+      },
+      {
+        "signature": "void readOrderItemOrder(int id)",
+        "body": [
+          "pi([orders.id, orders.customer_id, orders.customer_type, orders.amount, orders.express_token, orders.express_payer_id, orders.complete], sigma(order_items.id=id, join(order_items, orders)))"
+        ]
+      },
+      {
+        "signature": "void readOrderOrderItem(int id)",
+        "body": [
+          "pi([order_items.id, order_items.order_id, order_items.item_id, order_items.quantity], sigma(orders.id=id, join(order_items, orders)))"
+        ]
+      },
+      {
+        "signature": "void readOrderItemItem(int id)",
+        "body": [
+          "pi([items.id, items.product_id, items.product_type, items.name, items.price], sigma(order_items.id=id, join(order_items, items)))"
+        ]
+      },
+      {
+        "signature": "void readItemOrderItem(int id)",
+        "body": [
+          "pi([order_items.id, order_items.order_id, order_items.item_id, order_items.quantity], sigma(items.id=id, join(order_items, items)))"
+        ]
+      },
+      {
+        "signature": "void readParticipantCategory(int id)",
+        "body": [
+          "pi([categories.id, categories.name], sigma(participants.id=id, join(participants, categories)))"
+        ]
+      },
+      {
+        "signature": "void readCategoryParticipant(int id)",
+        "body": [
+          "pi([participants.id, participants.name, participants.url, participants.bio, participants.benefit, participants.instructions, participants.logo_file_name, participants.logo_content_type, participants.logo_file_size, participants.logo_updated_at, participants.category_id], sigma(categories.id=id, join(participants, categories)))"
+        ]
+      },
+      {
+        "signature": "void readRegistrationUser(int id)",
+        "body": [
+          "pi([users.id, users.first_name, users.last_name, users.url_friendly, users.email, users.crypted_password, users.password_salt, users.persistence_token, users.single_access_token, users.perishable_token, users.login_count, users.failed_login_count, users.last_request_at, users.current_login_at, users.last_login_at, users.current_login_ip, users.last_login_ip, users.joined_at, users.expired_at, users.activated_at, users.active, users.activated], sigma(registrations.id=id, join(registrations, users)))"
+        ]
+      },
+      {
+        "signature": "void readUserRegistration(int id)",
+        "body": [
+          "pi([registrations.id, registrations.user_id, registrations.email, registrations.first_name, registrations.last_name, registrations.address, registrations.address2, registrations.city, registrations.state, registrations.zip, registrations.phone_number, registrations.profession, registrations.employer, registrations.education, registrations.about2030], sigma(users.id=id, join(registrations, users)))"
+        ]
+      },
+      {
+        "signature": "void readUserAddressUser(int id)",
+        "body": [
+          "pi([users.id, users.first_name, users.last_name, users.url_friendly, users.email, users.crypted_password, users.password_salt, users.persistence_token, users.single_access_token, users.perishable_token, users.login_count, users.failed_login_count, users.last_request_at, users.current_login_at, users.last_login_at, users.current_login_ip, users.last_login_ip, users.joined_at, users.expired_at, users.activated_at, users.active, users.activated], sigma(user_addresses.id=id, join(user_addresses, users)))"
+        ]
+      },
+      {
+        "signature": "void readUserUserAddress(int id)",
+        "body": [
+          "pi([user_addresses.id, user_addresses.user_id, user_addresses.address2, user_addresses.address_type_id, user_addresses.is_primary, user_addresses.sort_order, user_addresses.address, user_addresses.city, user_addresses.state_code, user_addresses.zip], sigma(users.id=id, join(user_addresses, users)))"
+        ]
+      },
+      {
+        "signature": "void readUserProfileUser(int id)",
+        "body": [
+          "pi([users.id, users.first_name, users.last_name, users.url_friendly, users.email, users.crypted_password, users.password_salt, users.persistence_token, users.single_access_token, users.perishable_token, users.login_count, users.failed_login_count, users.last_request_at, users.current_login_at, users.last_login_at, users.current_login_ip, users.last_login_ip, users.joined_at, users.expired_at, users.activated_at, users.active, users.activated], sigma(user_profiles.id=id, join(user_profiles, users)))"
+        ]
+      },
+      {
+        "signature": "void readUserUserProfile(int id)",
+        "body": [
+          "pi([user_profiles.id, user_profiles.user_id, user_profiles.phone_number, user_profiles.profession, user_profiles.employer, user_profiles.education, user_profiles.about2030, user_profiles.birthdate, user_profiles.bio, user_profiles.avatar_file_name, user_profiles.avatar_content_type, user_profiles.avatar_file_size, user_profiles.avatar_updated_at, user_profiles.gender, user_profiles.member_notes], sigma(users.id=id, join(user_profiles, users)))"
+        ]
+      }
+    ]
+  }
+}

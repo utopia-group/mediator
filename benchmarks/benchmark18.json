@@ -1,0 +1,1053 @@
+{
+  "source": {
+    "relations": [
+      "comments(int comments.id, String comments.body, String comments.created_at, String comments.updated_at, int comments.rating_id)",
+      "dj_genres(int dj_genres.id, int dj_genres.dj_id, int dj_genres.genre_id, String dj_genres.created_at, String dj_genres.updated_at)",
+      "djs(int djs.id, String djs.name, String djs.image_url, String djs.bio, String djs.created_at, String djs.updated_at, String djs.uid, String djs.past_venues, String djs.email, String djs.phone, String djs.dj_status, int djs.sdcl_followers, int djs.sdcl_id, String djs.city, String djs.twitter_hdl, String djs.agent_status, String djs.rate, String djs.can_produce, String djs.slug, int djs.fb_likes, String djs.fbpage_id, String djs.fb_bio, int djs.talking_about_count, String djs.fb_location)",
+      "events(int events.id, String events.name, String events.date, String events.time, String events.description, int events.dj_id, int events.venue_id, String events.created_at, String events.updated_at)",
+      "genres(int genres.id, String genres.created_at, String genres.updated_at, String genres.name)",
+      "ratings(int ratings.id, int ratings.dj_id, String ratings.score, String ratings.created_at, String ratings.updated_at, int ratings.user_id, int ratings.venue_id, String ratings.seen_live)",
+      "replies(int replies.id, String replies.body, int replies.comment_id)",
+      "tracks(int tracks.id, String tracks.demo, int tracks.dj_id, int tracks.playback_count, int tracks.favoritings_count, String tracks.title, String tracks.tag_list)",
+      "users(int users.id, String users.name, String users.venue_status, String users.dj_status, int users.sdcl_id, String users.uid, String users.image_url, String users.created_at, String users.updated_at, String users.email, String users.phone, String users.first_name, String users.gender)",
+      "venues(int venues.id, String venues.name, String venues.address, String venues.created_at, String venues.updated_at, String venues.phone, String venues.image_url, String venues.cross_streets, String venues.neighborhood, String venues.latitude, String venues.longitude, String venues.yelp_rating, String venues.yelp_id, String venues.category)"
+    ],
+    "primarykeys": [
+      "comments(comments.id)",
+      "dj_genres(dj_genres.id)",
+      "djs(djs.id)",
+      "events(events.id)",
+      "genres(genres.id)",
+      "ratings(ratings.id)",
+      "replies(replies.id)",
+      "tracks(tracks.id)",
+      "users(users.id)",
+      "venues(venues.id)"
+    ],
+    "foreignkeys": [
+      "comments(comments.rating_id) -> ratings(ratings.id)",
+      "dj_genres(dj_genres.dj_id) -> djs(djs.id)",
+      "dj_genres(dj_genres.genre_id) -> genres(genres.id)",
+      "events(events.dj_id) -> djs(djs.id)",
+      "events(events.venue_id) -> venues(venues.id)",
+      "ratings(ratings.dj_id) -> djs(djs.id)",
+      "ratings(ratings.user_id) -> users(users.id)",
+      "ratings(ratings.venue_id) -> venues(venues.id)",
+      "replies(replies.comment_id) -> comments(comments.id)",
+      "tracks(tracks.dj_id) -> djs(djs.id)"
+    ],
+    "transactions": [
+      {
+        "signature": "void createComment(int id, String body, int dj_id, int user_id, String seen_live, int venue_id, String score, String created_at, String updated_at)",
+        "body": [
+          "ins(ratings, (UUID_x1, dj_id, score, UUID_f_created_at, UUID_f_updated_at, user_id, venue_id, seen_live))",
+          "ins(comments, (id, body, created_at, updated_at, UUID_x1))"
+        ]
+      },
+      {
+        "signature": "void deleteComment(int id)",
+        "body": [
+          "del(ratings, in(ratings.id, pi([comments.rating_id], sigma(comments.id=id, comments))))",
+          "del(comments, comments.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateComment(int id, String body, String score, String seen_live, String updated_at)",
+        "body": [
+          "upd(comments, comments.id=id, comments.body, body)",
+          "upd(comments, comments.id=id, comments.updated_at, updated_at)",
+          "upd(ratings, in(ratings.id, pi([comments.rating_id], sigma(comments.id=id, comments))), ratings.score, score)",
+          "upd(ratings, in(ratings.id, pi([comments.rating_id], sigma(comments.id=id, comments))), ratings.seen_live, seen_live)",
+          "upd(ratings, in(ratings.id, pi([comments.rating_id], sigma(comments.id=id, comments))), ratings.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readComment(int id)",
+        "body": [
+          "pi([comments.body, ratings.dj_id, ratings.score, ratings.user_id, ratings.venue_id, ratings.seen_live], sigma(comments.id=id, join(comments, ratings)))"
+        ]
+      },
+      {
+        "signature": "void readCommentCreateTime(int id)",
+        "body": [
+          "pi([comments.created_at], sigma(comments.id=id, comments))"
+        ]
+      },
+      {
+        "signature": "void readCommentUpdateTime(int id)",
+        "body": [
+          "pi([comments.updated_at], sigma(comments.id=id, comments))"
+        ]
+      },
+      {
+        "signature": "void createDjGenre(int id, int dj_id, int genre_id, String created_at, String updated_at)",
+        "body": [
+          "ins(dj_genres, (id, dj_id, genre_id, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteDjGenre(int id)",
+        "body": [
+          "del(dj_genres, dj_genres.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateDjGenre(int id, int dj_id, int genre_id, String updated_at)",
+        "body": [
+          "upd(dj_genres, dj_genres.id=id, dj_genres.dj_id, dj_id)",
+          "upd(dj_genres, dj_genres.id=id, dj_genres.genre_id, genre_id)",
+          "upd(dj_genres, dj_genres.id=id, dj_genres.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readDjGenre(int id)",
+        "body": [
+          "pi([dj_genres.dj_id, dj_genres.genre_id], sigma(dj_genres.id=id, dj_genres))"
+        ]
+      },
+      {
+        "signature": "void readDjGenreCreateTime(int id)",
+        "body": [
+          "pi([dj_genres.created_at], sigma(dj_genres.id=id, dj_genres))"
+        ]
+      },
+      {
+        "signature": "void readDjGenreUpdateTime(int id)",
+        "body": [
+          "pi([dj_genres.updated_at], sigma(dj_genres.id=id, dj_genres))"
+        ]
+      },
+      {
+        "signature": "void createDj(int id, String name, String image_url, String bio, String created_at, String updated_at, String uid, String past_venues, String email, String phone, String dj_status, int sdcl_followers, int sdcl_id, String city, String twitter_hdl, String agent_status, String rate, String can_produce, String slug, int fb_likes, String fbpage_id, String fb_bio, int talking_about_count, String fb_location)",
+        "body": [
+          "ins(djs, (id, name, image_url, bio, created_at, updated_at, uid, past_venues, email, phone, dj_status, sdcl_followers, sdcl_id, city, twitter_hdl, agent_status, rate, can_produce, slug, fb_likes, fbpage_id, fb_bio, talking_about_count, fb_location))"
+        ]
+      },
+      {
+        "signature": "void deleteDj(int id)",
+        "body": [
+          "del(djs, djs.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateDjProfile(int id, String name, String image_url, String bio, String past_venues, String email, String phone, String dj_status, String city, String agent_status, String rate, String can_produce, String slug, String updated_at)",
+        "body": [
+          "upd(djs, djs.id=id, djs.name, name)",
+          "upd(djs, djs.id=id, djs.image_url, image_url)",
+          "upd(djs, djs.id=id, djs.bio, bio)",
+          "upd(djs, djs.id=id, djs.past_venues, past_venues)",
+          "upd(djs, djs.id=id, djs.email, email)",
+          "upd(djs, djs.id=id, djs.phone, phone)",
+          "upd(djs, djs.id=id, djs.dj_status, dj_status)",
+          "upd(djs, djs.id=id, djs.city, city)",
+          "upd(djs, djs.id=id, djs.agent_status, agent_status)",
+          "upd(djs, djs.id=id, djs.rate, rate)",
+          "upd(djs, djs.id=id, djs.can_produce, can_produce)",
+          "upd(djs, djs.id=id, djs.slug, slug)",
+          "upd(djs, djs.id=id, djs.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateDjSocialMedia(int id,int sdcl_followers, int sdcl_id, String twitter_hdl, int fb_likes, String fbpage_id, String fb_bio, int talking_about_count, String fb_location, String updated_at)",
+        "body": [
+          "upd(djs, djs.id=id, djs.sdcl_followers, sdcl_followers)",
+          "upd(djs, djs.id=id, djs.sdcl_id, sdcl_id)",
+          "upd(djs, djs.id=id, djs.twitter_hdl, twitter_hdl)",
+          "upd(djs, djs.id=id, djs.fb_likes, fb_likes)",
+          "upd(djs, djs.id=id, djs.fbpage_id, fbpage_id)",
+          "upd(djs, djs.id=id, djs.fb_bio, fb_bio)",
+          "upd(djs, djs.id=id, djs.talking_about_count, talking_about_count)",
+          "upd(djs, djs.id=id, djs.fb_location, fb_location)",
+          "upd(djs, djs.id=id, djs.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readDj(int id)",
+        "body": [
+          "pi([djs.name, djs.image_url, djs.bio, djs.uid, djs.past_venues, djs.email, djs.phone, djs.dj_status, djs.sdcl_followers, djs.sdcl_id, djs.city, djs.twitter_hdl, djs.agent_status, djs.rate, djs.can_produce, djs.slug, djs.fb_likes, djs.fbpage_id, djs.fb_bio, djs.talking_about_count, djs.fb_location], sigma(djs.id=id, djs))"
+        ]
+      },
+      {
+        "signature": "void readDjCreateTime(int id)",
+        "body": [
+          "pi([djs.created_at], sigma(djs.id=id, djs))"
+        ]
+      },
+      {
+        "signature": "void readDjUpdateTime(int id)",
+        "body": [
+          "pi([djs.updated_at], sigma(djs.id=id, djs))"
+        ]
+      },
+      {
+        "signature": "void createEvent(int id, String name, String date, String time, String description, int dj_id, int venue_id, String created_at, String updated_at)",
+        "body": [
+          "ins(events, (id, name, date, time, description, dj_id, venue_id, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteEvent(int id)",
+        "body": [
+          "del(events, events.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateEvent(int id, String name, String date, String time, String description, int dj_id, int venue_id, String updated_at)",
+        "body": [
+          "upd(events, events.id=id, events.name, name)",
+          "upd(events, events.id=id, events.date, date)",
+          "upd(events, events.id=id, events.time, time)",
+          "upd(events, events.id=id, events.description, description)",
+          "upd(events, events.id=id, events.dj_id, dj_id)",
+          "upd(events, events.id=id, events.venue_id, venue_id)",
+          "upd(events, events.id=id, events.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readEvent(int id)",
+        "body": [
+          "pi([events.name, events.date, events.time, events.description, events.dj_id, events.venue_id], sigma(events.id=id, events))"
+        ]
+      },
+      {
+        "signature": "void readEventCreateTime(int id)",
+        "body": [
+          "pi([events.created_at], sigma(events.id=id, events))"
+        ]
+      },
+      {
+        "signature": "void readEventUpdateTime(int id)",
+        "body": [
+          "pi([events.updated_at], sigma(events.id=id, events))"
+        ]
+      },
+      {
+        "signature": "void createGenre(int id, String created_at, String updated_at, String name)",
+        "body": [
+          "ins(genres, (id, created_at, updated_at, name))"
+        ]
+      },
+      {
+        "signature": "void deleteGenre(int id)",
+        "body": [
+          "del(genres, genres.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateGenre(int id, String updated_at, String name)",
+        "body": [
+          "upd(genres, genres.id=id, genres.updated_at, updated_at)",
+          "upd(genres, genres.id=id, genres.name, name)"
+        ]
+      },
+      {
+        "signature": "void readGenre(int id)",
+        "body": [
+          "pi([genres.name], sigma(genres.id=id, genres))"
+        ]
+      },
+      {
+        "signature": "void readGenreCreateTime(int id)",
+        "body": [
+          "pi([genres.created_at], sigma(genres.id=id, genres))"
+        ]
+      },
+      {
+        "signature": "void readGenreUpdateTime(int id)",
+        "body": [
+          "pi([genres.updated_at], sigma(genres.id=id, genres))"
+        ]
+      },
+      {
+        "signature": "void createReply(int id, String body, int comment_id)",
+        "body": [
+          "ins(replies, (id, body, comment_id))"
+        ]
+      },
+      {
+        "signature": "void deleteReply(int id)",
+        "body": [
+          "del(replies, replies.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateReply(int id, String body, int comment_id)",
+        "body": [
+          "upd(replies, replies.id=id, replies.body, body)",
+          "upd(replies, replies.id=id, replies.comment_id, comment_id)"
+        ]
+      },
+      {
+        "signature": "void readReply(int id)",
+        "body": [
+          "pi([replies.body, replies.comment_id], sigma(replies.id=id, replies))"
+        ]
+      },
+      {
+        "signature": "void createTrack(int id, String demo, int dj_id, int playback_count, int favoritings_count, String title, String tag_list)",
+        "body": [
+          "ins(tracks, (id, demo, dj_id, playback_count, favoritings_count, title, tag_list))"
+        ]
+      },
+      {
+        "signature": "void deleteTrack(int id)",
+        "body": [
+          "del(tracks, tracks.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateTrack(int id, String demo, int dj_id, int playback_count, int favoritings_count, String title, String tag_list)",
+        "body": [
+          "upd(tracks, tracks.id=id, tracks.demo, demo)",
+          "upd(tracks, tracks.id=id, tracks.dj_id, dj_id)",
+          "upd(tracks, tracks.id=id, tracks.playback_count, playback_count)",
+          "upd(tracks, tracks.id=id, tracks.favoritings_count, favoritings_count)",
+          "upd(tracks, tracks.id=id, tracks.title, title)",
+          "upd(tracks, tracks.id=id, tracks.tag_list, tag_list)"
+        ]
+      },
+      {
+        "signature": "void readTrack(int id)",
+        "body": [
+          "pi([tracks.demo, tracks.dj_id, tracks.playback_count, tracks.favoritings_count, tracks.title, tracks.tag_list], sigma(tracks.id=id, tracks))"
+        ]
+      },
+      {
+        "signature": "void createUser(int id, String name, String venue_status, String dj_status, int sdcl_id, String uid, String image_url, String created_at, String updated_at, String email, String phone, String first_name, String gender)",
+        "body": [
+          "ins(users, (id, name, venue_status, dj_status, sdcl_id, uid, image_url, created_at, updated_at, email, phone, first_name, gender))"
+        ]
+      },
+      {
+        "signature": "void deleteUser(int id)",
+        "body": [
+          "del(users, users.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateUser(int id, String name, String venue_status, String dj_status, int sdcl_id, String uid, String image_url, String updated_at, String email, String phone, String first_name, String gender)",
+        "body": [
+          "upd(users, users.id=id, users.name, name)",
+          "upd(users, users.id=id, users.venue_status, venue_status)",
+          "upd(users, users.id=id, users.dj_status, dj_status)",
+          "upd(users, users.id=id, users.sdcl_id, sdcl_id)",
+          "upd(users, users.id=id, users.uid, uid)",
+          "upd(users, users.id=id, users.image_url, image_url)",
+          "upd(users, users.id=id, users.updated_at, updated_at)",
+          "upd(users, users.id=id, users.email, email)",
+          "upd(users, users.id=id, users.phone, phone)",
+          "upd(users, users.id=id, users.first_name, first_name)",
+          "upd(users, users.id=id, users.gender, gender)"
+        ]
+      },
+      {
+        "signature": "void readUser(int id)",
+        "body": [
+          "pi([users.name, users.venue_status, users.dj_status, users.sdcl_id, users.uid, users.image_url, users.email, users.phone, users.first_name, users.gender], sigma(users.id=id, users))"
+        ]
+      },
+      {
+        "signature": "void readUserCreateTime(int id)",
+        "body": [
+          "pi([users.created_at], sigma(users.id=id, users))"
+        ]
+      },
+      {
+        "signature": "void readUserUpdateTime(int id)",
+        "body": [
+          "pi([users.updated_at], sigma(users.id=id, users))"
+        ]
+      },
+      {
+        "signature": "void createVenue(int id, String name, String address, String created_at, String updated_at, String phone, String image_url, String cross_streets, String neighborhood, String latitude, String longitude, String yelp_rating, String yelp_id, String category)",
+        "body": [
+          "ins(venues, (id, name, address, created_at, updated_at, phone, image_url, cross_streets, neighborhood, latitude, longitude, yelp_rating, yelp_id, category))"
+        ]
+      },
+      {
+        "signature": "void deleteVenue(int id)",
+        "body": [
+          "del(venues, venues.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateVenue(int id, String name, String address, String updated_at, String phone, String image_url, String cross_streets, String latitude, String longitude, String yelp_rating, String yelp_id, String category)",
+        "body": [
+          "upd(venues, venues.id=id, venues.name, name)",
+          "upd(venues, venues.id=id, venues.address, address)",
+          "upd(venues, venues.id=id, venues.updated_at, updated_at)",
+          "upd(venues, venues.id=id, venues.phone, phone)",
+          "upd(venues, venues.id=id, venues.image_url, image_url)",
+          "upd(venues, venues.id=id, venues.cross_streets, cross_streets)",
+          "upd(venues, venues.id=id, venues.latitude, latitude)",
+          "upd(venues, venues.id=id, venues.longitude, longitude)",
+          "upd(venues, venues.id=id, venues.yelp_rating, yelp_rating)",
+          "upd(venues, venues.id=id, venues.yelp_id, yelp_id)",
+          "upd(venues, venues.id=id, venues.category, category)"
+        ]
+      },
+      {
+        "signature": "void updateVenueNeighborhood(int id, String neighborhood, String updated_at)",
+        "body": [
+          "upd(venues, venues.id=id, venues.neighborhood, neighborhood)",
+          "upd(venues, venues.id=id, venues.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readVenue(int id)",
+        "body": [
+          "pi([venues.name, venues.address, venues.phone, venues.image_url, venues.cross_streets, venues.neighborhood, venues.latitude, venues.longitude, venues.yelp_rating, venues.yelp_id, venues.category], sigma(venues.id=id, venues))"
+        ]
+      },
+      {
+        "signature": "void readVenueCreateTime(int id)",
+        "body": [
+          "pi([venues.created_at], sigma(venues.id=id, venues))"
+        ]
+      },
+      {
+        "signature": "void readVenueUpdateTime(int id)",
+        "body": [
+          "pi([venues.updated_at], sigma(venues.id=id, venues))"
+        ]
+      },
+      {
+        "signature": "void readDjGenreDj(int id)",
+        "body": [
+          "pi([djs.id, djs.name, djs.image_url, djs.bio, djs.uid, djs.past_venues, djs.email, djs.phone, djs.dj_status, djs.sdcl_followers, djs.sdcl_id, djs.city, djs.twitter_hdl, djs.agent_status, djs.rate, djs.can_produce, djs.slug, djs.fb_likes, djs.fbpage_id, djs.fb_bio, djs.talking_about_count, djs.fb_location], sigma(dj_genres.id=id, join(dj_genres, djs)))"
+        ]
+      },
+      {
+        "signature": "void readDjDjGenre(int id)",
+        "body": [
+          "pi([dj_genres.id, dj_genres.dj_id, dj_genres.genre_id], sigma(djs.id=id, join(dj_genres, djs)))"
+        ]
+      },
+      {
+        "signature": "void readDjGenreGenre(int id)",
+        "body": [
+          "pi([genres.id, genres.name], sigma(dj_genres.id=id, join(dj_genres, genres)))"
+        ]
+      },
+      {
+        "signature": "void readGenreDjGenre(int id)",
+        "body": [
+          "pi([dj_genres.id, dj_genres.dj_id, dj_genres.genre_id], sigma(genres.id=id, join(dj_genres, genres)))"
+        ]
+      },
+      {
+        "signature": "void readEventDj(int id)",
+        "body": [
+          "pi([djs.id, djs.name, djs.image_url, djs.bio, djs.uid, djs.past_venues, djs.email, djs.phone, djs.dj_status, djs.sdcl_followers, djs.sdcl_id, djs.city, djs.twitter_hdl, djs.agent_status, djs.rate, djs.can_produce, djs.slug, djs.fb_likes, djs.fbpage_id, djs.fb_bio, djs.talking_about_count, djs.fb_location], sigma(events.id=id, join(events, djs)))"
+        ]
+      },
+      {
+        "signature": "void readDjEvent(int id)",
+        "body": [
+          "pi([events.id, events.name, events.date, events.time, events.description, events.dj_id, events.venue_id], sigma(djs.id=id, join(events, djs)))"
+        ]
+      },
+      {
+        "signature": "void readEventVenue(int id)",
+        "body": [
+          "pi([venues.id, venues.name, venues.address, venues.phone, venues.image_url, venues.cross_streets, venues.neighborhood, venues.latitude, venues.longitude, venues.yelp_rating, venues.yelp_id, venues.category], sigma(events.id=id, join(events, venues)))"
+        ]
+      },
+      {
+        "signature": "void readVenueEvent(int id)",
+        "body": [
+          "pi([events.id, events.name, events.date, events.time, events.description, events.dj_id, events.venue_id], sigma(venues.id=id, join(events, venues)))"
+        ]
+      },
+      {
+        "signature": "void readCommentDj(int id)",
+        "body": [
+          "pi([djs.id, djs.name, djs.image_url, djs.bio, djs.uid, djs.past_venues, djs.email, djs.phone, djs.dj_status, djs.sdcl_followers, djs.sdcl_id, djs.city, djs.twitter_hdl, djs.agent_status, djs.rate, djs.can_produce, djs.slug, djs.fb_likes, djs.fbpage_id, djs.fb_bio, djs.talking_about_count, djs.fb_location], sigma(comments.id=id, join(join(comments, ratings), djs)))"
+        ]
+      },
+      {
+        "signature": "void readDjComment(int id)",
+        "body": [
+          "pi([comments.body, ratings.score, ratings.seen_live], sigma(djs.id=id, join(join(comments, ratings), djs)))"
+        ]
+      },
+      {
+        "signature": "void readCommentUser(int id)",
+        "body": [
+          "pi([users.id, users.name, users.venue_status, users.dj_status, users.sdcl_id, users.uid, users.image_url, users.email, users.phone, users.first_name, users.gender], sigma(comments.id=id, join(join(comments, ratings), users)))"
+        ]
+      },
+      {
+        "signature": "void readUserComment(int id)",
+        "body": [
+          "pi([comments.body, ratings.score, ratings.seen_live], sigma(users.id=id, join(join(comments, ratings), users)))"
+        ]
+      },
+      {
+        "signature": "void readCommentVenue(int id)",
+        "body": [
+          "pi([venues.id, venues.name, venues.address, venues.phone, venues.image_url, venues.cross_streets, venues.neighborhood, venues.latitude, venues.longitude, venues.yelp_rating, venues.yelp_id, venues.category], sigma(comments.id=id, join(join(comments, ratings), venues)))"
+        ]
+      },
+      {
+        "signature": "void readVenueComment(int id)",
+        "body": [
+          "pi([comments.body, ratings.score, ratings.seen_live], sigma(venues.id=id, join(join(comments, ratings), venues)))"
+        ]
+      },
+      {
+        "signature": "void readReplyComment(int id)",
+        "body": [
+          "pi([comments.id, comments.body, ratings.score, ratings.seen_live], sigma(replies.id=id, join(join(replies, comments), ratings)))"
+        ]
+      },
+      {
+        "signature": "void readCommentReply(int id)",
+        "body": [
+          "pi([replies.id, replies.body], sigma(comments.id=id, join(replies, comments)))"
+        ]
+      },
+      {
+        "signature": "void readTrackDj(int id)",
+        "body": [
+          "pi([djs.id, djs.name, djs.image_url, djs.bio, djs.uid, djs.past_venues, djs.email, djs.phone, djs.dj_status, djs.sdcl_followers, djs.sdcl_id, djs.city, djs.twitter_hdl, djs.agent_status, djs.rate, djs.can_produce, djs.slug, djs.fb_likes, djs.fbpage_id, djs.fb_bio, djs.talking_about_count, djs.fb_location], sigma(tracks.id=id, join(tracks, djs)))"
+        ]
+      },
+      {
+        "signature": "void readDjTrack(int id)",
+        "body": [
+          "pi([tracks.id, tracks.demo, tracks.dj_id, tracks.playback_count, tracks.favoritings_count, tracks.title, tracks.tag_list], sigma(djs.id=id, join(tracks, djs)))"
+        ]
+      }
+    ]
+  },
+  "target": {
+    "relations": [
+      "comments(int comments.id, String comments.body, String comments.created_at, String comments.updated_at, int comments.rating_id)",
+      "dj_genres(int dj_genres.id, int dj_genres.dj_id, int dj_genres.genre_id, String dj_genres.created_at, String dj_genres.updated_at)",
+      "djs(int djs.id, String djs.name, String djs.image_url, String djs.bio, String djs.created_at, String djs.updated_at, String djs.uid, String djs.past_venues, String djs.email, String djs.phone, String djs.dj_status, int djs.sdcl_followers, int djs.sdcl_id, String djs.city, String djs.twitter_hdl, String djs.agent_status, String djs.rate, String djs.can_produce, String djs.slug, int djs.fb_likes, String djs.fbpage_id, String djs.fb_bio, int djs.talking_about_count, String djs.fb_location)",
+      "events(int events.id, String events.name, String events.date, String events.time, String events.description, int events.dj_id, int events.venue_id, String events.created_at, String events.updated_at)",
+      "genres(int genres.id, String genres.created_at, String genres.updated_at, String genres.name)",
+      "neighborhoods(int neighborhoods.id, String neighborhoods.name, String neighborhoods.created_at, String neighborhoods.updated_at)",
+      "ratings(int ratings.id, int ratings.dj_id, String ratings.score, String ratings.created_at, String ratings.updated_at, int ratings.user_id, int ratings.venue_id, String ratings.seen_live)",
+      "replies(int replies.id, String replies.body, int replies.comment_id)",
+      "tracks(int tracks.id, String tracks.demo, int tracks.dj_id, int tracks.playback_count, int tracks.favoritings_count, String tracks.title, String tracks.tag_list)",
+      "users(int users.id, String users.name, String users.venue_status, String users.dj_status, int users.sdcl_id, String users.uid, String users.image_url, String users.created_at, String users.updated_at, String users.email, String users.phone, String users.first_name, String users.gender)",
+      "venues(int venues.id, String venues.name, String venues.address, String venues.created_at, String venues.updated_at, String venues.phone, String venues.image_url, String venues.cross_streets, String venues.hood, String venues.latitude, String venues.longitude, String venues.yelp_rating, String venues.yelp_id, String venues.category, int venues.neighborhood_id)"
+    ],
+    "primarykeys": [
+      "comments(comments.id)",
+      "dj_genres(dj_genres.id)",
+      "djs(djs.id)",
+      "events(events.id)",
+      "genres(genres.id)",
+      "neighborhoods(neighborhoods.id)",
+      "ratings(ratings.id)",
+      "replies(replies.id)",
+      "tracks(tracks.id)",
+      "users(users.id)",
+      "venues(venues.id)"
+    ],
+    "foreignkeys": [
+      "comments(comments.rating_id) -> ratings(ratings.id)",
+      "dj_genres(dj_genres.dj_id) -> djs(djs.id)",
+      "dj_genres(dj_genres.genre_id) -> genres(genres.id)",
+      "events(events.dj_id) -> djs(djs.id)",
+      "events(events.venue_id) -> venues(venues.id)",
+      "ratings(ratings.dj_id) -> djs(djs.id)",
+      "ratings(ratings.user_id) -> users(users.id)",
+      "ratings(ratings.venue_id) -> venues(venues.id)",
+      "replies(replies.comment_id) -> comments(comments.id)",
+      "tracks(tracks.dj_id) -> djs(djs.id)",
+      "venues(venues.neighborhood_id) -> neighborhoods(neighborhoods.id)"
+    ],
+    "transactions": [
+      {
+        "signature": "void createComment(int id, String body, int dj_id, int user_id, String seen_live, int venue_id, String score, String created_at, String updated_at)",
+        "body": [
+          "ins(ratings, (UUID_x2, dj_id, score, UUID_UNK, UUID_UNK, user_id, venue_id, seen_live))",
+          "ins(comments, (id, body, created_at, updated_at, UUID_x2))"
+        ]
+      },
+      {
+        "signature": "void deleteComment(int id)",
+        "body": [
+          "del(ratings, in(ratings.id, pi([comments.rating_id], sigma(comments.id=id, comments))))",
+          "del(comments, comments.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateComment(int id, String body, String score, String seen_live, String updated_at)",
+        "body": [
+          "upd(comments, comments.id=id, comments.body, body)",
+          "upd(comments, comments.id=id, comments.updated_at, updated_at)",
+          "upd(ratings, in(ratings.id, pi([comments.rating_id], sigma(comments.id=id, comments))), ratings.score, score)",
+          "upd(ratings, in(ratings.id, pi([comments.rating_id], sigma(comments.id=id, comments))), ratings.seen_live, seen_live)",
+          "upd(ratings, in(ratings.id, pi([comments.rating_id], sigma(comments.id=id, comments))), ratings.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readComment(int id)",
+        "body": [
+          "pi([comments.body, ratings.dj_id, ratings.score, ratings.user_id, ratings.venue_id, ratings.seen_live], sigma(comments.id=id, join(comments, ratings)))"
+        ]
+      },
+      {
+        "signature": "void readCommentCreateTime(int id)",
+        "body": [
+          "pi([comments.created_at], sigma(comments.id=id, comments))"
+        ]
+      },
+      {
+        "signature": "void readCommentUpdateTime(int id)",
+        "body": [
+          "pi([comments.updated_at], sigma(comments.id=id, comments))"
+        ]
+      },
+      {
+        "signature": "void createDjGenre(int id, int dj_id, int genre_id, String created_at, String updated_at)",
+        "body": [
+          "ins(dj_genres, (id, dj_id, genre_id, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteDjGenre(int id)",
+        "body": [
+          "del(dj_genres, dj_genres.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateDjGenre(int id, int dj_id, int genre_id, String updated_at)",
+        "body": [
+          "upd(dj_genres, dj_genres.id=id, dj_genres.dj_id, dj_id)",
+          "upd(dj_genres, dj_genres.id=id, dj_genres.genre_id, genre_id)",
+          "upd(dj_genres, dj_genres.id=id, dj_genres.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readDjGenre(int id)",
+        "body": [
+          "pi([dj_genres.dj_id, dj_genres.genre_id], sigma(dj_genres.id=id, dj_genres))"
+        ]
+      },
+      {
+        "signature": "void readDjGenreCreateTime(int id)",
+        "body": [
+          "pi([dj_genres.created_at], sigma(dj_genres.id=id, dj_genres))"
+        ]
+      },
+      {
+        "signature": "void readDjGenreUpdateTime(int id)",
+        "body": [
+          "pi([dj_genres.updated_at], sigma(dj_genres.id=id, dj_genres))"
+        ]
+      },
+      {
+        "signature": "void createDj(int id, String name, String image_url, String bio, String created_at, String updated_at, String uid, String past_venues, String email, String phone, String dj_status, int sdcl_followers, int sdcl_id, String city, String twitter_hdl, String agent_status, String rate, String can_produce, String slug, int fb_likes, String fbpage_id, String fb_bio, int talking_about_count, String fb_location)",
+        "body": [
+          "ins(djs, (id, name, image_url, bio, created_at, updated_at, uid, past_venues, email, phone, dj_status, sdcl_followers, sdcl_id, city, twitter_hdl, agent_status, rate, can_produce, slug, fb_likes, fbpage_id, fb_bio, talking_about_count, fb_location))"
+        ]
+      },
+      {
+        "signature": "void deleteDj(int id)",
+        "body": [
+          "del(djs, djs.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateDjProfile(int id, String name, String image_url, String bio, String past_venues, String email, String phone, String dj_status, String city, String agent_status, String rate, String can_produce, String slug, String updated_at)",
+        "body": [
+          "upd(djs, djs.id=id, djs.name, name)",
+          "upd(djs, djs.id=id, djs.image_url, image_url)",
+          "upd(djs, djs.id=id, djs.bio, bio)",
+          "upd(djs, djs.id=id, djs.past_venues, past_venues)",
+          "upd(djs, djs.id=id, djs.email, email)",
+          "upd(djs, djs.id=id, djs.phone, phone)",
+          "upd(djs, djs.id=id, djs.dj_status, dj_status)",
+          "upd(djs, djs.id=id, djs.city, city)",
+          "upd(djs, djs.id=id, djs.agent_status, agent_status)",
+          "upd(djs, djs.id=id, djs.rate, rate)",
+          "upd(djs, djs.id=id, djs.can_produce, can_produce)",
+          "upd(djs, djs.id=id, djs.slug, slug)",
+          "upd(djs, djs.id=id, djs.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateDjSocialMedia(int id,int sdcl_followers, int sdcl_id, String twitter_hdl, int fb_likes, String fbpage_id, String fb_bio, int talking_about_count, String fb_location, String updated_at)",
+        "body": [
+          "upd(djs, djs.id=id, djs.sdcl_followers, sdcl_followers)",
+          "upd(djs, djs.id=id, djs.sdcl_id, sdcl_id)",
+          "upd(djs, djs.id=id, djs.twitter_hdl, twitter_hdl)",
+          "upd(djs, djs.id=id, djs.fb_likes, fb_likes)",
+          "upd(djs, djs.id=id, djs.fbpage_id, fbpage_id)",
+          "upd(djs, djs.id=id, djs.fb_bio, fb_bio)",
+          "upd(djs, djs.id=id, djs.talking_about_count, talking_about_count)",
+          "upd(djs, djs.id=id, djs.fb_location, fb_location)",
+          "upd(djs, djs.id=id, djs.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readDj(int id)",
+        "body": [
+          "pi([djs.name, djs.image_url, djs.bio, djs.uid, djs.past_venues, djs.email, djs.phone, djs.dj_status, djs.sdcl_followers, djs.sdcl_id, djs.city, djs.twitter_hdl, djs.agent_status, djs.rate, djs.can_produce, djs.slug, djs.fb_likes, djs.fbpage_id, djs.fb_bio, djs.talking_about_count, djs.fb_location], sigma(djs.id=id, djs))"
+        ]
+      },
+      {
+        "signature": "void readDjCreateTime(int id)",
+        "body": [
+          "pi([djs.created_at], sigma(djs.id=id, djs))"
+        ]
+      },
+      {
+        "signature": "void readDjUpdateTime(int id)",
+        "body": [
+          "pi([djs.updated_at], sigma(djs.id=id, djs))"
+        ]
+      },
+      {
+        "signature": "void createEvent(int id, String name, String date, String time, String description, int dj_id, int venue_id, String created_at, String updated_at)",
+        "body": [
+          "ins(events, (id, name, date, time, description, dj_id, venue_id, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteEvent(int id)",
+        "body": [
+          "del(events, events.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateEvent(int id, String name, String date, String time, String description, int dj_id, int venue_id, String updated_at)",
+        "body": [
+          "upd(events, events.id=id, events.name, name)",
+          "upd(events, events.id=id, events.date, date)",
+          "upd(events, events.id=id, events.time, time)",
+          "upd(events, events.id=id, events.description, description)",
+          "upd(events, events.id=id, events.dj_id, dj_id)",
+          "upd(events, events.id=id, events.venue_id, venue_id)",
+          "upd(events, events.id=id, events.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readEvent(int id)",
+        "body": [
+          "pi([events.name, events.date, events.time, events.description, events.dj_id, events.venue_id], sigma(events.id=id, events))"
+        ]
+      },
+      {
+        "signature": "void readEventCreateTime(int id)",
+        "body": [
+          "pi([events.created_at], sigma(events.id=id, events))"
+        ]
+      },
+      {
+        "signature": "void readEventUpdateTime(int id)",
+        "body": [
+          "pi([events.updated_at], sigma(events.id=id, events))"
+        ]
+      },
+      {
+        "signature": "void createGenre(int id, String created_at, String updated_at, String name)",
+        "body": [
+          "ins(genres, (id, created_at, updated_at, name))"
+        ]
+      },
+      {
+        "signature": "void deleteGenre(int id)",
+        "body": [
+          "del(genres, genres.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateGenre(int id, String updated_at, String name)",
+        "body": [
+          "upd(genres, genres.id=id, genres.updated_at, updated_at)",
+          "upd(genres, genres.id=id, genres.name, name)"
+        ]
+      },
+      {
+        "signature": "void readGenre(int id)",
+        "body": [
+          "pi([genres.name], sigma(genres.id=id, genres))"
+        ]
+      },
+      {
+        "signature": "void readGenreCreateTime(int id)",
+        "body": [
+          "pi([genres.created_at], sigma(genres.id=id, genres))"
+        ]
+      },
+      {
+        "signature": "void readGenreUpdateTime(int id)",
+        "body": [
+          "pi([genres.updated_at], sigma(genres.id=id, genres))"
+        ]
+      },
+      {
+        "signature": "void createReply(int id, String body, int comment_id)",
+        "body": [
+          "ins(replies, (id, body, comment_id))"
+        ]
+      },
+      {
+        "signature": "void deleteReply(int id)",
+        "body": [
+          "del(replies, replies.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateReply(int id, String body, int comment_id)",
+        "body": [
+          "upd(replies, replies.id=id, replies.body, body)",
+          "upd(replies, replies.id=id, replies.comment_id, comment_id)"
+        ]
+      },
+      {
+        "signature": "void readReply(int id)",
+        "body": [
+          "pi([replies.body, replies.comment_id], sigma(replies.id=id, replies))"
+        ]
+      },
+      {
+        "signature": "void createTrack(int id, String demo, int dj_id, int playback_count, int favoritings_count, String title, String tag_list)",
+        "body": [
+          "ins(tracks, (id, demo, dj_id, playback_count, favoritings_count, title, tag_list))"
+        ]
+      },
+      {
+        "signature": "void deleteTrack(int id)",
+        "body": [
+          "del(tracks, tracks.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateTrack(int id, String demo, int dj_id, int playback_count, int favoritings_count, String title, String tag_list)",
+        "body": [
+          "upd(tracks, tracks.id=id, tracks.demo, demo)",
+          "upd(tracks, tracks.id=id, tracks.dj_id, dj_id)",
+          "upd(tracks, tracks.id=id, tracks.playback_count, playback_count)",
+          "upd(tracks, tracks.id=id, tracks.favoritings_count, favoritings_count)",
+          "upd(tracks, tracks.id=id, tracks.title, title)",
+          "upd(tracks, tracks.id=id, tracks.tag_list, tag_list)"
+        ]
+      },
+      {
+        "signature": "void readTrack(int id)",
+        "body": [
+          "pi([tracks.demo, tracks.dj_id, tracks.playback_count, tracks.favoritings_count, tracks.title, tracks.tag_list], sigma(tracks.id=id, tracks))"
+        ]
+      },
+      {
+        "signature": "void createUser(int id, String name, String venue_status, String dj_status, int sdcl_id, String uid, String image_url, String created_at, String updated_at, String email, String phone, String first_name, String gender)",
+        "body": [
+          "ins(users, (id, name, venue_status, dj_status, sdcl_id, uid, image_url, created_at, updated_at, email, phone, first_name, gender))"
+        ]
+      },
+      {
+        "signature": "void deleteUser(int id)",
+        "body": [
+          "del(users, users.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateUser(int id, String name, String venue_status, String dj_status, int sdcl_id, String uid, String image_url, String updated_at, String email, String phone, String first_name, String gender)",
+        "body": [
+          "upd(users, users.id=id, users.name, name)",
+          "upd(users, users.id=id, users.venue_status, venue_status)",
+          "upd(users, users.id=id, users.dj_status, dj_status)",
+          "upd(users, users.id=id, users.sdcl_id, sdcl_id)",
+          "upd(users, users.id=id, users.uid, uid)",
+          "upd(users, users.id=id, users.image_url, image_url)",
+          "upd(users, users.id=id, users.updated_at, updated_at)",
+          "upd(users, users.id=id, users.email, email)",
+          "upd(users, users.id=id, users.phone, phone)",
+          "upd(users, users.id=id, users.first_name, first_name)",
+          "upd(users, users.id=id, users.gender, gender)"
+        ]
+      },
+      {
+        "signature": "void readUser(int id)",
+        "body": [
+          "pi([users.name, users.venue_status, users.dj_status, users.sdcl_id, users.uid, users.image_url, users.email, users.phone, users.first_name, users.gender], sigma(users.id=id, users))"
+        ]
+      },
+      {
+        "signature": "void readUserCreateTime(int id)",
+        "body": [
+          "pi([users.created_at], sigma(users.id=id, users))"
+        ]
+      },
+      {
+        "signature": "void readUserUpdateTime(int id)",
+        "body": [
+          "pi([users.updated_at], sigma(users.id=id, users))"
+        ]
+      },
+      {
+        "signature": "void createVenue(int id, String name, String address, String created_at, String updated_at, String phone, String image_url, String cross_streets, String neighborhood, String latitude, String longitude, String yelp_rating, String yelp_id, String category)",
+        "body": [
+          "ins(neighborhoods, (UUID_x3, neighborhood, created_at, UUID_UNK))",
+          "ins(venues, (id, name, address, created_at, updated_at, phone, image_url, cross_streets, neighborhood, latitude, longitude, yelp_rating, yelp_id, category, UUID_x3))"
+        ]
+      },
+      {
+        "signature": "void deleteVenue(int id)",
+        "body": [
+          "del(neighborhoods, in(neighborhoods.id, pi([venues.neighborhood_id], sigma(venues.id=id, venues))))",
+          "del(venues, venues.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateVenue(int id, String name, String address, String updated_at, String phone, String image_url, String cross_streets, String latitude, String longitude, String yelp_rating, String yelp_id, String category)",
+        "body": [
+          "upd(venues, venues.id=id, venues.name, name)",
+          "upd(venues, venues.id=id, venues.address, address)",
+          "upd(venues, venues.id=id, venues.updated_at, updated_at)",
+          "upd(venues, venues.id=id, venues.phone, phone)",
+          "upd(venues, venues.id=id, venues.image_url, image_url)",
+          "upd(venues, venues.id=id, venues.cross_streets, cross_streets)",
+          "upd(venues, venues.id=id, venues.latitude, latitude)",
+          "upd(venues, venues.id=id, venues.longitude, longitude)",
+          "upd(venues, venues.id=id, venues.yelp_rating, yelp_rating)",
+          "upd(venues, venues.id=id, venues.yelp_id, yelp_id)",
+          "upd(venues, venues.id=id, venues.category, category)"
+        ]
+      },
+      {
+        "signature": "void updateVenueNeighborhood(int id, String neighborhood, String updated_at)",
+        "body": [
+          "upd(neighborhoods, in(neighborhoods.id, pi([venues.neighborhood_id], sigma(venues.id=id, venues))), neighborhoods.name, neighborhood)",
+          "upd(neighborhoods, in(neighborhoods.id, pi([venues.neighborhood_id], sigma(venues.id=id, venues))), neighborhoods.updated_at, updated_at)",
+          "upd(venues, venues.id=id, venues.hood, neighborhood)",
+          "upd(venues, venues.id=id, venues.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readVenue(int id)",
+        "body": [
+          "pi([venues.name, venues.address, venues.phone, venues.image_url, venues.cross_streets, neighborhoods.name, venues.latitude, venues.longitude, venues.yelp_rating, venues.yelp_id, venues.category], sigma(venues.id=id, join(venues, neighborhoods)))"
+        ]
+      },
+      {
+        "signature": "void readVenueCreateTime(int id)",
+        "body": [
+          "pi([venues.created_at], sigma(venues.id=id, venues))"
+        ]
+      },
+      {
+        "signature": "void readVenueUpdateTime(int id)",
+        "body": [
+          "pi([venues.updated_at], sigma(venues.id=id, venues))"
+        ]
+      },
+      {
+        "signature": "void readDjGenreDj(int id)",
+        "body": [
+          "pi([djs.id, djs.name, djs.image_url, djs.bio, djs.uid, djs.past_venues, djs.email, djs.phone, djs.dj_status, djs.sdcl_followers, djs.sdcl_id, djs.city, djs.twitter_hdl, djs.agent_status, djs.rate, djs.can_produce, djs.slug, djs.fb_likes, djs.fbpage_id, djs.fb_bio, djs.talking_about_count, djs.fb_location], sigma(dj_genres.id=id, join(dj_genres, djs)))"
+        ]
+      },
+      {
+        "signature": "void readDjDjGenre(int id)",
+        "body": [
+          "pi([dj_genres.id, dj_genres.dj_id, dj_genres.genre_id], sigma(djs.id=id, join(dj_genres, djs)))"
+        ]
+      },
+      {
+        "signature": "void readDjGenreGenre(int id)",
+        "body": [
+          "pi([genres.id, genres.name], sigma(dj_genres.id=id, join(dj_genres, genres)))"
+        ]
+      },
+      {
+        "signature": "void readGenreDjGenre(int id)",
+        "body": [
+          "pi([dj_genres.id, dj_genres.dj_id, dj_genres.genre_id], sigma(genres.id=id, join(dj_genres, genres)))"
+        ]
+      },
+      {
+        "signature": "void readEventDj(int id)",
+        "body": [
+          "pi([djs.id, djs.name, djs.image_url, djs.bio, djs.uid, djs.past_venues, djs.email, djs.phone, djs.dj_status, djs.sdcl_followers, djs.sdcl_id, djs.city, djs.twitter_hdl, djs.agent_status, djs.rate, djs.can_produce, djs.slug, djs.fb_likes, djs.fbpage_id, djs.fb_bio, djs.talking_about_count, djs.fb_location], sigma(events.id=id, join(events, djs)))"
+        ]
+      },
+      {
+        "signature": "void readDjEvent(int id)",
+        "body": [
+          "pi([events.id, events.name, events.date, events.time, events.description, events.dj_id, events.venue_id], sigma(djs.id=id, join(events, djs)))"
+        ]
+      },
+      {
+        "signature": "void readEventVenue(int id)",
+        "body": [
+          "pi([venues.id, venues.name, venues.address, venues.phone, venues.image_url, venues.cross_streets, neighborhoods.name, venues.latitude, venues.longitude, venues.yelp_rating, venues.yelp_id, venues.category], sigma(events.id=id, join(join(events, venues), neighborhoods)))"
+        ]
+      },
+      {
+        "signature": "void readVenueEvent(int id)",
+        "body": [
+          "pi([events.id, events.name, events.date, events.time, events.description, events.dj_id, events.venue_id], sigma(venues.id=id, join(events, venues)))"
+        ]
+      },
+      {
+        "signature": "void readCommentDj(int id)",
+        "body": [
+          "pi([djs.id, djs.name, djs.image_url, djs.bio, djs.uid, djs.past_venues, djs.email, djs.phone, djs.dj_status, djs.sdcl_followers, djs.sdcl_id, djs.city, djs.twitter_hdl, djs.agent_status, djs.rate, djs.can_produce, djs.slug, djs.fb_likes, djs.fbpage_id, djs.fb_bio, djs.talking_about_count, djs.fb_location], sigma(comments.id=id, join(join(comments, ratings), djs)))"
+        ]
+      },
+      {
+        "signature": "void readDjComment(int id)",
+        "body": [
+          "pi([comments.body, ratings.score, ratings.seen_live], sigma(djs.id=id, join(join(comments, ratings), djs)))"
+        ]
+      },
+      {
+        "signature": "void readCommentUser(int id)",
+        "body": [
+          "pi([users.id, users.name, users.venue_status, users.dj_status, users.sdcl_id, users.uid, users.image_url, users.email, users.phone, users.first_name, users.gender], sigma(comments.id=id, join(join(comments, ratings), users)))"
+        ]
+      },
+      {
+        "signature": "void readUserComment(int id)",
+        "body": [
+          "pi([comments.body, ratings.score, ratings.seen_live], sigma(users.id=id, join(join(comments, ratings), users)))"
+        ]
+      },
+      {
+        "signature": "void readCommentVenue(int id)",
+        "body": [
+          "pi([venues.id, venues.name, venues.address, venues.phone, venues.image_url, venues.cross_streets, neighborhoods.name, venues.latitude, venues.longitude, venues.yelp_rating, venues.yelp_id, venues.category], sigma(comments.id=id, join(join(join(comments, ratings), venues), neighborhoods)))"
+        ]
+      },
+      {
+        "signature": "void readVenueComment(int id)",
+        "body": [
+          "pi([comments.body, ratings.score, ratings.seen_live], sigma(venues.id=id, join(join(comments, ratings), venues)))"
+        ]
+      },
+      {
+        "signature": "void readReplyComment(int id)",
+        "body": [
+          "pi([comments.id, comments.body, ratings.score, ratings.seen_live], sigma(replies.id=id, join(join(replies, comments), ratings)))"
+        ]
+      },
+      {
+        "signature": "void readCommentReply(int id)",
+        "body": [
+          "pi([replies.id, replies.body], sigma(comments.id=id, join(replies, comments)))"
+        ]
+      },
+      {
+        "signature": "void readTrackDj(int id)",
+        "body": [
+          "pi([djs.id, djs.name, djs.image_url, djs.bio, djs.uid, djs.past_venues, djs.email, djs.phone, djs.dj_status, djs.sdcl_followers, djs.sdcl_id, djs.city, djs.twitter_hdl, djs.agent_status, djs.rate, djs.can_produce, djs.slug, djs.fb_likes, djs.fbpage_id, djs.fb_bio, djs.talking_about_count, djs.fb_location], sigma(tracks.id=id, join(tracks, djs)))"
+        ]
+      },
+      {
+        "signature": "void readDjTrack(int id)",
+        "body": [
+          "pi([tracks.id, tracks.demo, tracks.dj_id, tracks.playback_count, tracks.favoritings_count, tracks.title, tracks.tag_list], sigma(djs.id=id, join(tracks, djs)))"
+        ]
+      }
+    ]
+  }
+}

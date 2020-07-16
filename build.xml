@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="." default="build" name="Migrator">
+    <property file="ant.settings"/>
+
+    <property name="target" value="1.8"/>
+    <property name="source" value="1.8"/>
+    <property name="classes.dir" value="classes"/>
+    <property name="src.dir" value="src"/>
+
+    <path id="build.classpath">
+        <pathelement location="lib/antlr-4.6.jar"/>
+        <pathelement location="lib/gson-2.8.0.jar"/>
+        <pathelement location="lib/z3.jar"/>
+    </path>
+
+    <target name="clean">
+        <delete dir="${classes.dir}"/>
+    </target>
+
+    <target name="build">
+        <mkdir dir="${classes.dir}"/>
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="false" srcdir="${src.dir}" destdir="${classes.dir}" includeantruntime="false" source="${source}" target="${target}">
+            <classpath refid="build.classpath"/>
+        </javac>
+    </target>
+
+    <target name="jar" depends="build">
+        <jar destfile="mediator.jar">
+            <fileset dir="classes"/>
+        </jar>
+    </target>
+
+</project>

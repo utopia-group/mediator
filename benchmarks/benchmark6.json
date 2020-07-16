@@ -1,0 +1,84 @@
+{
+  "source": {
+    "relations": [
+      "Customer(int CustomerID, String Fname)"
+    ],
+    "primarykeys": [
+      "Customer(CustomerID)"
+    ],
+    "foreignkeys": [],
+    "transactions": [
+      {
+        "signature": "void createCustomer(int id, String name)",
+        "body": [
+          "ins(Customer, (id, name))"
+        ]
+      },
+      {
+        "signature": "void deleteCustomer(int id)",
+        "body": [
+          "del(Customer, CustomerID=id)"
+        ]
+      },
+      {
+        "signature": "void updateCustomerName(int id, String name)",
+        "body": [
+          "upd(Customer, CustomerID=id, Fname, name)"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getCustomerID(String name)",
+        "body": [
+          "pi([CustomerID], sigma(Fname=name, Customer))"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getCustomerName(int id)",
+        "body": [
+          "pi([Fname], sigma(CustomerID=id, Customer))"
+        ]
+      }
+    ]
+  },
+  "target": {
+    "relations": [
+      "Customer(int CustomerID, String FirstName)"
+    ],
+    "primarykeys": [
+      "Customer(CustomerID)"
+    ],
+    "foreignkeys": [],
+    "transactions": [
+      {
+        "signature": "void createCustomer(int id, String name)",
+        "body": [
+          "ins(Customer, (id, name))"
+        ]
+      },
+      {
+        "signature": "void deleteCustomer(int id)",
+        "body": [
+          "del(Customer, CustomerID=id)"
+        ]
+      },
+      {
+        "signature": "void updateCustomerName(int id, String name)",
+        "body": [
+          "upd(Customer, CustomerID=id, FirstName, name)"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getCustomerID(String name)",
+        "body": [
+          "pi([CustomerID], sigma(FirstName=name, Customer))"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getCustomerName(int id)",
+        "body": [
+          "pi([FirstName], sigma(CustomerID=id, Customer))"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,660 @@
+{
+  "source": {
+    "relations": [
+      "courses(int courses.id, String courses.title, String courses.description, int courses.price, int courses.coach_id, String courses.created_at, String courses.updated_at, String courses.sport, int courses.max_participants, String courses.address, String courses.latitude, String courses.longitude)",
+      "subscriptions(int subscriptions.id, int subscriptions.course_id, int subscriptions.user_id, String subscriptions.created_at, String subscriptions.updated_at)",
+      "training_sessions(int training_sessions.id, String training_sessions.description, String training_sessions.starts_at, String training_sessions.ends_at, String training_sessions.lat, String training_sessions.lng, int training_sessions.course_id, String training_sessions.created_at, String training_sessions.updated_at)",
+      "users(int users.id, String users.email, String users.encrypted_password, String users.reset_password_token, String users.reset_password_sent_at, String users.remember_created_at, String users.sign_in_count, String users.current_sign_in_at, String users.last_sign_in_at, String users.current_sign_in_ip, String users.last_sign_in_ip, String users.created_at, String users.updated_at, String users.username, String users.name, String users.last_name, String users.address, String users.country, String users.phone, String users.date_of_birth, String users.trophies, String users.personal_records, String users.education, String users.bio, String users.aboutme)"
+    ],
+    "primarykeys": [
+      "courses(courses.id)",
+      "subscriptions(subscriptions.id)",
+      "training_sessions(training_sessions.id)",
+      "users(users.id)"
+    ],
+    "foreignkeys": [
+      "courses(courses.coach_id) -> users(users.id)",
+      "subscriptions(subscriptions.course_id) -> courses(courses.id)",
+      "subscriptions(subscriptions.user_id) -> users(users.id)",
+      "training_sessions(training_sessions.course_id) -> courses(courses.id)"
+    ],
+    "transactions": [
+      {
+        "signature": "void createCourse(int id, String title, String description, int price, int coach_id, String created_at, String updated_at, String sport, int max_participants, String address, String latitude, String longitude)",
+        "body": [
+          "ins(courses, (id, title, description, price, coach_id, created_at, updated_at, sport, max_participants, address, latitude, longitude))"
+        ]
+      },
+      {
+        "signature": "void deleteCourse(int id)",
+        "body": [
+          "del(courses, courses.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateCourse(int id, String title, String description, int price, String updated_at, String sport, int max_participants, String address, String latitude, String longitude)",
+        "body": [
+          "upd(courses, courses.id=id, courses.title, title)",
+          "upd(courses, courses.id=id, courses.description, description)",
+          "upd(courses, courses.id=id, courses.price, price)",
+          "upd(courses, courses.id=id, courses.updated_at, updated_at)",
+          "upd(courses, courses.id=id, courses.sport, sport)",
+          "upd(courses, courses.id=id, courses.max_participants, max_participants)",
+          "upd(courses, courses.id=id, courses.address, address)",
+          "upd(courses, courses.id=id, courses.latitude, latitude)",
+          "upd(courses, courses.id=id, courses.longitude, longitude)"
+        ]
+      },
+      {
+        "signature": "void readCourse(int id)",
+        "body": [
+          "pi([courses.title, courses.description, courses.price, courses.coach_id, courses.sport, courses.max_participants, courses.address, courses.latitude, courses.longitude], sigma(courses.id=id, courses))"
+        ]
+      },
+      {
+        "signature": "void getCoachCourse(int id)",
+        "body": [
+          "pi([courses.title, courses.description, courses.price, courses.sport, courses.max_participants, courses.address, courses.latitude, courses.longitude], sigma(users.id=id, join(courses, users)))"
+        ]
+      },
+      {
+        "signature": "void getCourseByCoachName(String name)",
+        "body": [
+          "pi([courses.title, courses.description, courses.price, courses.sport, courses.max_participants, courses.address, courses.latitude, courses.longitude], sigma(users.username=name, join(courses, users)))"
+        ]
+      },
+      {
+        "signature": "void getCourseBySubscription(int id)",
+        "body": [
+          "pi([courses.title, courses.description, courses.price, courses.sport, courses.max_participants, courses.address, courses.latitude, courses.longitude], sigma(subscriptions.user_id=id, join(courses, subscriptions)))"
+        ]
+      },
+      {
+        "signature": "void readCourseCreateTime(int id)",
+        "body": [
+          "pi([courses.created_at], sigma(courses.id=id, courses))"
+        ]
+      },
+      {
+        "signature": "void readCourseUpdateTime(int id)",
+        "body": [
+          "pi([courses.updated_at], sigma(courses.id=id, courses))"
+        ]
+      },
+      {
+        "signature": "void createSubscription(int id, int course_id, int user_id, String created_at, String updated_at)",
+        "body": [
+          "ins(subscriptions, (id, course_id, user_id, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteSubscription(int id)",
+        "body": [
+          "del(subscriptions, subscriptions.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateSubscription(int id, int course_id, int user_id, String updated_at)",
+        "body": [
+          "upd(subscriptions, subscriptions.id=id, subscriptions.course_id, course_id)",
+          "upd(subscriptions, subscriptions.id=id, subscriptions.user_id, user_id)",
+          "upd(subscriptions, subscriptions.id=id, subscriptions.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void findCourses(String username)",
+        "body": [
+          "pi([courses.title, courses.description, courses.price, courses.sport], sigma(users.username=username, join(join(subscriptions, users), courses)))"
+        ]
+      },
+      {
+        "signature": "void readSubscriptionCreateTime(int id)",
+        "body": [
+          "pi([subscriptions.created_at], sigma(subscriptions.id=id, subscriptions))"
+        ]
+      },
+      {
+        "signature": "void readSubscriptionUpdateTime(int id)",
+        "body": [
+          "pi([subscriptions.updated_at], sigma(subscriptions.id=id, subscriptions))"
+        ]
+      },
+      {
+        "signature": "void createTrainingSession(int id, String description, String starts_at, String ends_at, String lat, String lng, int course_id, String created_at, String updated_at)",
+        "body": [
+          "ins(training_sessions, (id, description, starts_at, ends_at, lat, lng, course_id, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteTrainingSession(int id)",
+        "body": [
+          "del(training_sessions, training_sessions.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateTrainingSession(int id, String description, String starts_at, String ends_at, String lat, String lng, int course_id, String updated_at)",
+        "body": [
+          "upd(training_sessions, training_sessions.id=id, training_sessions.description, description)",
+          "upd(training_sessions, training_sessions.id=id, training_sessions.starts_at, starts_at)",
+          "upd(training_sessions, training_sessions.id=id, training_sessions.ends_at, ends_at)",
+          "upd(training_sessions, training_sessions.id=id, training_sessions.lat, lat)",
+          "upd(training_sessions, training_sessions.id=id, training_sessions.lng, lng)",
+          "upd(training_sessions, training_sessions.id=id, training_sessions.course_id, course_id)",
+          "upd(training_sessions, training_sessions.id=id, training_sessions.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readTrainingSession(int id)",
+        "body": [
+          "pi([training_sessions.description, training_sessions.starts_at, training_sessions.ends_at, training_sessions.lat, training_sessions.lng, training_sessions.course_id], sigma(training_sessions.id=id, training_sessions))"
+        ]
+      },
+      {
+        "signature": "void readTrainingSessionCreateTime(int id)",
+        "body": [
+          "pi([training_sessions.created_at], sigma(training_sessions.id=id, training_sessions))"
+        ]
+      },
+      {
+        "signature": "void readTrainingSessionUpdateTime(int id)",
+        "body": [
+          "pi([training_sessions.updated_at], sigma(training_sessions.id=id, training_sessions))"
+        ]
+      },
+      {
+        "signature": "void createUser(int id, String email, String encrypted_password, String reset_password_token, String reset_password_sent_at, String remember_created_at, String sign_in_count, String current_sign_in_at, String last_sign_in_at, String current_sign_in_ip, String last_sign_in_ip, String created_at, String updated_at, String username, String name, String last_name, String address, String country, String phone, String date_of_birth, String trophies, String personal_records, String education, String bio, String aboutme)",
+        "body": [
+          "ins(users, (id, email, encrypted_password, reset_password_token, reset_password_sent_at, remember_created_at, sign_in_count, current_sign_in_at, last_sign_in_at, current_sign_in_ip, last_sign_in_ip, created_at, updated_at, username, name, last_name, address, country, phone, date_of_birth, trophies, personal_records, education, bio, aboutme))"
+        ]
+      },
+      {
+        "signature": "void deleteUser(int id)",
+        "body": [
+          "del(users, users.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateUserContact(int id, String email, String address, String country, String phone, String updated_at)",
+        "body": [
+          "upd(users, users.id=id, users.email, email)",
+          "upd(users, users.id=id, users.address, address)",
+          "upd(users, users.id=id, users.country, country)",
+          "upd(users, users.id=id, users.phone, phone)",
+          "upd(users, users.id=id, users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateUserPassword(int id, String encrypted_password, String updated_at)",
+        "body": [
+          "upd(users, users.id=id, users.encrypted_password, encrypted_password)",
+          "upd(users, users.id=id, users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateUserResetPassword(int id, String reset_password_token, String reset_password_sent_at, String updated_at)",
+        "body": [
+          "upd(users, users.id=id, users.reset_password_token, reset_password_token)",
+          "upd(users, users.id=id, users.reset_password_sent_at, reset_password_sent_at)",
+          "upd(users, users.id=id, users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateUserRememberCreatedAt(int id, String remember_created_at, String updated_at)",
+        "body": [
+          "upd(users, users.id=id, users.remember_created_at, remember_created_at)",
+          "upd(users, users.id=id, users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateUserSignIn(int id, int sign_in_count, String current_sign_in_at, String last_sign_in_at, String current_sign_in_ip, String last_sign_in_ip, String updated_at)",
+        "body": [
+          "upd(users, users.id=id, users.sign_in_count, sign_in_count)",
+          "upd(users, users.id=id, users.current_sign_in_at, current_sign_in_at)",
+          "upd(users, users.id=id, users.last_sign_in_at, last_sign_in_at)",
+          "upd(users, users.id=id, users.current_sign_in_ip, current_sign_in_ip)",
+          "upd(users, users.id=id, users.last_sign_in_ip, last_sign_in_ip)",
+          "upd(users, users.id=id, users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateUserBio(int id, String bio, String education, String updated_at)",
+        "body": [
+          "upd(users, users.id=id, users.bio, bio)",
+          "upd(users, users.id=id, users.education, education)",
+          "upd(users, users.id=id, users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateUserTrophies(int id, String trophies, String updated_at)",
+        "body": [
+          "upd(users, users.id=id, users.trophies, trophies)",
+          "upd(users, users.id=id, users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateUserPersonalRecords(int id, String personal_records, String updated_at)",
+        "body": [
+          "upd(users, users.id=id, users.personal_records, personal_records)",
+          "upd(users, users.id=id, users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateUserAboutme(int id, String aboutme, String updated_at)",
+        "body": [
+          "upd(users, users.id=id, users.aboutme, aboutme)",
+          "upd(users, users.id=id, users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void findUserByEmail(String email)",
+        "body": [
+          "pi([users.id], sigma(users.email=email, users))"
+        ]
+      },
+      {
+        "signature": "void findUserByUserName(String username)",
+        "body": [
+          "pi([users.id], sigma(users.username=username, users))"
+        ]
+      },
+      {
+        "signature": "void readUser(int id)",
+        "body": [
+          "pi([users.email, users.encrypted_password, users.reset_password_token, users.reset_password_sent_at, users.remember_created_at, users.sign_in_count, users.current_sign_in_at, users.username, users.name, users.last_name, users.address, users.country, users.phone, users.date_of_birth, users.trophies, users.personal_records, users.education, users.bio, users.aboutme], sigma(users.id=id, users))"
+        ]
+      },
+      {
+        "signature": "void readUserCreateTime(int id)",
+        "body": [
+          "pi([users.created_at], sigma(users.id=id, users))"
+        ]
+      },
+      {
+        "signature": "void readUserUpdateTime(int id)",
+        "body": [
+          "pi([users.updated_at], sigma(users.id=id, users))"
+        ]
+      },
+      {
+        "signature": "void readCourseUser(int id)",
+        "body": [
+          "pi([users.id, users.email, users.encrypted_password, users.reset_password_token, users.reset_password_sent_at, users.remember_created_at, users.sign_in_count, users.current_sign_in_at, users.username, users.name, users.last_name, users.address, users.country, users.phone, users.date_of_birth, users.trophies, users.personal_records, users.education, users.bio, users.aboutme], sigma(courses.id=id, join(courses, users)))"
+        ]
+      },
+      {
+        "signature": "void readUserCourse(int id)",
+        "body": [
+          "pi([courses.id, courses.title, courses.description, courses.price, courses.coach_id, courses.sport, courses.max_participants, courses.address, courses.latitude, courses.longitude], sigma(users.id=id, join(courses, users)))"
+        ]
+      },
+      {
+        "signature": "void readSubscriptionCourse(int id)",
+        "body": [
+          "pi([courses.id, courses.title, courses.description, courses.price, courses.coach_id, courses.sport, courses.max_participants, courses.address, courses.latitude, courses.longitude], sigma(subscriptions.id=id, join(subscriptions, courses)))"
+        ]
+      },
+      {
+        "signature": "void readCourseSubscription(int id)",
+        "body": [
+          "pi([subscriptions.id, subscriptions.course_id, subscriptions.user_id], sigma(courses.id=id, join(subscriptions, courses)))"
+        ]
+      },
+      {
+        "signature": "void readSubscriptionUser(int id)",
+        "body": [
+          "pi([users.id, users.email, users.encrypted_password, users.reset_password_token, users.reset_password_sent_at, users.remember_created_at, users.sign_in_count, users.current_sign_in_at, users.username, users.name, users.last_name, users.address, users.country, users.phone, users.date_of_birth, users.trophies, users.personal_records, users.education, users.bio, users.aboutme], sigma(subscriptions.id=id, join(subscriptions, users)))"
+        ]
+      },
+      {
+        "signature": "void readUserSubscription(int id)",
+        "body": [
+          "pi([subscriptions.id, subscriptions.course_id, subscriptions.user_id], sigma(users.id=id, join(subscriptions, users)))"
+        ]
+      },
+      {
+        "signature": "void readTrainingSessionCourse(int id)",
+        "body": [
+          "pi([courses.id, courses.title, courses.description, courses.price, courses.coach_id, courses.sport, courses.max_participants, courses.address, courses.latitude, courses.longitude], sigma(training_sessions.id=id, join(training_sessions, courses)))"
+        ]
+      },
+      {
+        "signature": "void readCourseTrainingSession(int id)",
+        "body": [
+          "pi([training_sessions.id, training_sessions.description, training_sessions.starts_at, training_sessions.ends_at, training_sessions.lat, training_sessions.lng, training_sessions.course_id], sigma(courses.id=id, join(training_sessions, courses)))"
+        ]
+      }
+    ]
+  },
+  "target": {
+    "relations": [
+      "courses(int courses.id, String courses.title, String courses.description, int courses.price, int courses.coach_id, String courses.created_at, String courses.updated_at, String courses.sport, int courses.max_participants, int courses.location_id)",
+      "locations(int locations.id, String locations.latitude, String locations.longitude, String locations.address, String locations.created_at, String locations.updated_at)",
+      "subscriptions(int subscriptions.id, int subscriptions.course_id, int subscriptions.user_id, String subscriptions.created_at, String subscriptions.updated_at)",
+      "training_sessions(int training_sessions.id, String training_sessions.description, String training_sessions.starts_at, String training_sessions.ends_at, String training_sessions.lat, String training_sessions.lng, int training_sessions.course_id, String training_sessions.created_at, String training_sessions.updated_at)",
+      "users(int users.id, String users.email, String users.encrypted_password, String users.reset_password_token, String users.reset_password_sent_at, String users.remember_created_at, String users.sign_in_count, String users.current_sign_in_at, String users.last_sign_in_at, String users.current_sign_in_ip, String users.last_sign_in_ip, String users.created_at, String users.updated_at, String users.username, String users.name, String users.last_name, String users.address, String users.country, String users.phone, String users.date_of_birth, String users.trophies, String users.personal_records, String users.education, String users.bio, String users.aboutme)"
+    ],
+    "primarykeys": [
+      "courses(courses.id)",
+      "locations(locations.id)",
+      "subscriptions(subscriptions.id)",
+      "training_sessions(training_sessions.id)",
+      "users(users.id)"
+    ],
+    "foreignkeys": [
+      "courses(courses.coach_id) -> users(users.id)",
+      "courses(courses.location_id) -> locations(locations.id)",
+      "subscriptions(subscriptions.course_id) -> courses(courses.id)",
+      "subscriptions(subscriptions.user_id) -> users(users.id)",
+      "training_sessions(training_sessions.course_id) -> courses(courses.id)"
+    ],
+    "transactions": [
+      {
+        "signature": "void createCourse(int id, String title, String description, int price, int coach_id, String created_at, String updated_at, String sport, int max_participants, String address, String latitude, String longitude)",
+        "body": [
+          "ins(locations, (UUID_x1, latitude, longitude, address, created_at, updated_at))",
+          "ins(courses, (id, title, description, price, coach_id, created_at, updated_at, sport, max_participants, UUID_x1))"
+        ]
+      },
+      {
+        "signature": "void deleteCourse(int id)",
+        "body": [
+          "del(locations, in(locations.id, pi([courses.location_id], sigma(courses.id=id, courses))))",
+          "del(courses, courses.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateCourse(int id, String title, String description, int price, String updated_at, String sport, int max_participants, String address, String latitude, String longitude)",
+        "body": [
+          "upd(courses, courses.id=id, courses.title, title)",
+          "upd(courses, courses.id=id, courses.description, description)",
+          "upd(courses, courses.id=id, courses.price, price)",
+          "upd(courses, courses.id=id, courses.updated_at, updated_at)",
+          "upd(courses, courses.id=id, courses.sport, sport)",
+          "upd(courses, courses.id=id, courses.max_participants, max_participants)",
+          "upd(locations, in(locations.id, pi([courses.location_id], sigma(courses.id=id, courses))), locations.address, address)",
+          "upd(locations, in(locations.id, pi([courses.location_id], sigma(courses.id=id, courses))), locations.latitude, latitude)",
+          "upd(locations, in(locations.id, pi([courses.location_id], sigma(courses.id=id, courses))), locations.longitude, longitude)",
+          "upd(locations, in(locations.id, pi([courses.location_id], sigma(courses.id=id, courses))), locations.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readCourse(int id)",
+        "body": [
+          "pi([courses.title, courses.description, courses.price, courses.coach_id, courses.sport, courses.max_participants, locations.address, locations.latitude, locations.longitude], sigma(courses.id=id, join(courses, locations)))"
+        ]
+      },
+      {
+        "signature": "void getCoachCourse(int id)",
+        "body": [
+          "pi([courses.title, courses.description, courses.price, courses.sport, courses.max_participants, locations.address, locations.latitude, locations.longitude], sigma(users.id=id, join(join(courses, users), locations)))"
+        ]
+      },
+      {
+        "signature": "void getCourseByCoachName(String name)",
+        "body": [
+          "pi([courses.title, courses.description, courses.price, courses.sport, courses.max_participants, locations.address, locations.latitude, locations.longitude], sigma(users.username=name, join(join(courses, users), locations)))"
+        ]
+      },
+      {
+        "signature": "void getCourseBySubscription(int id)",
+        "body": [
+          "pi([courses.title, courses.description, courses.price, courses.sport, courses.max_participants, locations.address, locations.latitude, locations.longitude], sigma(subscriptions.user_id=id, join(join(courses, subscriptions), locations)))"
+        ]
+      },
+      {
+        "signature": "void readCourseCreateTime(int id)",
+        "body": [
+          "pi([courses.created_at], sigma(courses.id=id, courses))"
+        ]
+      },
+      {
+        "signature": "void readCourseUpdateTime(int id)",
+        "body": [
+          "pi([courses.updated_at], sigma(courses.id=id, courses))"
+        ]
+      },
+      {
+        "signature": "void createSubscription(int id, int course_id, int user_id, String created_at, String updated_at)",
+        "body": [
+          "ins(subscriptions, (id, course_id, user_id, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteSubscription(int id)",
+        "body": [
+          "del(subscriptions, subscriptions.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateSubscription(int id, int course_id, int user_id, String updated_at)",
+        "body": [
+          "upd(subscriptions, subscriptions.id=id, subscriptions.course_id, course_id)",
+          "upd(subscriptions, subscriptions.id=id, subscriptions.user_id, user_id)",
+          "upd(subscriptions, subscriptions.id=id, subscriptions.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void findCourses(String username)",
+        "body": [
+          "pi([courses.title, courses.description, courses.price, courses.sport], sigma(users.username=username, join(join(subscriptions, users), courses)))"
+        ]
+      },
+      {
+        "signature": "void readSubscriptionCreateTime(int id)",
+        "body": [
+          "pi([subscriptions.created_at], sigma(subscriptions.id=id, subscriptions))"
+        ]
+      },
+      {
+        "signature": "void readSubscriptionUpdateTime(int id)",
+        "body": [
+          "pi([subscriptions.updated_at], sigma(subscriptions.id=id, subscriptions))"
+        ]
+      },
+      {
+        "signature": "void createTrainingSession(int id, String description, String starts_at, String ends_at, String lat, String lng, int course_id, String created_at, String updated_at)",
+        "body": [
+          "ins(training_sessions, (id, description, starts_at, ends_at, lat, lng, course_id, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteTrainingSession(int id)",
+        "body": [
+          "del(training_sessions, training_sessions.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateTrainingSession(int id, String description, String starts_at, String ends_at, String lat, String lng, int course_id, String updated_at)",
+        "body": [
+          "upd(training_sessions, training_sessions.id=id, training_sessions.description, description)",
+          "upd(training_sessions, training_sessions.id=id, training_sessions.starts_at, starts_at)",
+          "upd(training_sessions, training_sessions.id=id, training_sessions.ends_at, ends_at)",
+          "upd(training_sessions, training_sessions.id=id, training_sessions.lat, lat)",
+          "upd(training_sessions, training_sessions.id=id, training_sessions.lng, lng)",
+          "upd(training_sessions, training_sessions.id=id, training_sessions.course_id, course_id)",
+          "upd(training_sessions, training_sessions.id=id, training_sessions.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readTrainingSession(int id)",
+        "body": [
+          "pi([training_sessions.description, training_sessions.starts_at, training_sessions.ends_at, training_sessions.lat, training_sessions.lng, training_sessions.course_id], sigma(training_sessions.id=id, training_sessions))"
+        ]
+      },
+      {
+        "signature": "void readTrainingSessionCreateTime(int id)",
+        "body": [
+          "pi([training_sessions.created_at], sigma(training_sessions.id=id, training_sessions))"
+        ]
+      },
+      {
+        "signature": "void readTrainingSessionUpdateTime(int id)",
+        "body": [
+          "pi([training_sessions.updated_at], sigma(training_sessions.id=id, training_sessions))"
+        ]
+      },
+      {
+        "signature": "void createUser(int id, String email, String encrypted_password, String reset_password_token, String reset_password_sent_at, String remember_created_at, String sign_in_count, String current_sign_in_at, String last_sign_in_at, String current_sign_in_ip, String last_sign_in_ip, String created_at, String updated_at, String username, String name, String last_name, String address, String country, String phone, String date_of_birth, String trophies, String personal_records, String education, String bio, String aboutme)",
+        "body": [
+          "ins(users, (id, email, encrypted_password, reset_password_token, reset_password_sent_at, remember_created_at, sign_in_count, current_sign_in_at, last_sign_in_at, current_sign_in_ip, last_sign_in_ip, created_at, updated_at, username, name, last_name, address, country, phone, date_of_birth, trophies, personal_records, education, bio, aboutme))"
+        ]
+      },
+      {
+        "signature": "void deleteUser(int id)",
+        "body": [
+          "del(users, users.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateUserContact(int id, String email, String address, String country, String phone, String updated_at)",
+        "body": [
+          "upd(users, users.id=id, users.email, email)",
+          "upd(users, users.id=id, users.address, address)",
+          "upd(users, users.id=id, users.country, country)",
+          "upd(users, users.id=id, users.phone, phone)",
+          "upd(users, users.id=id, users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateUserPassword(int id, String encrypted_password, String updated_at)",
+        "body": [
+          "upd(users, users.id=id, users.encrypted_password, encrypted_password)",
+          "upd(users, users.id=id, users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateUserResetPassword(int id, String reset_password_token, String reset_password_sent_at, String updated_at)",
+        "body": [
+          "upd(users, users.id=id, users.reset_password_token, reset_password_token)",
+          "upd(users, users.id=id, users.reset_password_sent_at, reset_password_sent_at)",
+          "upd(users, users.id=id, users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateUserRememberCreatedAt(int id, String remember_created_at, String updated_at)",
+        "body": [
+          "upd(users, users.id=id, users.remember_created_at, remember_created_at)",
+          "upd(users, users.id=id, users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateUserSignIn(int id, int sign_in_count, String current_sign_in_at, String last_sign_in_at, String current_sign_in_ip, String last_sign_in_ip, String updated_at)",
+        "body": [
+          "upd(users, users.id=id, users.sign_in_count, sign_in_count)",
+          "upd(users, users.id=id, users.current_sign_in_at, current_sign_in_at)",
+          "upd(users, users.id=id, users.last_sign_in_at, last_sign_in_at)",
+          "upd(users, users.id=id, users.current_sign_in_ip, current_sign_in_ip)",
+          "upd(users, users.id=id, users.last_sign_in_ip, last_sign_in_ip)",
+          "upd(users, users.id=id, users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateUserBio(int id, String bio, String education, String updated_at)",
+        "body": [
+          "upd(users, users.id=id, users.bio, bio)",
+          "upd(users, users.id=id, users.education, education)",
+          "upd(users, users.id=id, users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateUserTrophies(int id, String trophies, String updated_at)",
+        "body": [
+          "upd(users, users.id=id, users.trophies, trophies)",
+          "upd(users, users.id=id, users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateUserPersonalRecords(int id, String personal_records, String updated_at)",
+        "body": [
+          "upd(users, users.id=id, users.personal_records, personal_records)",
+          "upd(users, users.id=id, users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateUserAboutme(int id, String aboutme, String updated_at)",
+        "body": [
+          "upd(users, users.id=id, users.aboutme, aboutme)",
+          "upd(users, users.id=id, users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void findUserByEmail(String email)",
+        "body": [
+          "pi([users.id], sigma(users.email=email, users))"
+        ]
+      },
+      {
+        "signature": "void findUserByUserName(String username)",
+        "body": [
+          "pi([users.id], sigma(users.username=username, users))"
+        ]
+      },
+      {
+        "signature": "void readUser(int id)",
+        "body": [
+          "pi([users.email, users.encrypted_password, users.reset_password_token, users.reset_password_sent_at, users.remember_created_at, users.sign_in_count, users.current_sign_in_at, users.username, users.name, users.last_name, users.address, users.country, users.phone, users.date_of_birth, users.trophies, users.personal_records, users.education, users.bio, users.aboutme], sigma(users.id=id, users))"
+        ]
+      },
+      {
+        "signature": "void readUserCreateTime(int id)",
+        "body": [
+          "pi([users.created_at], sigma(users.id=id, users))"
+        ]
+      },
+      {
+        "signature": "void readUserUpdateTime(int id)",
+        "body": [
+          "pi([users.updated_at], sigma(users.id=id, users))"
+        ]
+      },
+      {
+        "signature": "void readCourseUser(int id)",
+        "body": [
+          "pi([users.id, users.email, users.encrypted_password, users.reset_password_token, users.reset_password_sent_at, users.remember_created_at, users.sign_in_count, users.current_sign_in_at, users.username, users.name, users.last_name, users.address, users.country, users.phone, users.date_of_birth, users.trophies, users.personal_records, users.education, users.bio, users.aboutme], sigma(courses.id=id, join(courses, users)))"
+        ]
+      },
+      {
+        "signature": "void readUserCourse(int id)",
+        "body": [
+          "pi([courses.id, courses.title, courses.description, courses.price, courses.coach_id, courses.sport, courses.max_participants, locations.address, locations.latitude, locations.longitude], sigma(users.id=id, join(join(courses, users), locations)))"
+        ]
+      },
+      {
+        "signature": "void readSubscriptionCourse(int id)",
+        "body": [
+          "pi([courses.id, courses.title, courses.description, courses.price, courses.coach_id, courses.sport, courses.max_participants, locations.address, locations.latitude, locations.longitude], sigma(subscriptions.id=id, join(join(subscriptions, courses), locations)))"
+        ]
+      },
+      {
+        "signature": "void readCourseSubscription(int id)",
+        "body": [
+          "pi([subscriptions.id, subscriptions.course_id, subscriptions.user_id], sigma(courses.id=id, join(subscriptions, courses)))"
+        ]
+      },
+      {
+        "signature": "void readSubscriptionUser(int id)",
+        "body": [
+          "pi([users.id, users.email, users.encrypted_password, users.reset_password_token, users.reset_password_sent_at, users.remember_created_at, users.sign_in_count, users.current_sign_in_at, users.username, users.name, users.last_name, users.address, users.country, users.phone, users.date_of_birth, users.trophies, users.personal_records, users.education, users.bio, users.aboutme], sigma(subscriptions.id=id, join(subscriptions, users)))"
+        ]
+      },
+      {
+        "signature": "void readUserSubscription(int id)",
+        "body": [
+          "pi([subscriptions.id, subscriptions.course_id, subscriptions.user_id], sigma(users.id=id, join(subscriptions, users)))"
+        ]
+      },
+      {
+        "signature": "void readTrainingSessionCourse(int id)",
+        "body": [
+          "pi([courses.id, courses.title, courses.description, courses.price, courses.coach_id, courses.sport, courses.max_participants, locations.address, locations.latitude, locations.longitude], sigma(training_sessions.id=id, join(join(training_sessions, courses), locations)))"
+        ]
+      },
+      {
+        "signature": "void readCourseTrainingSession(int id)",
+        "body": [
+          "pi([training_sessions.id, training_sessions.description, training_sessions.starts_at, training_sessions.ends_at, training_sessions.lat, training_sessions.lng, training_sessions.course_id], sigma(courses.id=id, join(training_sessions, courses)))"
+        ]
+      }
+    ]
+  }
+}

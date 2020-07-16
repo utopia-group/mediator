@@ -1,0 +1,302 @@
+{
+  "source": {
+    "relations": [
+      "EMPLOYEE(int eid, String ename, String street, int zipcode, String work_phone, String mobile, String fax, String work_email, String personal_email, String job_title, String job_desc)",
+      "PROJECT(int pid, String pname, String pdesc)",
+      "PROJ_EMP(int peid, int pid_fk, int eid_fk)"
+    ],
+    "primarykeys": [
+      "EMPLOYEE(eid)",
+      "PROJECT(pid)",
+      "PROJ_EMP(peid)"
+    ],
+    "foreignkeys": [
+      "PROJ_EMP(pid_fk) -> PROJECT(pid)",
+      "PROJ_EMP(eid_fk) -> EMPLOYEE(eid)"
+    ],
+    "transactions": [
+      {
+        "signature": "void createEmployee(int id, String name, String addr, int zip, String wkPhone, String mbPhone, String faxNumber, String email, String p_email, String title, String j_desc)",
+        "body": [
+          "ins(EMPLOYEE, (id, name, addr, zip, wkPhone, mbPhone, faxNumber, email, p_email, title, j_desc))"
+        ]
+      },
+      {
+        "signature": "void createProject(int id, String name, String desc)",
+        "body": [
+          "ins(PROJECT, (id, name, desc))"
+        ]
+      },
+      {
+        "signature": "void createAssignment(int id, int projId, int empId)",
+        "body": [
+          "ins(PROJ_EMP, (id, projId, empId))"
+        ]
+      },
+      {
+        "signature": "void deleteEmployee(int id)",
+        "body": [
+          "del(EMPLOYEE, eid=id)",
+          "del(PROJ_EMP, eid_fk=id)"
+        ]
+      },
+      {
+        "signature": "void deleteProject(int id)",
+        "body": [
+          "del(PROJECT, pid=id)",
+          "del(PROJ_EMP, pid_fk=id)"
+        ]
+      },
+      {
+        "signature": "void deleteAssignment(int id)",
+        "body": [
+          "del(PROJ_EMP, peid=id)"
+        ]
+      },
+      {
+        "signature": "void updateEmployeeAddress(int id, String addr, int zip)",
+        "body": [
+          "upd(EMPLOYEE, eid=id, street, addr)",
+          "upd(EMPLOYEE, eid=id, zipcode, zip)"
+        ]
+      },
+      {
+        "signature": "void updateEmployeePhone(int id, String wkPhone, String mbPhone, String faxNumber)",
+        "body": [
+          "upd(EMPLOYEE, eid=id, work_phone, wkPhone)",
+          "upd(EMPLOYEE, eid=id, mobile, mbPhone)",
+          "upd(EMPLOYEE, eid=id, fax, faxNumber)"
+        ]
+      },
+      {
+        "signature": "void updateEmployeeEmail(int id, String email, String pEmail)",
+        "body": [
+          "upd(EMPLOYEE, eid=id, work_email, email)",
+          "upd(EMPLOYEE, eid=id, personal_email, pEmail)"
+        ]
+      },
+      {
+        "signature": "void updateEmployeeJob(int id, String title, int jDesc)",
+        "body": [
+          "upd(EMPLOYEE, eid=id, job_title, title)",
+          "upd(EMPLOYEE, eid=id, job_desc, jDesc)"
+        ]
+      },
+      {
+        "signature": "void updateProjectInfo(int id, String name, int desc)",
+        "body": [
+          "upd(PROJECT, pid=id, pname, name)",
+          "upd(PROJECT, pid=id, pdesc, desc)"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getEmployeeId(String name)",
+        "body": [
+          "pi([eid], sigma(ename=name, EMPLOYEE))"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getEmployeeAddress(int id)",
+        "body": [
+          "pi([street, zipcode], sigma(eid=id, EMPLOYEE))"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getEmployeePhone(int id)",
+        "body": [
+          "pi([work_phone, mobile, fax], sigma(eid=id, EMPLOYEE))"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getEmployeeEmail(int id)",
+        "body": [
+          "pi([work_email, personal_email], sigma(eid=id, EMPLOYEE))"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getEmployeeJob(int id)",
+        "body": [
+          "pi([job_title, job_desc], sigma(eid=id, EMPLOYEE))"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getProjectInfo(int id)",
+        "body": [
+          "pi([pname, pdesc], sigma(pid=id, PROJECT))"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getProjEmployees(String name)",
+        "body": [
+          "pi([ename], sigma(pname=name, join(join(PROJECT, PROJ_EMP), EMPLOYEE)))"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getEmpProjects(String name)",
+        "body": [
+          "pi([pname], sigma(ename=name, join(join(EMPLOYEE, PROJ_EMP), PROJECT)))"
+        ]
+      }
+    ]
+  },
+  "target": {
+    "relations": [
+      "EMPLOYEE(int eid, String ename, int aid_fk, int phid_fk, int emid_fk, int jid_fk)",
+      "ADDRESS(int aid, String street, int zipcode)",
+      "PHONE(int phid, String work_phone, String mobile, String fax)",
+      "EMAIL(int emid, String work_email, String personal_email)",
+      "JOB(int jid, String job_title, String job_desc)",
+      "PROJECT(int pid, String pname, String pdesc)",
+      "PROJ_EMP(int peid, int pid_fk, int eid_fk)"
+    ],
+    "primarykeys": [
+      "EMPLOYEE(eid)",
+      "ADDRESS(aid)",
+      "PHONE(phid)",
+      "EMAIL(emid)",
+      "JOB(jid)",
+      "PROJECT(pid)",
+      "PROJ_EMP(peid)"
+    ],
+    "foreignkeys": [
+      "EMPLOYEE(aid_fk) -> ADDRESS(aid)",
+      "EMPLOYEE(phid_fk) -> PHONE(phid)",
+      "EMPLOYEE(emid_fk) -> EMAIL(emid)",
+      "EMPLOYEE(jid_fk) -> JOB(jid)",
+      "PROJ_EMP(pid_fk) -> PROJECT(pid)",
+      "PROJ_EMP(eid_fk) -> EMPLOYEE(eid)"
+    ],
+    "transactions": [
+      {
+        "signature": "void createEmployee(int id, String name, String addr, int zip, String wkPhone, String mbPhone, String faxNumber, String email, String p_email, String title, String j_desc)",
+        "body": [
+          "ins(ADDRESS, (UUID_x2, addr, zip))",
+          "ins(PHONE, (UUID_x3, wkPhone, mbPhone, faxNumber))",
+          "ins(EMAIL, (UUID_x4, email, p_email))",
+          "ins(JOB, (UUID_x5, title, j_desc))",
+          "ins(EMPLOYEE, (id, name, UUID_x2, UUID_x3, UUID_x4, UUID_x5))"
+        ]
+      },
+      {
+        "signature": "void createProject(int id, String name, String desc)",
+        "body": [
+          "ins(PROJECT, (id, name, desc))"
+        ]
+      },
+      {
+        "signature": "void createAssignment(int id, int projId, int empId)",
+        "body": [
+          "ins(PROJ_EMP, (id, projId, empId))"
+        ]
+      },
+      {
+        "signature": "void deleteEmployee(int id)",
+        "body": [
+          "del(ADDRESS, in(aid, pi([aid_fk], sigma(eid=id, EMPLOYEE))))",
+          "del(EMAIL, in(emid, pi([emid_fk], sigma(eid=id, EMPLOYEE))))",
+          "del(PHONE, in(phid, pi([phid_fk], sigma(eid=id, EMPLOYEE))))",
+          "del(JOB, in(jid, pi([jid_fk], sigma(eid=id, EMPLOYEE))))",
+          "del(EMPLOYEE, eid=id)",
+          "del(PROJ_EMP, eid_fk=id)"
+        ]
+      },
+      {
+        "signature": "void deleteProject(int id)",
+        "body": [
+          "del(PROJECT, pid=id)",
+          "del(PROJ_EMP, pid_fk=id)"
+        ]
+      },
+      {
+        "signature": "void deleteAssignment(int id)",
+        "body": [
+          "del(PROJ_EMP, peid=id)"
+        ]
+      },
+      {
+        "signature": "void updateEmployeeAddress(int id, String addr, int zip)",
+        "body": [
+          "upd(ADDRESS, in(aid, pi([aid_fk], sigma(eid=id, EMPLOYEE))), street, addr)",
+          "upd(ADDRESS, in(aid, pi([aid_fk], sigma(eid=id, EMPLOYEE))), zipcode, zip)"
+        ]
+      },
+      {
+        "signature": "void updateEmployeePhone(int id, String wkPhone, String mbPhone, String faxNumber)",
+        "body": [
+          "upd(PHONE, in(phid, pi([phid_fk], sigma(eid=id, EMPLOYEE))), work_phone, wkPhone)",
+          "upd(PHONE, in(phid, pi([phid_fk], sigma(eid=id, EMPLOYEE))), mobile, mbPhone)",
+          "upd(PHONE, in(phid, pi([phid_fk], sigma(eid=id, EMPLOYEE))), fax, faxNumber)"
+        ]
+      },
+      {
+        "signature": "void updateEmployeeEmail(int id, String email, String pEmail)",
+        "body": [
+          "upd(EMAIL, in(emid, pi([emid_fk], sigma(eid=id, EMPLOYEE))), work_email, email)",
+          "upd(EMAIL, in(emid, pi([emid_fk], sigma(eid=id, EMPLOYEE))), personal_email, pEmail)"
+        ]
+      },
+      {
+        "signature": "void updateEmployeeJob(int id, String title, int jDesc)",
+        "body": [
+          "upd(JOB, in(jid, pi([jid_fk], sigma(eid=id, EMPLOYEE))), job_title, title)",
+          "upd(JOB, in(jid, pi([jid_fk], sigma(eid=id, EMPLOYEE))), job_desc, jDesc)"
+        ]
+      },
+      {
+        "signature": "void updateProjectInfo(int id, String name, int desc)",
+        "body": [
+          "upd(PROJECT, pid=id, pname, name)",
+          "upd(PROJECT, pid=id, pdesc, desc)"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getEmployeeId(String name)",
+        "body": [
+          "pi([eid], sigma(ename=name, EMPLOYEE))"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getEmployeeAddress(int id)",
+        "body": [
+          "pi([street, zipcode], sigma(eid=id, join(EMPLOYEE, ADDRESS)))"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getEmployeePhone(int id)",
+        "body": [
+          "pi([work_phone, mobile, fax], sigma(eid=id, join(EMPLOYEE, PHONE)))"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getEmployeeEmail(int id)",
+        "body": [
+          "pi([work_email, personal_email], sigma(eid=id, join(EMPLOYEE, EMAIL)))"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getEmployeeJob(int id)",
+        "body": [
+          "pi([job_title, job_desc], sigma(eid=id, join(EMPLOYEE, JOB)))"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getProjectInfo(int id)",
+        "body": [
+          "pi([pname, pdesc], sigma(pid=id, PROJECT))"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getProjEmployees(String name)",
+        "body": [
+          "pi([ename], sigma(pname=name, join(join(PROJECT, PROJ_EMP), EMPLOYEE)))"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getEmpProjects(String name)",
+        "body": [
+          "pi([pname], sigma(ename=name, join(join(EMPLOYEE, PROJ_EMP), PROJECT)))"
+        ]
+      }
+    ]
+  }
+}

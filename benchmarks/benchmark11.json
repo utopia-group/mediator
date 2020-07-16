@@ -1,0 +1,1933 @@
+{
+  "source": {
+    "relations": [
+      "activation_tokens(int activation_tokens.id, String activation_tokens.value, String activation_tokens.device_secret_key, int activation_tokens.device_id, String activation_tokens.created_at, String activation_tokens.updated_at)",
+      "activations(int activations.id, int activations.activation_token_id, String activations.created_at, String activations.updated_at)",
+      "device_models(int device_models.id, String device_models.name, String device_models.created_at, String device_models.updated_at)",
+      "device_models_manifests(int device_models_manifests.id, int device_models_manifests.manifest_id, int device_models_manifests.device_model_id)",
+      "devices(int devices.id, String devices.name, String devices.created_at, String devices.updated_at, String devices.secret_key, int devices.institution_id, int devices.device_model_id)",
+      "devices_laboratories(int devices_laboratories.id, int devices_laboratories.device_id, int devices_laboratories.laboratory_id)",
+      "events(int events.id, int events.device_id, String events.raw_data, String events.created_at, String events.updated_at, String events.sensitive_data, String events.uuid, String events.custom_fields, String events.event_id, int events.index_failed, String events.index_failure_reason)",
+      "identities(int identities.id, int identities.user_id, String identities.provider, String identities.token, String identities.created_at, String identities.updated_at)",
+      "institutions(int institutions.id, String institutions.name, int institutions.user_id, String institutions.created_at, String institutions.updated_at)",
+      "laboratories(int laboratories.id, String laboratories.name, int laboratories.institution_id, String laboratories.address, String laboratories.city, String laboratories.state, String laboratories.zip_code, String laboratories.country, String laboratories.region, String laboratories.lat, String laboratories.lng, int laboratories.location_id, String laboratories.created_at, String laboratories.updated_at)",
+      "locations(int locations.id, String locations.name, int locations.parent_id, int locations.lft, int locations.rgt, String locations.lat, String locations.lng, int locations.depth, String locations.created_at, String locations.updated_at, int locations.admin_level, String locations.geo_id)",
+      "manifests(int manifests.id, String manifests.version, String manifests.definition, String manifests.created_at, String manifests.updated_at, String manifests.api_version)",
+      "policies(int policies.id, int policies.user_id, int policies.granter_id, String policies.definition, int policies.delegable, String policies.created_at, String policies.updated_at, String policies.name)",
+      "ssh_keys(int ssh_keys.id, String ssh_keys.public_key, int ssh_keys.device_id, String ssh_keys.created_at, String ssh_keys.updated_at)",
+      "subscribers(int subscribers.id, int subscribers.user_id, String subscribers.name, String subscribers.url, String subscribers.filter, String subscribers.fields, String subscribers.last_run_at, String subscribers.created_at, String subscribers.updated_at, String subscribers.url_user, subscribers subscribers.url_password)",
+      "users(int users.id, String users.email, String users.encrypted_password, String users.reset_password_token, String users.reset_password_sent_at, String users.remember_created_at, int users.sign_in_count, String users.current_sign_in_at, String users.last_sign_in_at, String users.current_sign_in_ip, String users.last_sign_in_ip, String users.confirmation_token, String users.confirmed_at, String users.confirmation_sent_at, String users.unconfirmed_email, int users.failed_attempts, String users.unlock_token, String users.locked_at, String users.created_at, String users.updated_at)"
+    ],
+    "primarykeys": [
+      "activation_tokens(activation_tokens.id)",
+      "activations(activations.id)",
+      "device_models(device_models.id)",
+      "device_models_manifests(device_models_manifests.id)",
+      "devices(devices.id)",
+      "devices_laboratories(devices_laboratories.id)",
+      "events(events.id)",
+      "identities(identities.id)",
+      "institutions(institutions.id)",
+      "laboratories(laboratories.id)",
+      "locations(locations.id)",
+      "manifests(manifests.id)",
+      "policies(policies.id)",
+      "ssh_keys(ssh_keys.id)",
+      "subscribers(subscribers.id)",
+      "users(users.id)"
+    ],
+    "foreignkeys": [
+      "activation_tokens(activation_tokens.device_id) -> devices(devices.id)",
+      "activations(activations.activation_token_id) -> activation_tokens(activation_tokens.id)",
+      "device_models_manifests(device_models_manifests.manifest_id) -> manifests(manifests.id)",
+      "device_models_manifests(device_models_manifests.device_model_id) -> device_models(device_models.id)",
+      "devices(devices.institution_id) -> institutions(institutions.id)",
+      "devices(devices.device_model_id) -> device_models(device_models.id)",
+      "devices_laboratories(devices_laboratories.device_id) -> devices(devices.id)",
+      "devices_laboratories(devices_laboratories.laboratory_id) -> laboratories(laboratories.id)",
+      "events(events.device_id) -> devices(devices.id)",
+      "identities(identities.user_id) -> users(users.id)",
+      "institutions(institutions.user_id) -> users(users.id)",
+      "laboratories(laboratories.institution_id) -> institutions(institutions.id)",
+      "laboratories(laboratories.location_id) -> locations(locations.id)",
+      "policies(policies.user_id) -> users(users.id)",
+      "policies(policies.granter_id) -> users(users.id)",
+      "ssh_keys(ssh_keys.device_id) -> devices(devices.id)",
+      "subscribers(subscribers.user_id) -> users(users.id)"
+    ],
+    "transactions": [
+      {
+        "signature": "void createActivationToken(int id, String value, String device_secret_key, int device_id, String created_at, String updated_at)",
+        "body": [
+          "ins(activation_tokens, (id, value, device_secret_key, device_id, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteActivationToken(int id)",
+        "body": [
+          "del(activation_tokens, activation_tokens.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateActivationToken(int id, String value, String device_secret_key, int device_id, String updated_at)",
+        "body": [
+          "upd(activation_tokens, activation_tokens.id=id, activation_tokens.value, value)",
+          "upd(activation_tokens, activation_tokens.id=id, activation_tokens.device_secret_key, device_secret_key)",
+          "upd(activation_tokens, activation_tokens.id=id, activation_tokens.device_id, device_id)",
+          "upd(activation_tokens, activation_tokens.id=id, activation_tokens.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readActivationToken(int id)",
+        "body": [
+          "pi([activation_tokens.value, activation_tokens.device_secret_key, activation_tokens.device_id], sigma(activation_tokens.id=id, activation_tokens))"
+        ]
+      },
+      {
+        "signature": "void readActivationTokenCreateTime(int id)",
+        "body": [
+          "pi([activation_tokens.created_at], sigma(activation_tokens.id=id, activation_tokens))"
+        ]
+      },
+      {
+        "signature": "void readActivationTokenUpdateTime(int id)",
+        "body": [
+          "pi([activation_tokens.updated_at], sigma(activation_tokens.id=id, activation_tokens))"
+        ]
+      },
+      {
+        "signature": "void createActivation(int id, int activation_token_id, String created_at, String updated_at)",
+        "body": [
+          "ins(activations, (id, activation_token_id, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteActivation(int id)",
+        "body": [
+          "del(activations, activations.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateActivation(int id, int activation_token_id, String updated_at)",
+        "body": [
+          "upd(activations, activations.id=id, activations.activation_token_id, activation_token_id)",
+          "upd(activations, activations.id=id, activations.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readActivation(int id)",
+        "body": [
+          "pi([activations.activation_token_id], sigma(activations.id=id, activations))"
+        ]
+      },
+      {
+        "signature": "void readActivationCreateTime(int id)",
+        "body": [
+          "pi([activations.created_at], sigma(activations.id=id, activations))"
+        ]
+      },
+      {
+        "signature": "void readActivationUpdateTime(int id)",
+        "body": [
+          "pi([activations.updated_at], sigma(activations.id=id, activations))"
+        ]
+      },
+      {
+        "signature": "void createDeviceModel(int id, String name, String created_at, String updated_at)",
+        "body": [
+          "ins(device_models, (id, name, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteDeviceModel(int id)",
+        "body": [
+          "del(device_models, device_models.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateDeviceModel(int id, String name, String updated_at)",
+        "body": [
+          "upd(device_models, device_models.id=id, device_models.name, name)",
+          "upd(device_models, device_models.id=id, device_models.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readDeviceModel(int id)",
+        "body": [
+          "pi([device_models.name], sigma(device_models.id=id, device_models))"
+        ]
+      },
+      {
+        "signature": "void readDeviceModelCreateTime(int id)",
+        "body": [
+          "pi([device_models.created_at], sigma(device_models.id=id, device_models))"
+        ]
+      },
+      {
+        "signature": "void readDeviceModelUpdateTime(int id)",
+        "body": [
+          "pi([device_models.updated_at], sigma(device_models.id=id, device_models))"
+        ]
+      },
+      {
+        "signature": "void createDeviceModelManifest(int id, int manifest_id, int device_model_id)",
+        "body": [
+          "ins(device_models_manifests, (id, manifest_id, device_model_id))"
+        ]
+      },
+      {
+        "signature": "void assignDeviceModelManifests(int id, int device_model_id, int manifest_id)",
+        "body": [
+          "ins(device_models_manifests, (id, device_model_id, manifest_id))"
+        ]
+      },
+      {
+        "signature": "void removeDeviceModelManifests(int id)",
+        "body": [
+          "del(device_models_manifests, device_models_manifests.id=id)"
+        ]
+      },
+      {
+        "signature": "void createDevice(int id, String name, String created_at, String updated_at, String secret_key, int institution_id, int device_model_id)",
+        "body": [
+          "ins(devices, (id, name, created_at, updated_at, secret_key, institution_id, device_model_id))"
+        ]
+      },
+      {
+        "signature": "void deleteDevice(int id)",
+        "body": [
+          "del(devices, devices.id=id)",
+          "del(devices_laboratories, devices_laboratories.device_id=id)"
+        ]
+      },
+      {
+        "signature": "void updateDevice(int id, String name, int device_model_id, String updated_at)",
+        "body": [
+          "upd(devices, devices.id=id, devices.name, name)",
+          "upd(devices, devices.id=id, devices.device_model_id, device_model_id)",
+          "upd(devices, devices.id=id, devices.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateDeviceSecretKey(int id, String key, String updated_at)",
+        "body": [
+          "upd(devices, devices.id=id, devices.secret_key, key)",
+          "upd(devices, devices.id=id, devices.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readDevice(int id)",
+        "body": [
+          "pi([devices.name, devices.secret_key, devices.institution_id, devices.device_model_id], sigma(devices.id=id, devices))"
+        ]
+      },
+      {
+        "signature": "List<Tuple> readDeviceName(int id)",
+        "body": [
+          "pi([devices.name], sigma(devices.id=id, devices))"
+        ]
+      },
+      {
+        "signature": "List<Tuple> readDeviceSecretKey(int id)",
+        "body": [
+          "pi([devices.secret_key], sigma(devices.id=id, devices))"
+        ]
+      },
+      {
+        "signature": "void readDeviceCreateTime(int id)",
+        "body": [
+          "pi([devices.created_at], sigma(devices.id=id, devices))"
+        ]
+      },
+      {
+        "signature": "void readDeviceUpdateTime(int id)",
+        "body": [
+          "pi([devices.updated_at], sigma(devices.id=id, devices))"
+        ]
+      },
+      {
+        "signature": "void assignDeviceLaboratories(int id, int device_id, int lab_id)",
+        "body": [
+          "ins(devices_laboratories, (id, device_id, lab_id))"
+        ]
+      },
+      {
+        "signature": "void removeDeviceLaboratories(int id)",
+        "body": [
+          "del(devices_laboratories, devices_laboratories.id=id)"
+        ]
+      },
+      {
+        "signature": "void createEvent(int id, int device_id, String raw_data, String created_at, String updated_at, String sensitive_data, String uuid, String custom_fields, String event_id, int index_failed, String index_failure_reason)",
+        "body": [
+          "ins(events, (id, device_id, raw_data, created_at, updated_at, sensitive_data, uuid, custom_fields, event_id, index_failed, index_failure_reason))"
+        ]
+      },
+      {
+        "signature": "void deleteEvent(int id)",
+        "body": [
+          "del(events, events.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateEvent(int id, int device_id, String raw_data, String updated_at, String sensitive_data, String uuid, String custom_fields, String event_id, int index_failed, String index_failure_reason)",
+        "body": [
+          "upd(events, events.id=id, events.device_id, device_id)",
+          "upd(events, events.id=id, events.raw_data, raw_data)",
+          "upd(events, events.id=id, events.updated_at, updated_at)",
+          "upd(events, events.id=id, events.sensitive_data, sensitive_data)",
+          "upd(events, events.id=id, events.uuid, uuid)",
+          "upd(events, events.id=id, events.custom_fields, custom_fields)",
+          "upd(events, events.id=id, events.event_id, event_id)",
+          "upd(events, events.id=id, events.index_failed, index_failed)",
+          "upd(events, events.id=id, events.index_failure_reason, index_failure_reason)"
+        ]
+      },
+      {
+        "signature": "void readEvent(int id)",
+        "body": [
+          "pi([events.device_id, events.raw_data, events.sensitive_data, events.uuid, events.custom_fields, events.event_id, events.index_failed, events.index_failure_reason], sigma(events.id=id, events))"
+        ]
+      },
+      {
+        "signature": "void readEventCreateTime(int id)",
+        "body": [
+          "pi([events.created_at], sigma(events.id=id, events))"
+        ]
+      },
+      {
+        "signature": "void readEventUpdateTime(int id)",
+        "body": [
+          "pi([events.updated_at], sigma(events.id=id, events))"
+        ]
+      },
+      {
+        "signature": "void createIdentity(int id, int user_id, String provider, String token, String created_at, String updated_at)",
+        "body": [
+          "ins(identities, (id, user_id, provider, token, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteIdentity(int id)",
+        "body": [
+          "del(identities, identities.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateIdentity(int id, int user_id, String provider, String token, String updated_at)",
+        "body": [
+          "upd(identities, identities.id=id, identities.user_id, user_id)",
+          "upd(identities, identities.id=id, identities.provider, provider)",
+          "upd(identities, identities.id=id, identities.token, token)",
+          "upd(identities, identities.id=id, identities.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readIdentity(int id)",
+        "body": [
+          "pi([identities.user_id, identities.provider, identities.token], sigma(identities.id=id, identities))"
+        ]
+      },
+      {
+        "signature": "void readIdentityCreateTime(int id)",
+        "body": [
+          "pi([identities.created_at], sigma(identities.id=id, identities))"
+        ]
+      },
+      {
+        "signature": "void readIdentityUpdateTime(int id)",
+        "body": [
+          "pi([identities.updated_at], sigma(identities.id=id, identities))"
+        ]
+      },
+      {
+        "signature": "void createInstitution(int id, String name, int user_id, String created_at, String updated_at)",
+        "body": [
+          "ins(institutions, (id, name, user_id, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteInstitution(int id)",
+        "body": [
+          "del(institutions, institutions.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateInstitution(int id, String name, String updated_at)",
+        "body": [
+          "upd(institutions, institutions.id=id, institutions.name, name)",
+          "upd(institutions, institutions.id=id, institutions.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readInstitution(int id)",
+        "body": [
+          "pi([institutions.name, institutions.user_id], sigma(institutions.id=id, institutions))"
+        ]
+      },
+      {
+        "signature": "List<Tuple> readInstitutionName(int id)",
+        "body": [
+          "pi([institutions.name], sigma(institutions.id=id, institutions))"
+        ]
+      },
+      {
+        "signature": "void readInstitutionCreateTime(int id)",
+        "body": [
+          "pi([institutions.created_at], sigma(institutions.id=id, institutions))"
+        ]
+      },
+      {
+        "signature": "void readInstitutionUpdateTime(int id)",
+        "body": [
+          "pi([institutions.updated_at], sigma(institutions.id=id, institutions))"
+        ]
+      },
+      {
+        "signature": "void createLaboratory(int id, String name, int institution_id, String address, String city, String state, String zip_code, String country, String region, String lat, String lng, int location_id, String created_at, String updated_at)",
+        "body": [
+          "ins(laboratories, (id, name, institution_id, address, city, state, zip_code, country, region, lat, lng, location_id, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteLaboratory(int id)",
+        "body": [
+          "del(laboratories, laboratories.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateLaboratory(int id, String name, int institution_id, String address, String city, String state, String zip_code, String country, String region, String lat, String lng, int location_id, String updated_at)",
+        "body": [
+          "upd(laboratories, laboratories.id=id, laboratories.name, name)",
+          "upd(laboratories, laboratories.id=id, laboratories.institution_id, institution_id)",
+          "upd(laboratories, laboratories.id=id, laboratories.address, address)",
+          "upd(laboratories, laboratories.id=id, laboratories.city, city)",
+          "upd(laboratories, laboratories.id=id, laboratories.state, state)",
+          "upd(laboratories, laboratories.id=id, laboratories.zip_code, zip_code)",
+          "upd(laboratories, laboratories.id=id, laboratories.country, country)",
+          "upd(laboratories, laboratories.id=id, laboratories.region, region)",
+          "upd(laboratories, laboratories.id=id, laboratories.lat, lat)",
+          "upd(laboratories, laboratories.id=id, laboratories.lng, lng)",
+          "upd(laboratories, laboratories.id=id, laboratories.location_id, location_id)",
+          "upd(laboratories, laboratories.id=id, laboratories.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readLaboratory(int id)",
+        "body": [
+          "pi([laboratories.name, laboratories.institution_id, laboratories.address, laboratories.city, laboratories.state, laboratories.zip_code, laboratories.country, laboratories.region, laboratories.lat, laboratories.lng, laboratories.location_id], sigma(laboratories.id=id, laboratories))"
+        ]
+      },
+      {
+        "signature": "void readLaboratoryCreateTime(int id)",
+        "body": [
+          "pi([laboratories.created_at], sigma(laboratories.id=id, laboratories))"
+        ]
+      },
+      {
+        "signature": "void readLaboratoryUpdateTime(int id)",
+        "body": [
+          "pi([laboratories.updated_at], sigma(laboratories.id=id, laboratories))"
+        ]
+      },
+      {
+        "signature": "void createLocation(int id, String name, int parent_id, int lft, int rgt, String lat, String lng, int depth, String created_at, String updated_at, int admin_level, String geo_id)",
+        "body": [
+          "ins(locations, (id, name, parent_id, lft, rgt, lat, lng, depth, created_at, updated_at, admin_level, geo_id))"
+        ]
+      },
+      {
+        "signature": "void deleteLocation(int id)",
+        "body": [
+          "del(locations, locations.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateLocation(int id, String name, int parent_id, int admin_level, int geo_id, String updated_at)",
+        "body": [
+          "upd(locations, locations.id=id, locations.name, name)",
+          "upd(locations, locations.id=id, locations.parent_id, parent_id)",
+          "upd(locations, locations.id=id, locations.admin_level, admin_level)",
+          "upd(locations, locations.id=id, locations.geo_id, geo_id)",
+          "upd(locations, locations.id=id, locations.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateLocationPosition(int id, int lft, int rgt, String lat, String lng, int depth, String updated_at)",
+        "body": [
+          "upd(locations, locations.id=id, locations.lft, lft)",
+          "upd(locations, locations.id=id, locations.rgt, rgt)",
+          "upd(locations, locations.id=id, locations.lat, lat)",
+          "upd(locations, locations.id=id, locations.lng, lng)",
+          "upd(locations, locations.id=id, locations.depth, depth)",
+          "upd(locations, locations.id=id, locations.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readLocation(int id)",
+        "body": [
+          "pi([locations.name, locations.parent_id, locations.lft, locations.rgt, locations.lat, locations.lng, locations.depth, locations.admin_level, locations.geo_id], sigma(locations.id=id, locations))"
+        ]
+      },
+      {
+        "signature": "List<Tuple> readLocationPosition(int id)",
+        "body": [
+          "pi([locations.name, locations.lft, locations.rgt, locations.lat, locations.lng, locations.depth], sigma(locations.id=id, locations))"
+        ]
+      },
+      {
+        "signature": "void readLocationCreateTime(int id)",
+        "body": [
+          "pi([locations.created_at], sigma(locations.id=id, locations))"
+        ]
+      },
+      {
+        "signature": "void readLocationUpdateTime(int id)",
+        "body": [
+          "pi([locations.updated_at], sigma(locations.id=id, locations))"
+        ]
+      },
+      {
+        "signature": "void createManifest(int id, String version, String definition, String created_at, String updated_at, String api_version)",
+        "body": [
+          "ins(manifests, (id, version, definition, created_at, updated_at, api_version))"
+        ]
+      },
+      {
+        "signature": "void deleteManifest(int id)",
+        "body": [
+          "del(manifests, manifests.id=id)",
+          "del(device_models_manifests, device_models_manifests.manifest_id=id)"
+        ]
+      },
+      {
+        "signature": "void updateManifest(int id, String definition, String updated_at)",
+        "body": [
+          "upd(manifests, manifests.id=id, manifests.definition, definition)",
+          "upd(manifests, manifests.id=id, manifests.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateManifestVersion(int id, String version, String updated_at)",
+        "body": [
+          "upd(manifests, manifests.id=id, manifests.version, version)",
+          "upd(manifests, manifests.id=id, manifests.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateManifestApiVersion(int id, String api_version, String updated_at)",
+        "body": [
+          "upd(manifests, manifests.id=id, manifests.api_version, api_version)",
+          "upd(manifests, manifests.id=id, manifests.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readManifest(int id)",
+        "body": [
+          "pi([manifests.version, manifests.definition, manifests.api_version], sigma(manifests.id=id, manifests))"
+        ]
+      },
+      {
+        "signature": "void readManifestVersion(int id)",
+        "body": [
+          "pi([manifests.version], sigma(manifests.id=id, manifests))"
+        ]
+      },
+      {
+        "signature": "void readManifestApiVersion(int id)",
+        "body": [
+          "pi([manifests.api_version], sigma(manifests.id=id, manifests))"
+        ]
+      },
+      {
+        "signature": "void readManifestCreateTime(int id)",
+        "body": [
+          "pi([manifests.created_at], sigma(manifests.id=id, manifests))"
+        ]
+      },
+      {
+        "signature": "void readManifestUpdateTime(int id)",
+        "body": [
+          "pi([manifests.updated_at], sigma(manifests.id=id, manifests))"
+        ]
+      },
+      {
+        "signature": "void createPolicy(int id, int user_id, int granter_id, String definition, int delegable, String created_at, String updated_at, String name)",
+        "body": [
+          "ins(policies, (id, user_id, granter_id, definition, delegable, created_at, updated_at, name))"
+        ]
+      },
+      {
+        "signature": "void deletePolicy(int id)",
+        "body": [
+          "del(policies, policies.id=id)"
+        ]
+      },
+      {
+        "signature": "void updatePolicy(int id, int user_id, int granter_id, String definition, int delegable, String updated_at, String name)",
+        "body": [
+          "upd(policies, policies.id=id, policies.user_id, user_id)",
+          "upd(policies, policies.id=id, policies.granter_id, granter_id)",
+          "upd(policies, policies.id=id, policies.definition, definition)",
+          "upd(policies, policies.id=id, policies.delegable, delegable)",
+          "upd(policies, policies.id=id, policies.updated_at, updated_at)",
+          "upd(policies, policies.id=id, policies.name, name)"
+        ]
+      },
+      {
+        "signature": "void readPolicy(int id)",
+        "body": [
+          "pi([policies.user_id, policies.granter_id, policies.definition, policies.delegable, policies.name], sigma(policies.id=id, policies))"
+        ]
+      },
+      {
+        "signature": "void readPolicyCreateTime(int id)",
+        "body": [
+          "pi([policies.created_at], sigma(policies.id=id, policies))"
+        ]
+      },
+      {
+        "signature": "void readPolicyUpdateTime(int id)",
+        "body": [
+          "pi([policies.updated_at], sigma(policies.id=id, policies))"
+        ]
+      },
+      {
+        "signature": "void createSshKey(int id, String public_key, int device_id, String created_at, String updated_at)",
+        "body": [
+          "ins(ssh_keys, (id, public_key, device_id, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteSshKey(int id)",
+        "body": [
+          "del(ssh_keys, ssh_keys.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateSshKey(int id, String public_key, int device_id, String updated_at)",
+        "body": [
+          "upd(ssh_keys, ssh_keys.id=id, ssh_keys.public_key, public_key)",
+          "upd(ssh_keys, ssh_keys.id=id, ssh_keys.device_id, device_id)",
+          "upd(ssh_keys, ssh_keys.id=id, ssh_keys.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readSshKey(int id)",
+        "body": [
+          "pi([ssh_keys.public_key, ssh_keys.device_id], sigma(ssh_keys.id=id, ssh_keys))"
+        ]
+      },
+      {
+        "signature": "void readSshKeyCreateTime(int id)",
+        "body": [
+          "pi([ssh_keys.created_at], sigma(ssh_keys.id=id, ssh_keys))"
+        ]
+      },
+      {
+        "signature": "void readSshKeyUpdateTime(int id)",
+        "body": [
+          "pi([ssh_keys.updated_at], sigma(ssh_keys.id=id, ssh_keys))"
+        ]
+      },
+      {
+        "signature": "void createSubscriber(int id, int user_id, String name, String url, String filter, String fields, String last_run_at, String created_at, String updated_at, String url_user, subscribers url_password)",
+        "body": [
+          "ins(subscribers, (id, user_id, name, url, filter, fields, last_run_at, created_at, updated_at, url_user, url_password))"
+        ]
+      },
+      {
+        "signature": "void deleteSubscriber(int id)",
+        "body": [
+          "del(subscribers, subscribers.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateSubscriber(int id, String name, String url, String updated_at, String url_user, subscribers url_password)",
+        "body": [
+          "upd(subscribers, subscribers.id=id, subscribers.name, name)",
+          "upd(subscribers, subscribers.id=id, subscribers.url, url)",
+          "upd(subscribers, subscribers.id=id, subscribers.updated_at, updated_at)",
+          "upd(subscribers, subscribers.id=id, subscribers.url_user, url_user)",
+          "upd(subscribers, subscribers.id=id, subscribers.url_password, url_password)"
+        ]
+      },
+      {
+        "signature": "void updateSubscriberFilter(int id, String filter, String updated_at)",
+        "body": [
+          "upd(subscribers, subscribers.id=id, subscribers.filter, filter)",
+          "upd(subscribers, subscribers.id=id, subscribers.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateSubscriberLastRunAt(int id, String last_run_at, String updated_at)",
+        "body": [
+          "upd(subscribers, subscribers.id=id, subscribers.last_run_at, last_run_at)",
+          "upd(subscribers, subscribers.id=id, subscribers.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readSubscriber(int id)",
+        "body": [
+          "pi([subscribers.user_id, subscribers.name, subscribers.url, subscribers.filter, subscribers.fields, subscribers.last_run_at, subscribers.url_user, subscribers.url_password], sigma(subscribers.id=id, subscribers))"
+        ]
+      },
+      {
+        "signature": "void readSubscriberCreateTime(int id)",
+        "body": [
+          "pi([subscribers.created_at], sigma(subscribers.id=id, subscribers))"
+        ]
+      },
+      {
+        "signature": "void readSubscriberUpdateTime(int id)",
+        "body": [
+          "pi([subscribers.updated_at], sigma(subscribers.id=id, subscribers))"
+        ]
+      },
+      {
+        "signature": "void createUser(int id, String email, String encrypted_password, String reset_password_token, String reset_password_sent_at, String remember_created_at, int sign_in_count, String current_sign_in_at, String last_sign_in_at, String current_sign_in_ip, String last_sign_in_ip, String confirmation_token, String confirmed_at, String confirmation_sent_at, String unconfirmed_email, int failed_attempts, String unlock_token, String locked_at, String created_at, String updated_at)",
+        "body": [
+          "ins(users, (id, email, encrypted_password, reset_password_token, reset_password_sent_at, remember_created_at, sign_in_count, current_sign_in_at, last_sign_in_at, current_sign_in_ip, last_sign_in_ip, confirmation_token, confirmed_at, confirmation_sent_at, unconfirmed_email, failed_attempts, unlock_token, locked_at, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteUser(int id)",
+        "body": [
+          "del(users, users.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateUserEmail(int id, String email, String updated_at)",
+        "body": [
+          "upd(users, users.id=id, users.email, email)",
+          "upd(users, users.id=id, users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateUserPassword(int id, String encrypted_password, String updated_at)",
+        "body": [
+          "upd(users, users.id=id, users.encrypted_password, encrypted_password)",
+          "upd(users, users.id=id, users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateUserResetPassword(int id, String reset_password_token, String reset_password_sent_at, String updated_at)",
+        "body": [
+          "upd(users, users.id=id, users.reset_password_token, reset_password_token)",
+          "upd(users, users.id=id, users.reset_password_sent_at, reset_password_sent_at)",
+          "upd(users, users.id=id, users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateUserRememberCreatedAt(int id, String remember_created_at, String updated_at)",
+        "body": [
+          "upd(users, users.id=id, users.remember_created_at, remember_created_at)",
+          "upd(users, users.id=id, users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateUserSignIn(int id, int sign_in_count, String current_sign_in_at, String last_sign_in_at, String current_sign_in_ip, String last_sign_in_ip, String updated_at)",
+        "body": [
+          "upd(users, users.id=id, users.sign_in_count, sign_in_count)",
+          "upd(users, users.id=id, users.current_sign_in_at, current_sign_in_at)",
+          "upd(users, users.id=id, users.last_sign_in_at, last_sign_in_at)",
+          "upd(users, users.id=id, users.current_sign_in_ip, current_sign_in_ip)",
+          "upd(users, users.id=id, users.last_sign_in_ip, last_sign_in_ip)",
+          "upd(users, users.id=id, users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateUserEmailConfirmation(int id, String confirmation_token, String confirmed_at, String confirmation_sent_at, String unconfirmed_email, String updated_at)",
+        "body": [
+          "upd(users, users.id=id, users.confirmation_token, confirmation_token)",
+          "upd(users, users.id=id, users.confirmed_at, confirmed_at)",
+          "upd(users, users.id=id, users.confirmation_sent_at, confirmation_sent_at)",
+          "upd(users, users.id=id, users.unconfirmed_email, unconfirmed_email)",
+          "upd(users, users.id=id, users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateUserLock(int id, int failed_attempts, String unlock_token, String locked_at, String updated_at)",
+        "body": [
+          "upd(users, users.id=id, users.failed_attempts, failed_attempts)",
+          "upd(users, users.id=id, users.unlock_token, unlock_token)",
+          "upd(users, users.id=id, users.locked_at, locked_at)",
+          "upd(users, users.id=id, users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readUser(int id)",
+        "body": [
+          "pi([users.email, users.encrypted_password, users.reset_password_token, users.reset_password_sent_at, users.remember_created_at, users.sign_in_count, users.current_sign_in_at, users.last_sign_in_at, users.current_sign_in_ip, users.last_sign_in_ip, users.confirmation_token, users.confirmed_at, users.confirmation_sent_at, users.unconfirmed_email, users.failed_attempts, users.unlock_token, users.locked_at], sigma(users.id=id, users))"
+        ]
+      },
+      {
+        "signature": "void findUserByEmail(String email)",
+        "body": [
+          "pi([users.id], sigma(users.email=email, users))"
+        ]
+      },
+      {
+        "signature": "void readUserCreateTime(int id)",
+        "body": [
+          "pi([users.created_at], sigma(users.id=id, users))"
+        ]
+      },
+      {
+        "signature": "void readUserUpdateTime(int id)",
+        "body": [
+          "pi([users.updated_at], sigma(users.id=id, users))"
+        ]
+      },
+      {
+        "signature": "void readActivationTokenDevice(int id)",
+        "body": [
+          "pi([devices.id, devices.name, devices.secret_key, devices.institution_id, devices.device_model_id], sigma(activation_tokens.id=id, join(activation_tokens, devices)))"
+        ]
+      },
+      {
+        "signature": "void readDeviceActivationToken(int id)",
+        "body": [
+          "pi([activation_tokens.id, activation_tokens.value, activation_tokens.device_secret_key, activation_tokens.device_id], sigma(devices.id=id, join(activation_tokens, devices)))"
+        ]
+      },
+      {
+        "signature": "void readActivationActivationToken(int id)",
+        "body": [
+          "pi([activation_tokens.id, activation_tokens.value, activation_tokens.device_secret_key, activation_tokens.device_id], sigma(activations.id=id, join(activations, activation_tokens)))"
+        ]
+      },
+      {
+        "signature": "void readActivationTokenActivation(int id)",
+        "body": [
+          "pi([activations.id, activations.activation_token_id], sigma(activation_tokens.id=id, join(activations, activation_tokens)))"
+        ]
+      },
+      {
+        "signature": "void readManifestDeviceModels(int id)",
+        "body": [
+          "pi([device_models.name], sigma(manifests.id=id, join(join(manifests, device_models_manifests), device_models)))"
+        ]
+      },
+      {
+        "signature": "void readDeviceModelManifests(int id)",
+        "body": [
+          "pi([manifests.definition], sigma(device_models.id=id, join(join(device_models, device_models_manifests), manifests)))"
+        ]
+      },
+      {
+        "signature": "void readDeviceInstitution(int id)",
+        "body": [
+          "pi([institutions.id, institutions.name, institutions.user_id], sigma(devices.id=id, join(devices, institutions)))"
+        ]
+      },
+      {
+        "signature": "void readInstitutionDevice(int id)",
+        "body": [
+          "pi([devices.id, devices.name, devices.secret_key, devices.institution_id, devices.device_model_id], sigma(institutions.id=id, join(devices, institutions)))"
+        ]
+      },
+      {
+        "signature": "void readDeviceDeviceModel(int id)",
+        "body": [
+          "pi([device_models.id, device_models.name], sigma(devices.id=id, join(devices, device_models)))"
+        ]
+      },
+      {
+        "signature": "void readDeviceModelDevice(int id)",
+        "body": [
+          "pi([devices.id, devices.name, devices.secret_key, devices.institution_id, devices.device_model_id], sigma(device_models.id=id, join(devices, device_models)))"
+        ]
+      },
+      {
+        "signature": "void readLaboratoryDevices(int id)",
+        "body": [
+          "pi([devices.name, devices.secret_key, devices.institution_id, devices.device_model_id], sigma(laboratories.id=id, join(join(devices_laboratories, laboratories), devices)))"
+        ]
+      },
+      {
+        "signature": "void readDeviceLaboratories(int id)",
+        "body": [
+          "pi([laboratories.name, laboratories.institution_id, laboratories.address, laboratories.city, laboratories.state, laboratories.zip_code, laboratories.country, laboratories.region, laboratories.lat, laboratories.lng, laboratories.location_id], sigma(devices.id=id, join(join(devices_laboratories, devices), laboratories)))"
+        ]
+      },
+      {
+        "signature": "void readEventDevice(int id)",
+        "body": [
+          "pi([devices.id, devices.name, devices.secret_key, devices.institution_id, devices.device_model_id], sigma(events.id=id, join(events, devices)))"
+        ]
+      },
+      {
+        "signature": "void readDeviceEvent(int id)",
+        "body": [
+          "pi([events.id, events.device_id, events.raw_data, events.sensitive_data, events.uuid, events.custom_fields, events.event_id, events.index_failed, events.index_failure_reason], sigma(devices.id=id, join(events, devices)))"
+        ]
+      },
+      {
+        "signature": "void readIdentityUser(int id)",
+        "body": [
+          "pi([users.id, users.email, users.encrypted_password, users.reset_password_token, users.reset_password_sent_at, users.remember_created_at, users.sign_in_count, users.current_sign_in_at, users.last_sign_in_at, users.current_sign_in_ip, users.last_sign_in_ip, users.confirmation_token, users.confirmed_at, users.confirmation_sent_at, users.unconfirmed_email, users.failed_attempts, users.unlock_token, users.locked_at], sigma(identities.id=id, join(identities, users)))"
+        ]
+      },
+      {
+        "signature": "void readUserIdentity(int id)",
+        "body": [
+          "pi([identities.id, identities.user_id, identities.provider, identities.token], sigma(users.id=id, join(identities, users)))"
+        ]
+      },
+      {
+        "signature": "void readInstitutionUser(int id)",
+        "body": [
+          "pi([users.id, users.email, users.encrypted_password, users.reset_password_token, users.reset_password_sent_at, users.remember_created_at, users.sign_in_count, users.current_sign_in_at, users.last_sign_in_at, users.current_sign_in_ip, users.last_sign_in_ip, users.confirmation_token, users.confirmed_at, users.confirmation_sent_at, users.unconfirmed_email, users.failed_attempts, users.unlock_token, users.locked_at], sigma(institutions.id=id, join(institutions, users)))"
+        ]
+      },
+      {
+        "signature": "void readUserInstitution(int id)",
+        "body": [
+          "pi([institutions.id, institutions.name, institutions.user_id], sigma(users.id=id, join(institutions, users)))"
+        ]
+      },
+      {
+        "signature": "void readLaboratoryInstitution(int id)",
+        "body": [
+          "pi([institutions.id, institutions.name, institutions.user_id], sigma(laboratories.id=id, join(laboratories, institutions)))"
+        ]
+      },
+      {
+        "signature": "void readInstitutionLaboratory(int id)",
+        "body": [
+          "pi([laboratories.id, laboratories.name, laboratories.institution_id, laboratories.address, laboratories.city, laboratories.state, laboratories.zip_code, laboratories.country, laboratories.region, laboratories.lat, laboratories.lng, laboratories.location_id], sigma(institutions.id=id, join(laboratories, institutions)))"
+        ]
+      },
+      {
+        "signature": "void readLaboratoryLocation(int id)",
+        "body": [
+          "pi([locations.id, locations.name, locations.parent_id, locations.lft, locations.rgt, locations.lat, locations.lng, locations.depth, locations.admin_level, locations.geo_id], sigma(laboratories.id=id, join(laboratories, locations)))"
+        ]
+      },
+      {
+        "signature": "void readLocationLaboratory(int id)",
+        "body": [
+          "pi([laboratories.id, laboratories.name, laboratories.institution_id, laboratories.address, laboratories.city, laboratories.state, laboratories.zip_code, laboratories.country, laboratories.region, laboratories.lat, laboratories.lng, laboratories.location_id], sigma(locations.id=id, join(laboratories, locations)))"
+        ]
+      },
+      {
+        "signature": "void readPolicyUser(int id)",
+        "body": [
+          "pi([users.id, users.email, users.encrypted_password, users.reset_password_token, users.reset_password_sent_at, users.remember_created_at, users.sign_in_count, users.current_sign_in_at, users.last_sign_in_at, users.current_sign_in_ip, users.last_sign_in_ip, users.confirmation_token, users.confirmed_at, users.confirmation_sent_at, users.unconfirmed_email, users.failed_attempts, users.unlock_token, users.locked_at], sigma(policies.id=id, join(policies, users)))"
+        ]
+      },
+      {
+        "signature": "void readUserPolicy(int id)",
+        "body": [
+          "pi([policies.id, policies.user_id, policies.granter_id, policies.definition, policies.delegable, policies.name], sigma(users.id=id, join(policies, users)))"
+        ]
+      },
+      {
+        "signature": "void readPolicyUser(int id)",
+        "body": [
+          "pi([users.id, users.email, users.encrypted_password, users.reset_password_token, users.reset_password_sent_at, users.remember_created_at, users.sign_in_count, users.current_sign_in_at, users.last_sign_in_at, users.current_sign_in_ip, users.last_sign_in_ip, users.confirmation_token, users.confirmed_at, users.confirmation_sent_at, users.unconfirmed_email, users.failed_attempts, users.unlock_token, users.locked_at], sigma(policies.id=id, join(policies, users)))"
+        ]
+      },
+      {
+        "signature": "void readUserPolicy(int id)",
+        "body": [
+          "pi([policies.id, policies.user_id, policies.granter_id, policies.definition, policies.delegable, policies.name], sigma(users.id=id, join(policies, users)))"
+        ]
+      },
+      {
+        "signature": "void readSshKeyDevice(int id)",
+        "body": [
+          "pi([devices.id, devices.name, devices.secret_key, devices.institution_id, devices.device_model_id], sigma(ssh_keys.id=id, join(ssh_keys, devices)))"
+        ]
+      },
+      {
+        "signature": "void readDeviceSshKey(int id)",
+        "body": [
+          "pi([ssh_keys.id, ssh_keys.public_key, ssh_keys.device_id], sigma(devices.id=id, join(ssh_keys, devices)))"
+        ]
+      },
+      {
+        "signature": "void readSubscriberUser(int id)",
+        "body": [
+          "pi([users.id, users.email, users.encrypted_password, users.reset_password_token, users.reset_password_sent_at, users.remember_created_at, users.sign_in_count, users.current_sign_in_at, users.last_sign_in_at, users.current_sign_in_ip, users.last_sign_in_ip, users.confirmation_token, users.confirmed_at, users.confirmation_sent_at, users.unconfirmed_email, users.failed_attempts, users.unlock_token, users.locked_at], sigma(subscribers.id=id, join(subscribers, users)))"
+        ]
+      },
+      {
+        "signature": "void readUserSubscriber(int id)",
+        "body": [
+          "pi([subscribers.id, subscribers.user_id, subscribers.name, subscribers.url, subscribers.filter, subscribers.fields, subscribers.last_run_at, subscribers.url_user, subscribers.url_password], sigma(users.id=id, join(subscribers, users)))"
+        ]
+      }
+    ]
+  },
+  "target": {
+    "relations": [
+      "activation_tokens(int activation_tokens.id, String activation_tokens.value, String activation_tokens.client_id, int activation_tokens.device_id, String activation_tokens.created_at, String activation_tokens.updated_at)",
+      "activations(int activations.id, int activations.activation_token_id, String activations.created_at, String activations.updated_at)",
+      "device_models(int device_models.id, String device_models.name, String device_models.created_at, String device_models.updated_at)",
+      "device_models_manifests(int device_models_manifests.id, int device_models_manifests.manifest_id, int device_models_manifests.device_model_id)",
+      "devices(int devices.id, String devices.name, String devices.created_at, String devices.updated_at, String devices.secret_key, int devices.institution_id, int devices.device_model_id)",
+      "devices_laboratories(int devices_laboratories.id, int devices_laboratories.device_id, int devices_laboratories.laboratory_id)",
+      "events(int events.id, int events.device_id, String events.raw_data, String events.created_at, String events.updated_at, String events.sensitive_data, String events.uuid, String events.custom_fields, String events.event_id, int events.index_failed, String events.index_failure_reason)",
+      "identities(int identities.id, int identities.user_id, String identities.provider, String identities.token, String identities.created_at, String identities.updated_at)",
+      "institutions(int institutions.id, String institutions.name, int institutions.user_id, String institutions.created_at, String institutions.updated_at)",
+      "laboratories(int laboratories.id, String laboratories.name, int laboratories.institution_id, String laboratories.address, String laboratories.city, String laboratories.state, String laboratories.zip_code, String laboratories.country, String laboratories.region, String laboratories.lat, String laboratories.lng, int laboratories.location_id, String laboratories.created_at, String laboratories.updated_at)",
+      "locations(int locations.id, String locations.name, int locations.parent_id, int locations.lft, int locations.rgt, String locations.lat, String locations.lng, int locations.depth, String locations.created_at, String locations.updated_at, int locations.admin_level, String locations.geo_id)",
+      "manifests(int manifests.id, String manifests.version, String manifests.definition, String manifests.created_at, String manifests.updated_at, String manifests.api_version)",
+      "policies(int policies.id, int policies.user_id, int policies.granter_id, String policies.definition, int policies.delegable, String policies.created_at, String policies.updated_at, String policies.name)",
+      "ssh_keys(int ssh_keys.id, String ssh_keys.public_key, int ssh_keys.device_id, String ssh_keys.created_at, String ssh_keys.updated_at)",
+      "subscribers(int subscribers.id, int subscribers.user_id, String subscribers.name, String subscribers.url, String subscribers.fields, String subscribers.last_run_at, String subscribers.created_at, String subscribers.updated_at, String subscribers.url_user, subscribers subscribers.url_password, int subscribers.filter_id)",
+      "filters(int filters.id, int filters.user_id, String filters.name, String filters.params, String filters.created_at, String filters.updated_at)",
+      "users(int users.id, String users.email, String users.encrypted_password, String users.reset_password_token, String users.reset_password_sent_at, String users.remember_created_at, int users.sign_in_count, String users.current_sign_in_at, String users.last_sign_in_at, String users.current_sign_in_ip, String users.last_sign_in_ip, String users.confirmation_token, String users.confirmed_at, String users.confirmation_sent_at, String users.unconfirmed_email, int users.failed_attempts, String users.unlock_token, String users.locked_at, String users.created_at, String users.updated_at)"
+    ],
+    "primarykeys": [
+      "activation_tokens(activation_tokens.id)",
+      "activations(activations.id)",
+      "device_models(device_models.id)",
+      "device_models_manifests(device_models_manifests.id)",
+      "devices(devices.id)",
+      "devices_laboratories(devices_laboratories.id)",
+      "events(events.id)",
+      "identities(identities.id)",
+      "institutions(institutions.id)",
+      "laboratories(laboratories.id)",
+      "locations(locations.id)",
+      "manifests(manifests.id)",
+      "policies(policies.id)",
+      "ssh_keys(ssh_keys.id)",
+      "subscribers(subscribers.id)",
+      "filters(filters.id)",
+      "users(users.id)"
+    ],
+    "foreignkeys": [
+      "activation_tokens(activation_tokens.device_id) -> devices(devices.id)",
+      "activations(activations.activation_token_id) -> activation_tokens(activation_tokens.id)",
+      "device_models_manifests(device_models_manifests.manifest_id) -> manifests(manifests.id)",
+      "device_models_manifests(device_models_manifests.device_model_id) -> device_models(device_models.id)",
+      "devices(devices.institution_id) -> institutions(institutions.id)",
+      "devices(devices.device_model_id) -> device_models(device_models.id)",
+      "devices_laboratories(devices_laboratories.device_id) -> devices(devices.id)",
+      "devices_laboratories(devices_laboratories.laboratory_id) -> laboratories(laboratories.id)",
+      "events(events.device_id) -> devices(devices.id)",
+      "identities(identities.user_id) -> users(users.id)",
+      "institutions(institutions.user_id) -> users(users.id)",
+      "laboratories(laboratories.institution_id) -> institutions(institutions.id)",
+      "laboratories(laboratories.location_id) -> locations(locations.id)",
+      "policies(policies.user_id) -> users(users.id)",
+      "policies(policies.granter_id) -> users(users.id)",
+      "ssh_keys(ssh_keys.device_id) -> devices(devices.id)",
+      "subscribers(subscribers.user_id) -> users(users.id)",
+      "subscribers(subscribers.filter_id) -> filters(filters.id)",
+      "filters(filters.user_id) -> users(users.id)"
+    ],
+    "transactions": [
+      {
+        "signature": "void createActivationToken(int id, String value, String device_secret_key, int device_id, String created_at, String updated_at)",
+        "body": [
+          "ins(activation_tokens, (id, value, device_secret_key, device_id, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteActivationToken(int id)",
+        "body": [
+          "del(activation_tokens, activation_tokens.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateActivationToken(int id, String value, String device_secret_key, int device_id, String updated_at)",
+        "body": [
+          "upd(activation_tokens, activation_tokens.id=id, activation_tokens.value, value)",
+          "upd(activation_tokens, activation_tokens.id=id, activation_tokens.client_id, device_secret_key)",
+          "upd(activation_tokens, activation_tokens.id=id, activation_tokens.device_id, device_id)",
+          "upd(activation_tokens, activation_tokens.id=id, activation_tokens.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readActivationToken(int id)",
+        "body": [
+          "pi([activation_tokens.value, activation_tokens.client_id, activation_tokens.device_id], sigma(activation_tokens.id=id, activation_tokens))"
+        ]
+      },
+      {
+        "signature": "void readActivationTokenCreateTime(int id)",
+        "body": [
+          "pi([activation_tokens.created_at], sigma(activation_tokens.id=id, activation_tokens))"
+        ]
+      },
+      {
+        "signature": "void readActivationTokenUpdateTime(int id)",
+        "body": [
+          "pi([activation_tokens.updated_at], sigma(activation_tokens.id=id, activation_tokens))"
+        ]
+      },
+      {
+        "signature": "void createActivation(int id, int activation_token_id, String created_at, String updated_at)",
+        "body": [
+          "ins(activations, (id, activation_token_id, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteActivation(int id)",
+        "body": [
+          "del(activations, activations.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateActivation(int id, int activation_token_id, String updated_at)",
+        "body": [
+          "upd(activations, activations.id=id, activations.activation_token_id, activation_token_id)",
+          "upd(activations, activations.id=id, activations.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readActivation(int id)",
+        "body": [
+          "pi([activations.activation_token_id], sigma(activations.id=id, activations))"
+        ]
+      },
+      {
+        "signature": "void readActivationCreateTime(int id)",
+        "body": [
+          "pi([activations.created_at], sigma(activations.id=id, activations))"
+        ]
+      },
+      {
+        "signature": "void readActivationUpdateTime(int id)",
+        "body": [
+          "pi([activations.updated_at], sigma(activations.id=id, activations))"
+        ]
+      },
+      {
+        "signature": "void createDeviceModel(int id, String name, String created_at, String updated_at)",
+        "body": [
+          "ins(device_models, (id, name, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteDeviceModel(int id)",
+        "body": [
+          "del(device_models, device_models.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateDeviceModel(int id, String name, String updated_at)",
+        "body": [
+          "upd(device_models, device_models.id=id, device_models.name, name)",
+          "upd(device_models, device_models.id=id, device_models.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readDeviceModel(int id)",
+        "body": [
+          "pi([device_models.name], sigma(device_models.id=id, device_models))"
+        ]
+      },
+      {
+        "signature": "void readDeviceModelCreateTime(int id)",
+        "body": [
+          "pi([device_models.created_at], sigma(device_models.id=id, device_models))"
+        ]
+      },
+      {
+        "signature": "void readDeviceModelUpdateTime(int id)",
+        "body": [
+          "pi([device_models.updated_at], sigma(device_models.id=id, device_models))"
+        ]
+      },
+      {
+        "signature": "void createDeviceModelManifest(int id, int manifest_id, int device_model_id)",
+        "body": [
+          "ins(device_models_manifests, (id, manifest_id, device_model_id))"
+        ]
+      },
+      {
+        "signature": "void assignDeviceModelManifests(int id, int device_model_id, int manifest_id)",
+        "body": [
+          "ins(device_models_manifests, (id, device_model_id, manifest_id))"
+        ]
+      },
+      {
+        "signature": "void removeDeviceModelManifests(int id)",
+        "body": [
+          "del(device_models_manifests, device_models_manifests.id=id)"
+        ]
+      },
+      {
+        "signature": "void createDevice(int id, String name, String created_at, String updated_at, String secret_key, int institution_id, int device_model_id)",
+        "body": [
+          "ins(devices, (id, name, created_at, updated_at, secret_key, institution_id, device_model_id))"
+        ]
+      },
+      {
+        "signature": "void deleteDevice(int id)",
+        "body": [
+          "del(devices, devices.id=id)",
+          "del(devices_laboratories, devices_laboratories.device_id=id)"
+        ]
+      },
+      {
+        "signature": "void updateDevice(int id, String name, int device_model_id, String updated_at)",
+        "body": [
+          "upd(devices, devices.id=id, devices.name, name)",
+          "upd(devices, devices.id=id, devices.device_model_id, device_model_id)",
+          "upd(devices, devices.id=id, devices.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateDeviceSecretKey(int id, String key, String updated_at)",
+        "body": [
+          "upd(devices, devices.id=id, devices.secret_key, key)",
+          "upd(devices, devices.id=id, devices.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readDevice(int id)",
+        "body": [
+          "pi([devices.name, devices.secret_key, devices.institution_id, devices.device_model_id], sigma(devices.id=id, devices))"
+        ]
+      },
+      {
+        "signature": "List<Tuple> readDeviceName(int id)",
+        "body": [
+          "pi([devices.name], sigma(devices.id=id, devices))"
+        ]
+      },
+      {
+        "signature": "List<Tuple> readDeviceSecretKey(int id)",
+        "body": [
+          "pi([devices.secret_key], sigma(devices.id=id, devices))"
+        ]
+      },
+      {
+        "signature": "void readDeviceCreateTime(int id)",
+        "body": [
+          "pi([devices.created_at], sigma(devices.id=id, devices))"
+        ]
+      },
+      {
+        "signature": "void readDeviceUpdateTime(int id)",
+        "body": [
+          "pi([devices.updated_at], sigma(devices.id=id, devices))"
+        ]
+      },
+      {
+        "signature": "void assignDeviceLaboratories(int id, int device_id, int lab_id)",
+        "body": [
+          "ins(devices_laboratories, (id, device_id, lab_id))"
+        ]
+      },
+      {
+        "signature": "void removeDeviceLaboratories(int id)",
+        "body": [
+          "del(devices_laboratories, devices_laboratories.id=id)"
+        ]
+      },
+      {
+        "signature": "void createEvent(int id, int device_id, String raw_data, String created_at, String updated_at, String sensitive_data, String uuid, String custom_fields, String event_id, int index_failed, String index_failure_reason)",
+        "body": [
+          "ins(events, (id, device_id, raw_data, created_at, updated_at, sensitive_data, uuid, custom_fields, event_id, index_failed, index_failure_reason))"
+        ]
+      },
+      {
+        "signature": "void deleteEvent(int id)",
+        "body": [
+          "del(events, events.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateEvent(int id, int device_id, String raw_data, String updated_at, String sensitive_data, String uuid, String custom_fields, String event_id, int index_failed, String index_failure_reason)",
+        "body": [
+          "upd(events, events.id=id, events.device_id, device_id)",
+          "upd(events, events.id=id, events.raw_data, raw_data)",
+          "upd(events, events.id=id, events.updated_at, updated_at)",
+          "upd(events, events.id=id, events.sensitive_data, sensitive_data)",
+          "upd(events, events.id=id, events.uuid, uuid)",
+          "upd(events, events.id=id, events.custom_fields, custom_fields)",
+          "upd(events, events.id=id, events.event_id, event_id)",
+          "upd(events, events.id=id, events.index_failed, index_failed)",
+          "upd(events, events.id=id, events.index_failure_reason, index_failure_reason)"
+        ]
+      },
+      {
+        "signature": "void readEvent(int id)",
+        "body": [
+          "pi([events.device_id, events.raw_data, events.sensitive_data, events.uuid, events.custom_fields, events.event_id, events.index_failed, events.index_failure_reason], sigma(events.id=id, events))"
+        ]
+      },
+      {
+        "signature": "void readEventCreateTime(int id)",
+        "body": [
+          "pi([events.created_at], sigma(events.id=id, events))"
+        ]
+      },
+      {
+        "signature": "void readEventUpdateTime(int id)",
+        "body": [
+          "pi([events.updated_at], sigma(events.id=id, events))"
+        ]
+      },
+      {
+        "signature": "void createIdentity(int id, int user_id, String provider, String token, String created_at, String updated_at)",
+        "body": [
+          "ins(identities, (id, user_id, provider, token, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteIdentity(int id)",
+        "body": [
+          "del(identities, identities.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateIdentity(int id, int user_id, String provider, String token, String updated_at)",
+        "body": [
+          "upd(identities, identities.id=id, identities.user_id, user_id)",
+          "upd(identities, identities.id=id, identities.provider, provider)",
+          "upd(identities, identities.id=id, identities.token, token)",
+          "upd(identities, identities.id=id, identities.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readIdentity(int id)",
+        "body": [
+          "pi([identities.user_id, identities.provider, identities.token], sigma(identities.id=id, identities))"
+        ]
+      },
+      {
+        "signature": "void readIdentityCreateTime(int id)",
+        "body": [
+          "pi([identities.created_at], sigma(identities.id=id, identities))"
+        ]
+      },
+      {
+        "signature": "void readIdentityUpdateTime(int id)",
+        "body": [
+          "pi([identities.updated_at], sigma(identities.id=id, identities))"
+        ]
+      },
+      {
+        "signature": "void createInstitution(int id, String name, int user_id, String created_at, String updated_at)",
+        "body": [
+          "ins(institutions, (id, name, user_id, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteInstitution(int id)",
+        "body": [
+          "del(institutions, institutions.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateInstitution(int id, String name, String updated_at)",
+        "body": [
+          "upd(institutions, institutions.id=id, institutions.name, name)",
+          "upd(institutions, institutions.id=id, institutions.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readInstitution(int id)",
+        "body": [
+          "pi([institutions.name, institutions.user_id], sigma(institutions.id=id, institutions))"
+        ]
+      },
+      {
+        "signature": "List<Tuple> readInstitutionName(int id)",
+        "body": [
+          "pi([institutions.name], sigma(institutions.id=id, institutions))"
+        ]
+      },
+      {
+        "signature": "void readInstitutionCreateTime(int id)",
+        "body": [
+          "pi([institutions.created_at], sigma(institutions.id=id, institutions))"
+        ]
+      },
+      {
+        "signature": "void readInstitutionUpdateTime(int id)",
+        "body": [
+          "pi([institutions.updated_at], sigma(institutions.id=id, institutions))"
+        ]
+      },
+      {
+        "signature": "void createLaboratory(int id, String name, int institution_id, String address, String city, String state, String zip_code, String country, String region, String lat, String lng, int location_id, String created_at, String updated_at)",
+        "body": [
+          "ins(laboratories, (id, name, institution_id, address, city, state, zip_code, country, region, lat, lng, location_id, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteLaboratory(int id)",
+        "body": [
+          "del(laboratories, laboratories.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateLaboratory(int id, String name, int institution_id, String address, String city, String state, String zip_code, String country, String region, String lat, String lng, int location_id, String updated_at)",
+        "body": [
+          "upd(laboratories, laboratories.id=id, laboratories.name, name)",
+          "upd(laboratories, laboratories.id=id, laboratories.institution_id, institution_id)",
+          "upd(laboratories, laboratories.id=id, laboratories.address, address)",
+          "upd(laboratories, laboratories.id=id, laboratories.city, city)",
+          "upd(laboratories, laboratories.id=id, laboratories.state, state)",
+          "upd(laboratories, laboratories.id=id, laboratories.zip_code, zip_code)",
+          "upd(laboratories, laboratories.id=id, laboratories.country, country)",
+          "upd(laboratories, laboratories.id=id, laboratories.region, region)",
+          "upd(laboratories, laboratories.id=id, laboratories.lat, lat)",
+          "upd(laboratories, laboratories.id=id, laboratories.lng, lng)",
+          "upd(laboratories, laboratories.id=id, laboratories.location_id, location_id)",
+          "upd(laboratories, laboratories.id=id, laboratories.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readLaboratory(int id)",
+        "body": [
+          "pi([laboratories.name, laboratories.institution_id, laboratories.address, laboratories.city, laboratories.state, laboratories.zip_code, laboratories.country, laboratories.region, laboratories.lat, laboratories.lng, laboratories.location_id], sigma(laboratories.id=id, laboratories))"
+        ]
+      },
+      {
+        "signature": "void readLaboratoryCreateTime(int id)",
+        "body": [
+          "pi([laboratories.created_at], sigma(laboratories.id=id, laboratories))"
+        ]
+      },
+      {
+        "signature": "void readLaboratoryUpdateTime(int id)",
+        "body": [
+          "pi([laboratories.updated_at], sigma(laboratories.id=id, laboratories))"
+        ]
+      },
+      {
+        "signature": "void createLocation(int id, String name, int parent_id, int lft, int rgt, String lat, String lng, int depth, String created_at, String updated_at, int admin_level, String geo_id)",
+        "body": [
+          "ins(locations, (id, name, parent_id, lft, rgt, lat, lng, depth, created_at, updated_at, admin_level, geo_id))"
+        ]
+      },
+      {
+        "signature": "void deleteLocation(int id)",
+        "body": [
+          "del(locations, locations.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateLocation(int id, String name, int parent_id, int admin_level, int geo_id, String updated_at)",
+        "body": [
+          "upd(locations, locations.id=id, locations.name, name)",
+          "upd(locations, locations.id=id, locations.parent_id, parent_id)",
+          "upd(locations, locations.id=id, locations.admin_level, admin_level)",
+          "upd(locations, locations.id=id, locations.geo_id, geo_id)",
+          "upd(locations, locations.id=id, locations.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateLocationPosition(int id, int lft, int rgt, String lat, String lng, int depth, String updated_at)",
+        "body": [
+          "upd(locations, locations.id=id, locations.lft, lft)",
+          "upd(locations, locations.id=id, locations.rgt, rgt)",
+          "upd(locations, locations.id=id, locations.lat, lat)",
+          "upd(locations, locations.id=id, locations.lng, lng)",
+          "upd(locations, locations.id=id, locations.depth, depth)",
+          "upd(locations, locations.id=id, locations.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readLocation(int id)",
+        "body": [
+          "pi([locations.name, locations.parent_id, locations.lft, locations.rgt, locations.lat, locations.lng, locations.depth, locations.admin_level, locations.geo_id], sigma(locations.id=id, locations))"
+        ]
+      },
+      {
+        "signature": "List<Tuple> readLocationPosition(int id)",
+        "body": [
+          "pi([locations.name, locations.lft, locations.rgt, locations.lat, locations.lng, locations.depth], sigma(locations.id=id, locations))"
+        ]
+      },
+      {
+        "signature": "void readLocationCreateTime(int id)",
+        "body": [
+          "pi([locations.created_at], sigma(locations.id=id, locations))"
+        ]
+      },
+      {
+        "signature": "void readLocationUpdateTime(int id)",
+        "body": [
+          "pi([locations.updated_at], sigma(locations.id=id, locations))"
+        ]
+      },
+      {
+        "signature": "void createManifest(int id, String version, String definition, String created_at, String updated_at, String api_version)",
+        "body": [
+          "ins(manifests, (id, version, definition, created_at, updated_at, api_version))"
+        ]
+      },
+      {
+        "signature": "void deleteManifest(int id)",
+        "body": [
+          "del(manifests, manifests.id=id)",
+          "del(device_models_manifests, device_models_manifests.manifest_id=id)"
+        ]
+      },
+      {
+        "signature": "void updateManifest(int id, String definition, String updated_at)",
+        "body": [
+          "upd(manifests, manifests.id=id, manifests.definition, definition)",
+          "upd(manifests, manifests.id=id, manifests.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateManifestVersion(int id, String version, String updated_at)",
+        "body": [
+          "upd(manifests, manifests.id=id, manifests.version, version)",
+          "upd(manifests, manifests.id=id, manifests.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateManifestApiVersion(int id, String api_version, String updated_at)",
+        "body": [
+          "upd(manifests, manifests.id=id, manifests.api_version, api_version)",
+          "upd(manifests, manifests.id=id, manifests.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readManifest(int id)",
+        "body": [
+          "pi([manifests.version, manifests.definition, manifests.api_version], sigma(manifests.id=id, manifests))"
+        ]
+      },
+      {
+        "signature": "void readManifestVersion(int id)",
+        "body": [
+          "pi([manifests.version], sigma(manifests.id=id, manifests))"
+        ]
+      },
+      {
+        "signature": "void readManifestApiVersion(int id)",
+        "body": [
+          "pi([manifests.api_version], sigma(manifests.id=id, manifests))"
+        ]
+      },
+      {
+        "signature": "void readManifestCreateTime(int id)",
+        "body": [
+          "pi([manifests.created_at], sigma(manifests.id=id, manifests))"
+        ]
+      },
+      {
+        "signature": "void readManifestUpdateTime(int id)",
+        "body": [
+          "pi([manifests.updated_at], sigma(manifests.id=id, manifests))"
+        ]
+      },
+      {
+        "signature": "void createPolicy(int id, int user_id, int granter_id, String definition, int delegable, String created_at, String updated_at, String name)",
+        "body": [
+          "ins(policies, (id, user_id, granter_id, definition, delegable, created_at, updated_at, name))"
+        ]
+      },
+      {
+        "signature": "void deletePolicy(int id)",
+        "body": [
+          "del(policies, policies.id=id)"
+        ]
+      },
+      {
+        "signature": "void updatePolicy(int id, int user_id, int granter_id, String definition, int delegable, String updated_at, String name)",
+        "body": [
+          "upd(policies, policies.id=id, policies.user_id, user_id)",
+          "upd(policies, policies.id=id, policies.granter_id, granter_id)",
+          "upd(policies, policies.id=id, policies.definition, definition)",
+          "upd(policies, policies.id=id, policies.delegable, delegable)",
+          "upd(policies, policies.id=id, policies.updated_at, updated_at)",
+          "upd(policies, policies.id=id, policies.name, name)"
+        ]
+      },
+      {
+        "signature": "void readPolicy(int id)",
+        "body": [
+          "pi([policies.user_id, policies.granter_id, policies.definition, policies.delegable, policies.name], sigma(policies.id=id, policies))"
+        ]
+      },
+      {
+        "signature": "void readPolicyCreateTime(int id)",
+        "body": [
+          "pi([policies.created_at], sigma(policies.id=id, policies))"
+        ]
+      },
+      {
+        "signature": "void readPolicyUpdateTime(int id)",
+        "body": [
+          "pi([policies.updated_at], sigma(policies.id=id, policies))"
+        ]
+      },
+      {
+        "signature": "void createSshKey(int id, String public_key, int device_id, String created_at, String updated_at)",
+        "body": [
+          "ins(ssh_keys, (id, public_key, device_id, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteSshKey(int id)",
+        "body": [
+          "del(ssh_keys, ssh_keys.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateSshKey(int id, String public_key, int device_id, String updated_at)",
+        "body": [
+          "upd(ssh_keys, ssh_keys.id=id, ssh_keys.public_key, public_key)",
+          "upd(ssh_keys, ssh_keys.id=id, ssh_keys.device_id, device_id)",
+          "upd(ssh_keys, ssh_keys.id=id, ssh_keys.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readSshKey(int id)",
+        "body": [
+          "pi([ssh_keys.public_key, ssh_keys.device_id], sigma(ssh_keys.id=id, ssh_keys))"
+        ]
+      },
+      {
+        "signature": "void readSshKeyCreateTime(int id)",
+        "body": [
+          "pi([ssh_keys.created_at], sigma(ssh_keys.id=id, ssh_keys))"
+        ]
+      },
+      {
+        "signature": "void readSshKeyUpdateTime(int id)",
+        "body": [
+          "pi([ssh_keys.updated_at], sigma(ssh_keys.id=id, ssh_keys))"
+        ]
+      },
+      {
+        "signature": "void createSubscriber(int id, int user_id, String name, String url, String filter, String fields, String last_run_at, String created_at, String updated_at, String url_user, subscribers url_password)",
+        "body": [
+          "ins(subscribers, (id, user_id, name, url, fields, last_run_at, created_at, updated_at, url_user, url_password, UUID_x1))",
+          "ins(filters, (UUID_x1, user_id, UUID_f_name, filter, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteSubscriber(int id)",
+        "body": [
+          "del(filters, in(filters.id, pi([subscribers.filter_id], sigma(subscribers.id=id, subscribers))))",
+          "del(subscribers, subscribers.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateSubscriber(int id, String name, String url, String updated_at, String url_user, subscribers url_password)",
+        "body": [
+          "upd(subscribers, subscribers.id=id, subscribers.name, name)",
+          "upd(subscribers, subscribers.id=id, subscribers.url, url)",
+          "upd(subscribers, subscribers.id=id, subscribers.updated_at, updated_at)",
+          "upd(subscribers, subscribers.id=id, subscribers.url_user, url_user)",
+          "upd(subscribers, subscribers.id=id, subscribers.url_password, url_password)"
+        ]
+      },
+      {
+        "signature": "void updateSubscriberFilter(int id, String filter, String updated_at)",
+        "body": [
+          "upd(filters, in(filters.id, pi([subscribers.filter_id], sigma(subscribers.id=id, subscribers))), filters.params, filter)",
+          "upd(filters, in(filters.id, pi([subscribers.filter_id], sigma(subscribers.id=id, subscribers))), filters.updated_at, updated_at)",
+          "upd(subscribers, subscribers.id=id, subscribers.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateSubscriberLastRunAt(int id, String last_run_at, String updated_at)",
+        "body": [
+          "upd(subscribers, subscribers.id=id, subscribers.last_run_at, last_run_at)",
+          "upd(subscribers, subscribers.id=id, subscribers.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readSubscriber(int id)",
+        "body": [
+          "pi([subscribers.user_id, subscribers.name, subscribers.url, filters.params, subscribers.fields, subscribers.last_run_at, subscribers.url_user, subscribers.url_password], sigma(subscribers.id=id, join(subscribers, filters)))"
+        ]
+      },
+      {
+        "signature": "void readSubscriberCreateTime(int id)",
+        "body": [
+          "pi([subscribers.created_at], sigma(subscribers.id=id, subscribers))"
+        ]
+      },
+      {
+        "signature": "void readSubscriberUpdateTime(int id)",
+        "body": [
+          "pi([subscribers.updated_at], sigma(subscribers.id=id, subscribers))"
+        ]
+      },
+      {
+        "signature": "void createUser(int id, String email, String encrypted_password, String reset_password_token, String reset_password_sent_at, String remember_created_at, int sign_in_count, String current_sign_in_at, String last_sign_in_at, String current_sign_in_ip, String last_sign_in_ip, String confirmation_token, String confirmed_at, String confirmation_sent_at, String unconfirmed_email, int failed_attempts, String unlock_token, String locked_at, String created_at, String updated_at)",
+        "body": [
+          "ins(users, (id, email, encrypted_password, reset_password_token, reset_password_sent_at, remember_created_at, sign_in_count, current_sign_in_at, last_sign_in_at, current_sign_in_ip, last_sign_in_ip, confirmation_token, confirmed_at, confirmation_sent_at, unconfirmed_email, failed_attempts, unlock_token, locked_at, created_at, updated_at))"
+        ]
+      },
+      {
+        "signature": "void deleteUser(int id)",
+        "body": [
+          "del(users, users.id=id)"
+        ]
+      },
+      {
+        "signature": "void updateUserEmail(int id, String email, String updated_at)",
+        "body": [
+          "upd(users, users.id=id, users.email, email)",
+          "upd(users, users.id=id, users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateUserPassword(int id, String encrypted_password, String updated_at)",
+        "body": [
+          "upd(users, users.id=id, users.encrypted_password, encrypted_password)",
+          "upd(users, users.id=id, users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateUserResetPassword(int id, String reset_password_token, String reset_password_sent_at, String updated_at)",
+        "body": [
+          "upd(users, users.id=id, users.reset_password_token, reset_password_token)",
+          "upd(users, users.id=id, users.reset_password_sent_at, reset_password_sent_at)",
+          "upd(users, users.id=id, users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateUserRememberCreatedAt(int id, String remember_created_at, String updated_at)",
+        "body": [
+          "upd(users, users.id=id, users.remember_created_at, remember_created_at)",
+          "upd(users, users.id=id, users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateUserSignIn(int id, int sign_in_count, String current_sign_in_at, String last_sign_in_at, String current_sign_in_ip, String last_sign_in_ip, String updated_at)",
+        "body": [
+          "upd(users, users.id=id, users.sign_in_count, sign_in_count)",
+          "upd(users, users.id=id, users.current_sign_in_at, current_sign_in_at)",
+          "upd(users, users.id=id, users.last_sign_in_at, last_sign_in_at)",
+          "upd(users, users.id=id, users.current_sign_in_ip, current_sign_in_ip)",
+          "upd(users, users.id=id, users.last_sign_in_ip, last_sign_in_ip)",
+          "upd(users, users.id=id, users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateUserEmailConfirmation(int id, String confirmation_token, String confirmed_at, String confirmation_sent_at, String unconfirmed_email, String updated_at)",
+        "body": [
+          "upd(users, users.id=id, users.confirmation_token, confirmation_token)",
+          "upd(users, users.id=id, users.confirmed_at, confirmed_at)",
+          "upd(users, users.id=id, users.confirmation_sent_at, confirmation_sent_at)",
+          "upd(users, users.id=id, users.unconfirmed_email, unconfirmed_email)",
+          "upd(users, users.id=id, users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void updateUserLock(int id, int failed_attempts, String unlock_token, String locked_at, String updated_at)",
+        "body": [
+          "upd(users, users.id=id, users.failed_attempts, failed_attempts)",
+          "upd(users, users.id=id, users.unlock_token, unlock_token)",
+          "upd(users, users.id=id, users.locked_at, locked_at)",
+          "upd(users, users.id=id, users.updated_at, updated_at)"
+        ]
+      },
+      {
+        "signature": "void readUser(int id)",
+        "body": [
+          "pi([users.email, users.encrypted_password, users.reset_password_token, users.reset_password_sent_at, users.remember_created_at, users.sign_in_count, users.current_sign_in_at, users.last_sign_in_at, users.current_sign_in_ip, users.last_sign_in_ip, users.confirmation_token, users.confirmed_at, users.confirmation_sent_at, users.unconfirmed_email, users.failed_attempts, users.unlock_token, users.locked_at], sigma(users.id=id, users))"
+        ]
+      },
+      {
+        "signature": "void findUserByEmail(String email)",
+        "body": [
+          "pi([users.id], sigma(users.email=email, users))"
+        ]
+      },
+      {
+        "signature": "void readUserCreateTime(int id)",
+        "body": [
+          "pi([users.created_at], sigma(users.id=id, users))"
+        ]
+      },
+      {
+        "signature": "void readUserUpdateTime(int id)",
+        "body": [
+          "pi([users.updated_at], sigma(users.id=id, users))"
+        ]
+      },
+      {
+        "signature": "void readActivationTokenDevice(int id)",
+        "body": [
+          "pi([devices.id, devices.name, devices.secret_key, devices.institution_id, devices.device_model_id], sigma(activation_tokens.id=id, join(activation_tokens, devices)))"
+        ]
+      },
+      {
+        "signature": "void readDeviceActivationToken(int id)",
+        "body": [
+          "pi([activation_tokens.id, activation_tokens.value, activation_tokens.client_id, activation_tokens.device_id], sigma(devices.id=id, join(activation_tokens, devices)))"
+        ]
+      },
+      {
+        "signature": "void readActivationActivationToken(int id)",
+        "body": [
+          "pi([activation_tokens.id, activation_tokens.value, activation_tokens.client_id, activation_tokens.device_id], sigma(activations.id=id, join(activations, activation_tokens)))"
+        ]
+      },
+      {
+        "signature": "void readActivationTokenActivation(int id)",
+        "body": [
+          "pi([activations.id, activations.activation_token_id], sigma(activation_tokens.id=id, join(activations, activation_tokens)))"
+        ]
+      },
+      {
+        "signature": "void readManifestDeviceModels(int id)",
+        "body": [
+          "pi([device_models.name], sigma(manifests.id=id, join(join(manifests, device_models_manifests), device_models)))"
+        ]
+      },
+      {
+        "signature": "void readDeviceModelManifests(int id)",
+        "body": [
+          "pi([manifests.definition], sigma(device_models.id=id, join(join(device_models, device_models_manifests), manifests)))"
+        ]
+      },
+      {
+        "signature": "void readDeviceInstitution(int id)",
+        "body": [
+          "pi([institutions.id, institutions.name, institutions.user_id], sigma(devices.id=id, join(devices, institutions)))"
+        ]
+      },
+      {
+        "signature": "void readInstitutionDevice(int id)",
+        "body": [
+          "pi([devices.id, devices.name, devices.secret_key, devices.institution_id, devices.device_model_id], sigma(institutions.id=id, join(devices, institutions)))"
+        ]
+      },
+      {
+        "signature": "void readDeviceDeviceModel(int id)",
+        "body": [
+          "pi([device_models.id, device_models.name], sigma(devices.id=id, join(devices, device_models)))"
+        ]
+      },
+      {
+        "signature": "void readDeviceModelDevice(int id)",
+        "body": [
+          "pi([devices.id, devices.name, devices.secret_key, devices.institution_id, devices.device_model_id], sigma(device_models.id=id, join(devices, device_models)))"
+        ]
+      },
+      {
+        "signature": "void readLaboratoryDevices(int id)",
+        "body": [
+          "pi([devices.name, devices.secret_key, devices.institution_id, devices.device_model_id], sigma(laboratories.id=id, join(join(devices_laboratories, laboratories), devices)))"
+        ]
+      },
+      {
+        "signature": "void readDeviceLaboratories(int id)",
+        "body": [
+          "pi([laboratories.name, laboratories.institution_id, laboratories.address, laboratories.city, laboratories.state, laboratories.zip_code, laboratories.country, laboratories.region, laboratories.lat, laboratories.lng, laboratories.location_id], sigma(devices.id=id, join(join(devices_laboratories, devices), laboratories)))"
+        ]
+      },
+      {
+        "signature": "void readEventDevice(int id)",
+        "body": [
+          "pi([devices.id, devices.name, devices.secret_key, devices.institution_id, devices.device_model_id], sigma(events.id=id, join(events, devices)))"
+        ]
+      },
+      {
+        "signature": "void readDeviceEvent(int id)",
+        "body": [
+          "pi([events.id, events.device_id, events.raw_data, events.sensitive_data, events.uuid, events.custom_fields, events.event_id, events.index_failed, events.index_failure_reason], sigma(devices.id=id, join(events, devices)))"
+        ]
+      },
+      {
+        "signature": "void readIdentityUser(int id)",
+        "body": [
+          "pi([users.id, users.email, users.encrypted_password, users.reset_password_token, users.reset_password_sent_at, users.remember_created_at, users.sign_in_count, users.current_sign_in_at, users.last_sign_in_at, users.current_sign_in_ip, users.last_sign_in_ip, users.confirmation_token, users.confirmed_at, users.confirmation_sent_at, users.unconfirmed_email, users.failed_attempts, users.unlock_token, users.locked_at], sigma(identities.id=id, join(identities, users)))"
+        ]
+      },
+      {
+        "signature": "void readUserIdentity(int id)",
+        "body": [
+          "pi([identities.id, identities.user_id, identities.provider, identities.token], sigma(users.id=id, join(identities, users)))"
+        ]
+      },
+      {
+        "signature": "void readInstitutionUser(int id)",
+        "body": [
+          "pi([users.id, users.email, users.encrypted_password, users.reset_password_token, users.reset_password_sent_at, users.remember_created_at, users.sign_in_count, users.current_sign_in_at, users.last_sign_in_at, users.current_sign_in_ip, users.last_sign_in_ip, users.confirmation_token, users.confirmed_at, users.confirmation_sent_at, users.unconfirmed_email, users.failed_attempts, users.unlock_token, users.locked_at], sigma(institutions.id=id, join(institutions, users)))"
+        ]
+      },
+      {
+        "signature": "void readUserInstitution(int id)",
+        "body": [
+          "pi([institutions.id, institutions.name, institutions.user_id], sigma(users.id=id, join(institutions, users)))"
+        ]
+      },
+      {
+        "signature": "void readLaboratoryInstitution(int id)",
+        "body": [
+          "pi([institutions.id, institutions.name, institutions.user_id], sigma(laboratories.id=id, join(laboratories, institutions)))"
+        ]
+      },
+      {
+        "signature": "void readInstitutionLaboratory(int id)",
+        "body": [
+          "pi([laboratories.id, laboratories.name, laboratories.institution_id, laboratories.address, laboratories.city, laboratories.state, laboratories.zip_code, laboratories.country, laboratories.region, laboratories.lat, laboratories.lng, laboratories.location_id], sigma(institutions.id=id, join(laboratories, institutions)))"
+        ]
+      },
+      {
+        "signature": "void readLaboratoryLocation(int id)",
+        "body": [
+          "pi([locations.id, locations.name, locations.parent_id, locations.lft, locations.rgt, locations.lat, locations.lng, locations.depth, locations.admin_level, locations.geo_id], sigma(laboratories.id=id, join(laboratories, locations)))"
+        ]
+      },
+      {
+        "signature": "void readLocationLaboratory(int id)",
+        "body": [
+          "pi([laboratories.id, laboratories.name, laboratories.institution_id, laboratories.address, laboratories.city, laboratories.state, laboratories.zip_code, laboratories.country, laboratories.region, laboratories.lat, laboratories.lng, laboratories.location_id], sigma(locations.id=id, join(laboratories, locations)))"
+        ]
+      },
+      {
+        "signature": "void readPolicyUser(int id)",
+        "body": [
+          "pi([users.id, users.email, users.encrypted_password, users.reset_password_token, users.reset_password_sent_at, users.remember_created_at, users.sign_in_count, users.current_sign_in_at, users.last_sign_in_at, users.current_sign_in_ip, users.last_sign_in_ip, users.confirmation_token, users.confirmed_at, users.confirmation_sent_at, users.unconfirmed_email, users.failed_attempts, users.unlock_token, users.locked_at], sigma(policies.id=id, join(policies, users)))"
+        ]
+      },
+      {
+        "signature": "void readUserPolicy(int id)",
+        "body": [
+          "pi([policies.id, policies.user_id, policies.granter_id, policies.definition, policies.delegable, policies.name], sigma(users.id=id, join(policies, users)))"
+        ]
+      },
+      {
+        "signature": "void readPolicyUser(int id)",
+        "body": [
+          "pi([users.id, users.email, users.encrypted_password, users.reset_password_token, users.reset_password_sent_at, users.remember_created_at, users.sign_in_count, users.current_sign_in_at, users.last_sign_in_at, users.current_sign_in_ip, users.last_sign_in_ip, users.confirmation_token, users.confirmed_at, users.confirmation_sent_at, users.unconfirmed_email, users.failed_attempts, users.unlock_token, users.locked_at], sigma(policies.id=id, join(policies, users)))"
+        ]
+      },
+      {
+        "signature": "void readUserPolicy(int id)",
+        "body": [
+          "pi([policies.id, policies.user_id, policies.granter_id, policies.definition, policies.delegable, policies.name], sigma(users.id=id, join(policies, users)))"
+        ]
+      },
+      {
+        "signature": "void readSshKeyDevice(int id)",
+        "body": [
+          "pi([devices.id, devices.name, devices.secret_key, devices.institution_id, devices.device_model_id], sigma(ssh_keys.id=id, join(ssh_keys, devices)))"
+        ]
+      },
+      {
+        "signature": "void readDeviceSshKey(int id)",
+        "body": [
+          "pi([ssh_keys.id, ssh_keys.public_key, ssh_keys.device_id], sigma(devices.id=id, join(ssh_keys, devices)))"
+        ]
+      },
+      {
+        "signature": "void readSubscriberUser(int id)",
+        "body": [
+          "pi([users.id, users.email, users.encrypted_password, users.reset_password_token, users.reset_password_sent_at, users.remember_created_at, users.sign_in_count, users.current_sign_in_at, users.last_sign_in_at, users.current_sign_in_ip, users.last_sign_in_ip, users.confirmation_token, users.confirmed_at, users.confirmation_sent_at, users.unconfirmed_email, users.failed_attempts, users.unlock_token, users.locked_at], sigma(subscribers.id=id, join(subscribers, users)))"
+        ]
+      },
+      {
+        "signature": "void readUserSubscriber(int id)",
+        "body": [
+          "pi([subscribers.id, subscribers.user_id, subscribers.name, subscribers.url, filters.params, subscribers.fields, subscribers.last_run_at, subscribers.url_user, subscribers.url_password], sigma(users.id=id, join(join(subscribers, users), filters)))"
+        ]
+      }
+    ]
+  }
+}

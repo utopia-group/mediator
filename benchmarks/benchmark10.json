@@ -1,0 +1,213 @@
+{
+  "source": {
+    "relations": [
+      "Employees(int EmployeeId, String EmployeeName)",
+      "Customers(int CustomerId, String Name, String Address, int CityId, int EmployeeId_fk)",
+      "Invoices(int InvoiceId, int CustomerId_fk, String InvoiceDate)"
+    ],
+    "primarykeys": [
+      "Employees(EmployeeId)",
+      "Customers(CustomerId)",
+      "Invoices(InvoiceId)"
+    ],
+    "foreignkeys": [
+      "Customers(EmployeeId_fk) -> Employees(EmployeeId)",
+      "Invoices(CustomerId_fk) -> Customers(CustomerId)"
+    ],
+    "transactions": [
+      {
+        "signature": "void createEmployee(int eid, String name)",
+        "body": [
+          "ins(Employees, (eid, name))"
+        ]
+      },
+      {
+        "signature": "void createInvoice(int iid, String date, String name, String addr, int city, int eid)",
+        "body": [
+          "ins(Invoices, (iid, UUID_x1, date))",
+          "ins(Customers, (UUID_x1, name, addr, city, eid))"
+        ]
+      },
+      {
+        "signature": "void deleteEmployee(int eid)",
+        "body": [
+          "del(Employees, EmployeeId=eid)"
+        ]
+      },
+      {
+        "signature": "void deleteInvoice(int iid)",
+        "body": [
+          "del(Customers, in(CustomerId, pi([CustomerId_fk], sigma(InvoiceId=iid, Invoices))))",
+          "del(Invoices, InvoiceId=iid)"
+        ]
+      },
+      {
+        "signature": "void updateEmployeeName(int eid, String name)",
+        "body": [
+          "upd(Employees, EmployeeId=eid, EmployeeName, name)"
+        ]
+      },
+      {
+        "signature": "void updateCustomerName(int iid, String name)",
+        "body": [
+          "upd(Customers, in(CustomerId, pi([CustomerId_fk], sigma(InvoiceId=iid, Invoices))), Name, name)"
+        ]
+      },
+      {
+        "signature": "void updateCustomerAddress(int iid, String addr)",
+        "body": [
+          "upd(Customers, in(CustomerId, pi([CustomerId_fk], sigma(InvoiceId=iid, Invoices))), Address, addr)"
+        ]
+      },
+      {
+        "signature": "void updateCustomerCity(int iid, int city)",
+        "body": [
+          "upd(Customers, in(CustomerId, pi([CustomerId_fk], sigma(InvoiceId=iid, Invoices))), CityId, city)"
+        ]
+      },
+      {
+        "signature": "void updateInvoiceDate(int iid, String date)",
+        "body": [
+          "upd(Invoices, InvoiceId=iid, InvoiceDate, date)"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getCustomerName(int iid)",
+        "body": [
+          "pi([Name], sigma(InvoiceId=iid, join(Invoices, Customers)))"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getCustomerAddress(int iid)",
+        "body": [
+          "pi([Address], sigma(InvoiceId=iid, join(Invoices, Customers)))"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getCustomerCity(int iid)",
+        "body": [
+          "pi([CityId], sigma(InvoiceId=iid, join(Invoices, Customers)))"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getInvoiceDate(int iid)",
+        "body": [
+          "pi([InvoiceDate], sigma(InvoiceId=iid, Invoices))"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getInvoiceEmployeeName(int iid)",
+        "body": [
+          "pi([EmployeeName], sigma(InvoiceId=iid, join(join(Invoices, Customers), Employees)))"
+        ]
+      }
+    ]
+  },
+  "target": {
+    "relations": [
+      "Employees(int EmployeeId, String EmployeeName)",
+      "Customers(int CustomerId, String Name, String Address, int CityId, int EmployeeId_fk)",
+      "Invoices(int InvoiceId, int CustomerId_fk, String InvoiceDate, int EmpId_fk, String CustomerName, String CustomerAddress)"
+    ],
+    "primarykeys": [
+      "Employees(EmployeeId)",
+      "Customers(CustomerId)",
+      "Invoices(InvoiceId)"
+    ],
+    "foreignkeys": [
+      "Customers(EmployeeId_fk) -> Employees(EmployeeId)",
+      "Invoices(CustomerId_fk) -> Customers(CustomerId)",
+      "Invoices(EmpId_fk) -> Employees(EmployeeId)"
+    ],
+    "transactions": [
+      {
+        "signature": "void createEmployee(int eid, String name)",
+        "body": [
+          "ins(Employees, (eid, name))"
+        ]
+      },
+      {
+        "signature": "void createInvoice(int iid, String date, String name, String addr, int city, int eid)",
+        "body": [
+          "ins(Invoices, (iid, UUID_x2, date, eid, name, addr))",
+          "ins(Customers, (UUID_x2, name, addr, city, eid))"
+        ]
+      },
+      {
+        "signature": "void deleteEmployee(int eid)",
+        "body": [
+          "del(Employees, EmployeeId=eid)"
+        ]
+      },
+      {
+        "signature": "void deleteInvoice(int iid)",
+        "body": [
+          "del(Customers, in(CustomerId, pi([CustomerId_fk], sigma(InvoiceId=iid, Invoices))))",
+          "del(Invoices, InvoiceId=iid)"
+        ]
+      },
+      {
+        "signature": "void updateEmployeeName(int eid, String name)",
+        "body": [
+          "upd(Employees, EmployeeId=eid, EmployeeName, name)"
+        ]
+      },
+      {
+        "signature": "void updateCustomerName(int iid, String name)",
+        "body": [
+          "upd(Customers, in(CustomerId, pi([CustomerId_fk], sigma(InvoiceId=iid, Invoices))), Name, name)",
+          "upd(Invoices, InvoiceId=iid, CustomerName, name)"
+        ]
+      },
+      {
+        "signature": "void updateCustomerAddress(int iid, String addr)",
+        "body": [
+          "upd(Customers, in(CustomerId, pi([CustomerId_fk], sigma(InvoiceId=iid, Invoices))), Address, addr)",
+          "upd(Invoices, InvoiceId=iid, CustomerAddress, addr)"
+        ]
+      },
+      {
+        "signature": "void updateCustomerCity(int iid, int city)",
+        "body": [
+          "upd(Customers, in(CustomerId, pi([CustomerId_fk], sigma(InvoiceId=iid, Invoices))), CityId, city)"
+        ]
+      },
+      {
+        "signature": "void updateInvoiceDate(int iid, String date)",
+        "body": [
+          "upd(Invoices, InvoiceId=iid, InvoiceDate, date)"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getCustomerName(int iid)",
+        "body": [
+          "pi([CustomerName], sigma(InvoiceId=iid, Invoices))"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getCustomerAddress(int iid)",
+        "body": [
+          "pi([CustomerAddress], sigma(InvoiceId=iid, Invoices))"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getCustomerCity(int iid)",
+        "body": [
+          "pi([CityId], sigma(InvoiceId=iid, join(Invoices, Customers)))"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getInvoiceDate(int iid)",
+        "body": [
+          "pi([InvoiceDate], sigma(InvoiceId=iid, Invoices))"
+        ]
+      },
+      {
+        "signature": "List<Tuple> getInvoiceEmployeeName(int iid)",
+        "body": [
+          "pi([EmployeeName], sigma(InvoiceId=iid, join(Invoices, Employees)))"
+        ]
+      }
+    ]
+  }
+}
